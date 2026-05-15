@@ -1,0 +1,26 @@
+# FINAL BOSS AUTOMATION: ARCHITECT EDITION (v1.0)
+## Current Topology: 30x30 Expanded Grid
+
+Final_Boss_Automation/
+├── docs/
+│   ├── SYSTEMS_ARCHITECTURE.md (Updated: Hardware/OS/Network Hybrid)
+│   ├── OPERATIONAL_RUNBOOK.md
+│   └── DARWINIAN_SPECS.md (Finalized Game Logic)
+├── backend/
+│   ├── main.py (FastAPI CORS Enabled)
+│   └── core/ (Orchestrator & Agent Registrar)
+├── frontend/
+│   ├── index.html (Graphical Sidebar UI & Legend)
+│   ├── css/ (Retro-Cyber Styles)
+│   └── js/
+│       ├── engine.js (Isometric v2: Zoom, Pan, Data Pipelines)
+│       └── bridge.js (CORS Local Fallback)
+├── GIT_LOG.txt (Checkpoint Ledger)
+└── TEST.bat (Unified Desktop Launch)
+
+## Key Milestones Completed:
+- Full Isometric Engine (toIso/fromIso Matrix Mapping)
+- 42-Branch Darwinistic Architectural Merge
+- Universal Component Settings Suites (Right-Click Config)
+- Global Network Topology & Real-time Packet Simulation
+- Camera Navigation (Drag-Pan / Scroll-Zoom)

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final Boss Automation - System Architect</title>
+    <style>
+        body { margin: 0; padding: 0; background-color: #050a10; color: #00ffff; font-family: 'Courier New', monospace; overflow: hidden; }
+        #main-container { display: flex; height: 100vh; width: 100vw; }
+        
+        /* Sidebar Styling */
+        #sidebar { 
+            width: 250px; 
+            background: rgba(0, 10, 20, 0.95); 
+            border-right: 2px solid #00ffff; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 15px;
+            box-shadow: 5px 0 15px rgba(0,255,255,0.1);
+            z-index: 10;
+        }
+        
+        .sidebar-header { font-size: 18px; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #00ffff; padding-bottom: 10px; }
+        
+        .tool-category { font-size: 12px; color: #888; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .tool-btn { 
+            background: transparent; border: 1px solid #005555; color: #aaa; 
+            padding: 8px; margin-bottom: 5px; cursor: pointer; text-align: left;
+            transition: all 0.2s; font-size: 13px;
+        }
+        .tool-btn:hover { background: rgba(0,255,255,0.1); border-color: #00ffff; color: #fff; }
+        .tool-btn.active { background: #00ffff; color: #000; font-weight: bold; }
+        
+        /* Game View */
+        #viewport { flex-grow: 1; position: relative; }
+        canvas { display: block; background: #000; cursor: crosshair; }
+        
+        /* Legend HUD */
+        #legend {
+            position: absolute; bottom: 20px; right: 20px;
+            background: rgba(0, 0, 0, 0.8); border: 1px solid #00ffff;
+            padding: 10px; font-size: 11px; pointer-events: none;
+        }
+        .legend-item { display: flex; align-items: center; margin-bottom: 4px; }
+        .legend-color { width: 12px; height: 12px; margin-right: 8px; border: 1px solid #fff; }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <div id="sidebar">
+            <div class="sidebar-header">SYSTEM ARCHITECT</div>
+            
+            <div class="tool-category">Firmware</div>
+            <button class="tool-btn" data-type="BIOS">BIOS/UEFI</button>
+            <button class="tool-btn" data-type="BOOT">Boot Sector</button>
+            
+            <div class="tool-category">Hardware</div>
+            <button class="tool-btn active" data-type="CPU">CPU Core</button>
+            <button class="tool-btn" data-type="RAM">RAM Module</button>
+            <button class="tool-btn" data-type="GPU">GPU Accelerator</button>
+            <button class="tool-btn" data-type="HDD">Storage Drive</button>
+            <button class="tool-btn" data-type="PSU">Power Supply</button>
+            
+            <div class="tool-category">OS Topology</div>
+            <button class="tool-btn" data-type="REG">Registry Hive</button>
+            <button class="tool-btn" data-type="SYS">System32</button>
+            <button class="tool-btn" data-type="PROG">Application</button>
+            <button class="tool-btn" data-type="DSK">Desktop Shell</button>
+            
+            <div class="tool-category">Network</div>
+            <button class="tool-btn" data-type="ROUT">Router</button>
+            <button class="tool-btn" data-type="WEB">Internet Hub</button>
+            <button class="tool-btn" data-type="SRV">Remote Server</button>
+        </div>
+        
+        <div id="viewport">
+            <canvas id="gameCanvas"></canvas>
+            <div id="legend">
+                <div class="sidebar-header" style="font-size: 12px; margin-bottom: 10px;">TOPOLOGY LEGEND</div>
+                <div id="legend-content"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/engine.js"></script>
+    <script src="js/bridge.js"></script>
+    <script>
+        // Sidebar Tool Selection
+        const buttons = document.querySelectorAll('.tool-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                window.setBuildType(btn.getAttribute('data-type'));
+            });
+        });
+    </script>
+</body>
+</html>
