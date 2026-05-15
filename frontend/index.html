@@ -1,98 +1,396 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Final Boss Automation - System Architect</title>
+    <title>SimsMerged - Final Boss Automation</title>
     <style>
-        body { margin: 0; padding: 0; background-color: #050a10; color: #00ffff; font-family: 'Courier New', monospace; overflow: hidden; }
+        body { margin: 0; padding: 0; background-color: #02050a; color: #00ffff; font-family: 'Courier New', monospace; overflow: hidden; }
         #main-container { display: flex; height: 100vh; width: 100vw; }
         
-        /* Sidebar Styling */
         #sidebar { 
-            width: 250px; 
-            background: rgba(0, 10, 20, 0.95); 
-            border-right: 2px solid #00ffff; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 15px;
-            box-shadow: 5px 0 15px rgba(0,255,255,0.1);
-            z-index: 10;
+            width: 280px; background: rgba(0, 5, 15, 0.98); border-right: 2px solid #00ffff; 
+            display: flex; flex-direction: column; padding: 15px; z-index: 100;
         }
+        .sidebar-header { font-size: 16px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #00ffff; padding-bottom: 5px; color: #fff; }
         
-        .sidebar-header { font-size: 18px; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #00ffff; padding-bottom: 10px; }
-        
-        .tool-category { font-size: 12px; color: #888; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        
+        #console {
+            flex-grow: 1; background: #000; border: 1px solid #005555; margin-top: 15px; 
+            font-size: 10px; overflow-y: auto; padding: 10px; color: #0f0;
+            text-shadow: 0 0 5px #0f0;
+        }
+        .log-entry { margin-bottom: 4px; border-left: 2px solid #0f0; padding-left: 5px; }
+
         .tool-btn { 
-            background: transparent; border: 1px solid #005555; color: #aaa; 
-            padding: 8px; margin-bottom: 5px; cursor: pointer; text-align: left;
-            transition: all 0.2s; font-size: 13px;
+            background: rgba(0, 85, 85, 0.1); border: 1px solid #005555; color: #aaa; 
+            padding: 10px; margin-bottom: 6px; cursor: pointer; text-align: left; font-size: 13px;
+            font-family: 'Courier New', monospace; font-weight: bold; width: 100%;
         }
-        .tool-btn:hover { background: rgba(0,255,255,0.1); border-color: #00ffff; color: #fff; }
-        .tool-btn.active { background: #00ffff; color: #000; font-weight: bold; }
+        .tool-btn:hover { border-color: #00ffff; color: #fff; }
+        .tool-btn.active { background: #00ffff !important; color: #000 !important; border-color: #fff; box-shadow: 0 0 10px #00ffff; }
+
+        /* Atmospheric Overlays */
+        #scanner-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none; z-index: 400; opacity: 0.15;
+        }
+        #vignette {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.8) 120%);
+            pointer-events: none; z-index: 401;
+        }
+
+        #viewport { flex-grow: 1; position: relative; background: #000500; }
+        canvas { display: block; width: 100%; height: 100%; }
         
-        /* Game View */
-        #viewport { flex-grow: 1; position: relative; }
-        canvas { display: block; background: #000; cursor: crosshair; }
-        
+        #hud-top {
+            position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8);
+            padding: 12px; border: 1px solid #00ffff; font-size: 14px; z-index: 50;
+        }
+
+        /* Hover Tooltip - Information Veil */
+        #hover-tooltip {
+            position: absolute; display: none; pointer-events: none;
+            background: rgba(0, 10, 20, 0.95); border: 2px solid #00ffff;
+            padding: 15px; width: 300px; z-index: 300;
+            box-shadow: 0 0 20px rgba(0,255,255,0.4);
+            font-family: 'Courier New', monospace;
+        }
+        .tooltip-header { font-size: 16px; font-weight: bold; color: #fff; border-bottom: 1px solid #00ffff; margin-bottom: 10px; padding-bottom: 5px; }
+        .tooltip-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
+        .tooltip-label { color: #888; }
+        .tooltip-value { color: #0f0; text-align: right; }
+        .tooltip-desc { margin-top: 10px; font-size: 11px; color: #ccc; line-height: 1.4; border-top: 1px solid #333; padding-top: 10px; }
+
         /* Legend HUD */
         #legend {
             position: absolute; bottom: 20px; right: 20px;
-            background: rgba(0, 0, 0, 0.8); border: 1px solid #00ffff;
-            padding: 10px; font-size: 11px; pointer-events: none;
+            background: rgba(0, 5, 10, 0.9); border: 1px solid #00ffff;
+            padding: 15px; font-size: 12px; pointer-events: none; z-index: 100;
+            box-shadow: 0 0 15px rgba(0,255,255,0.2);
         }
-        .legend-item { display: flex; align-items: center; margin-bottom: 4px; }
-        .legend-color { width: 12px; height: 12px; margin-right: 8px; border: 1px solid #fff; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 6px; color: #ccc; }
+        .legend-color { width: 10px; height: 10px; margin-right: 8px; border: 1px solid #fff; }
+
+        /* Admin Modal Styles */
+        .modal {
+            display: none; position: fixed; z-index: 200; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+        }
+        .modal-content {
+            background: #111; border: 2px solid #00ffff; margin: 10% auto;
+            padding: 20px; width: 50%; color: #ccc; font-size: 12px;
+            max-height: 70vh; overflow-y: auto;
+        }
+        .close-modal { float: right; color: #f00; cursor: pointer; font-weight: bold; }
+        .boring-section { border-bottom: 1px solid #333; margin-bottom: 15px; padding-bottom: 10px; }
+        .boring-title { color: #0ff; font-weight: bold; margin-bottom: 5px; }
     </style>
 </head>
 <body>
     <div id="main-container">
         <div id="sidebar">
-            <div class="sidebar-header">SYSTEM ARCHITECT</div>
+            <div class="sidebar-header">SIMS_MERGED v1.1</div>
+            <div style="font-size: 11px; color: #0f0; margin-bottom: 5px;">ACTIVE: <span id="active-tool-display">CPU CORE</span></div>
             
-            <div class="tool-category">Firmware</div>
-            <button class="tool-btn" data-type="BIOS">BIOS/UEFI</button>
-            <button class="tool-btn" data-type="BOOT">Boot Sector</button>
+            <div id="admin-tools" style="display:flex; gap:5px; margin-bottom:10px;">
+                <button class="control-btn" id="options-btn" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid #555; color:#888; font-size:10px; padding:4px; cursor:pointer;">OPTIONS</button>
+                <button class="control-btn" id="help-btn" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid #555; color:#888; font-size:10px; padding:4px; cursor:pointer;">HELP</button>
+                <button class="control-btn" id="about-btn" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid #555; color:#888; font-size:10px; padding:4px; cursor:pointer;">ABOUT</button>
+            </div>
+
+            <div id="parameter-suite" style="background: rgba(0,255,255,0.05); border: 1px solid #005555; padding: 10px; margin-bottom: 15px; font-size: 11px; color: #fff; max-height: 250px; overflow-y: auto;">
+                <!-- Populated dynamically -->
+                <div style="color: #888;">Select a tool to configure parameters...</div>
+            </div>
+
+            <div id="build-tools">
+                <div style="font-size:10px; color:#888; margin-bottom:5px;">AI / DATA STACK</div>
+                <button class="tool-btn active" data-type="LLM">LLM NODE</button>
+                <button class="tool-btn" data-type="VDB">VECTOR DB</button>
+                <button class="tool-btn" data-type="SPRITE">AUTO_SPRITE</button>
+                <button class="tool-btn" data-type="PLANT" style="color:#fa0;">SPRITE PLANT</button>
+                
+                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">URBAN INFRASTRUCTURE</div>
+                <button class="tool-btn" data-type="HOSPITAL">HOSPITAL (SEC)</button>
+                <button class="tool-btn" data-type="SCHOOL">SCHOOL (EDU)</button>
+                <button class="tool-btn" data-type="GARAGE">TRANS_HUB (CAR)</button>
+                
+                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">LOGIC / RUNTIME</div>
+                <button class="tool-btn" data-type="LOGIC">LOGIC ENGINE</button>
+                <button class="tool-btn" data-type="MATH">MATH LIBRARY</button>
+                <button class="tool-btn" data-type="LANG">CODE RUNTIME</button>
+                
+                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">ENVIRONMENT (WEATHER)</div>
+                <button class="tool-btn" data-type="W_RAIN" style="color:#4af;">RAM PRECIP</button>
+                <button class="tool-btn" data-type="W_STORM" style="color:#fa0;">CPU STORM</button>
+                <button class="tool-btn" data-type="W_GLITCH" style="color:#f0f;">DATA GLITCH</button>
+                
+                <div style="font-size:10px; color:#555; margin:10px 0 5px 0;">LOCKED INFRASTRUCTURE</div>
+                <button class="tool-btn" data-type="BIOS" disabled style="opacity:0.4; cursor:not-allowed;">BIOS (HARD-LOCKED)</button>
+                <button class="tool-btn" data-type="PSU" disabled style="opacity:0.4; cursor:not-allowed;">POWER (STATIC)</button>
+            </div>
             
-            <div class="tool-category">Hardware</div>
-            <button class="tool-btn active" data-type="CPU">CPU Core</button>
-            <button class="tool-btn" data-type="RAM">RAM Module</button>
-            <button class="tool-btn" data-type="GPU">GPU Accelerator</button>
-            <button class="tool-btn" data-type="HDD">Storage Drive</button>
-            <button class="tool-btn" data-type="PSU">Power Supply</button>
+            <button id="checkpoint-btn" style="margin-top:20px; background:transparent; border:1px solid #0f0; color:#0f0; padding:8px; cursor:pointer; font-family:monospace;">FORCE_CHECKPOINT</button>
             
-            <div class="tool-category">OS Topology</div>
-            <button class="tool-btn" data-type="REG">Registry Hive</button>
-            <button class="tool-btn" data-type="SYS">System32</button>
-            <button class="tool-btn" data-type="PROG">Application</button>
-            <button class="tool-btn" data-type="DSK">Desktop Shell</button>
-            
-            <div class="tool-category">Network</div>
-            <button class="tool-btn" data-type="ROUT">Router</button>
-            <button class="tool-btn" data-type="WEB">Internet Hub</button>
-            <button class="tool-btn" data-type="SRV">Remote Server</button>
+            <div id="console"></div>
         </div>
         
+        <!-- BORING ADMIN MODAL -->
+        <div id="admin-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-admin">&times; CLOSE</span>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+
         <div id="viewport">
-            <canvas id="gameCanvas"></canvas>
+            <div id="scanner-overlay"></div>
+            <div id="vignette"></div>
+            <div id="hud-top">
+                LOCAL_MACHINE_PARITY: <span id="telemetry-status">LINKING...</span><br>
+                CRYPTO_MINT_RATE: <span id="mint-rate">0.0001 cycles/s</span>
+            </div>
+            <div id="hover-tooltip"></div>
             <div id="legend">
-                <div class="sidebar-header" style="font-size: 12px; margin-bottom: 10px;">TOPOLOGY LEGEND</div>
+                <div style="font-weight:bold; color:#0ff; margin-bottom:10px; border-bottom:1px solid #005555; padding-bottom:4px;">TOPOLOGY LEGEND</div>
                 <div id="legend-content"></div>
             </div>
+            <canvas id="gameCanvas"></canvas>
         </div>
     </div>
     
+    <script src="js/telemetry_data.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/bridge.js"></script>
+    
     <script>
-        // Sidebar Tool Selection
-        const buttons = document.querySelectorAll('.tool-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                window.setBuildType(btn.getAttribute('data-type'));
+        const toolDisplay = document.getElementById('active-tool-display');
+        const buildButtons = document.querySelectorAll('.tool-btn');
+        const paramSuite = document.getElementById('parameter-suite');
+        
+        const COMPONENT_VARS = {
+            'LLM': [
+                { id: 'model', label: 'Base Model', type: 'text', val: 'Llama-3-8B' },
+                { id: 'temp', label: 'Temperature', type: 'range', min: 0, max: 2.0, step: 0.1, val: 0.7 },
+                { id: 'top_p', label: 'Top-P Sampling', type: 'range', min: 0.1, max: 1.0, step: 0.05, val: 0.9 }
+            ],
+            'VDB': [
+                { id: 'dim', label: 'Vector Dim', type: 'number', val: 1536 },
+                { id: 'metric', label: 'Distance Metric', type: 'text', val: 'Cosine' }
+            ],
+            'PLANT': [
+                { id: 'yield', label: 'Swarm Yield', type: 'range', min: 1, max: 50, val: 5 },
+                { id: 'auto', label: 'Auto-Spawn', type: 'checkbox', val: true }
+            ],
+            'HOSPITAL': [
+                { id: 'beds', label: 'Quarantine Cap', type: 'number', val: 10 },
+                { id: 'purge', label: 'Deep Flush', type: 'checkbox', val: false }
+            ],
+            'SCHOOL': [
+                { id: 'iq', label: 'Education Rate', type: 'range', min: 1, max: 10, val: 2 }
+            ],
+            'SPRITE': [
+                { id: 'size', label: 'Token Limit', type: 'range', min: 2048, max: 128000, step: 1024, val: 32768 },
+                { id: 'attn', label: 'Attention Heads', type: 'number', val: 32 },
+                { id: 'sliding', label: 'Sliding Window', type: 'checkbox', val: true }
+            ],
+            'STUDIO': [
+                { id: 'port', label: 'Local Port', type: 'number', val: 1234 },
+                { id: 'remote', label: 'Remote API Link', type: 'checkbox', val: false }
+            ],
+            'SPRITE': [
+                { id: 'mode', label: 'Auto-Mode', type: 'text', val: 'Heuristic Learning' },
+                { id: 'speed', label: 'Opti-Rate', type: 'range', min: 1, max: 100, val: 5 },
+                { id: 'target', label: 'Goal', type: 'text', val: 'Minimize Latency' }
+            ],
+            'LOGIC': [
+                { id: 'type', label: 'Logic Type', type: 'text', val: 'Boolean / Fuzzy' },
+                { id: 'gates', label: 'Gate Complexity', type: 'range', min: 1, max: 10, val: 5 }
+            ],
+            'MATH': [
+                { id: 'mode', label: 'Lib Type', type: 'text', val: 'Linear Algebra' },
+                { id: 'prec', label: 'Floating Point', type: 'text', val: 'float64' }
+            ],
+            'LANG': [
+                { id: 'runtime', label: 'Runtime Environment', type: 'text', val: 'Python 3.11' },
+                { id: 'libs', label: 'Pre-loaded Libs', type: 'text', val: 'NumPy, Pandas, PyTorch' }
+            ],
+            'W_RAIN': [
+                { id: 'int', label: 'RAM Pressure %', type: 'range', min: 0, max: 100, val: 50 }
+            ],
+            'W_STORM': [
+                { id: 'int', label: 'CPU Turbulence %', type: 'range', min: 0, max: 100, val: 30 }
+            ],
+            'W_GLITCH': [
+                { id: 'int', label: 'Entropy Level %', type: 'range', min: 0, max: 100, val: 10 }
+            ]
+        };
+
+        window.currentSettings = {};
+
+        function updateParamSuite(type) {
+            paramSuite.innerHTML = `<div style="font-weight:bold; margin-bottom:10px; color:#0ff; border-bottom:1px solid #005555; padding-bottom:5px;">\${type} SYSTEM VARIABLES</div>`;
+            const vars = COMPONENT_VARS[type] || [];
+            window.currentSettings = {};
+
+            vars.forEach(v => {
+                const row = document.createElement('div');
+                row.style.marginBottom = '10px';
+                
+                const labelContainer = document.createElement('div');
+                labelContainer.style.display = 'flex';
+                labelContainer.style.justifyContent = 'space-between';
+                
+                const label = document.createElement('label');
+                label.innerText = v.label;
+                
+                const valueReadout = document.createElement('span');
+                valueReadout.id = `readout-\${v.id}`;
+                valueReadout.style.color = '#0f0';
+                valueReadout.innerText = v.val;
+                
+                labelContainer.appendChild(label);
+                labelContainer.appendChild(valueReadout);
+                row.appendChild(labelContainer);
+                
+                let input;
+                if (v.type === 'range') {
+                    input = document.createElement('input');
+                    input.type = 'range';
+                    input.min = v.min;
+                    input.max = v.max;
+                    if(v.step) input.step = v.step;
+                    input.value = v.val;
+                    input.style.width = '100%';
+                    input.style.cursor = 'pointer';
+                } else if (v.type === 'checkbox') {
+                    input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.checked = v.val;
+                    valueReadout.innerText = v.val ? 'ON' : 'OFF';
+                } else {
+                    input = document.createElement('input');
+                    input.type = v.type;
+                    input.value = v.val;
+                    input.style.width = '100%';
+                    input.style.background = '#000';
+                    input.style.color = '#0f0';
+                    input.style.border = '1px solid #005555';
+                    input.style.padding = '2px';
+                    input.style.fontSize = '10px';
+                }
+
+                input.oninput = input.onchange = () => {
+                    const finalVal = input.type === 'checkbox' ? input.checked : input.value;
+                    window.currentSettings[v.id] = finalVal;
+                    valueReadout.innerText = input.type === 'checkbox' ? (finalVal ? 'ON' : 'OFF') : finalVal;
+                    console.log("PARAM_SYNC:", v.id, finalVal);
+                };
+                
+                window.currentSettings[v.id] = v.val;
+                row.appendChild(input);
+                paramSuite.appendChild(row);
             });
+        }
+        
+        buildButtons.forEach(btn => {
+            btn.onclick = function() {
+                const type = this.getAttribute('data-type');
+                buildButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                toolDisplay.innerText = this.innerText;
+                
+                updateParamSuite(type);
+
+                if (window.setBuildType) {
+                    window.setBuildType(type);
+                }
+            };
         });
+
+        // Initialize first tool
+        updateParamSuite('CPU');
+
+        document.getElementById('checkpoint-btn').onclick = function() {
+            window.logToConsole("CHECKPOINT: Triggering ledger sync...", "warn");
+            setTimeout(() => window.logToConsole("SUCCESS: Local ledger updated."), 1000);
+        };
+
+        const modal = document.getElementById('admin-modal');
+        const modalBody = document.getElementById('modal-body');
+        const closeModal = document.getElementById('close-admin');
+
+        const BORING_CONTENT = {
+            'OPTIONS': `
+                <div class="boring-section">
+                    <div class="boring-title">UI CONFIGURATION</div>
+                    <label><input type="checkbox" checked> Enable Grid Overlay</label><br>
+                    <label><input type="checkbox" checked> Show Data Packets</label><br>
+                    <label><input type="checkbox"> High-Performance Mode (Culls FX)</label>
+                </div>
+                <div class="boring-section">
+                    <div class="boring-title">SYSTEM PREFERENCES</div>
+                    <label>Telemetry Interval: <input type="number" value="1000" style="width:50px; background:#000; border:1px solid #333; color:#0f0;"> ms</label><br>
+                    <label>Auto-Save frequency: <input type="number" value="5" style="width:40px; background:#000; border:1px solid #333; color:#0f0;"> min</label>
+                </div>
+            `,
+            'HELP': `
+                <div class="boring-section">
+                    <div class="boring-title">SYSTEM ARCHITECT MANUAL</div>
+                    <p>Welcome to SimsMerged. To build your virtual machine topology:</p>
+                    <ul>
+                        <li><b>Deployment:</b> Select a tool in the sidebar, configure variables in the Parameter Suite, and left-click the grid.</li>
+                        <li><b>Navigation:</b> Use mouse wheel to zoom. Middle-click and drag to pan the view.</li>
+                        <li><b>Analysis:</b> Right-click any active node to see real-time system metrics.</li>
+                    </ul>
+                </div>
+                <div class="boring-section">
+                    <div class="boring-title">HOTKEYS</div>
+                    <ul>
+                        <li><b>[Shift + Drag]:</b> Alternative Pan</li>
+                        <li><b>[Enter]:</b> Confirm Parameter</li>
+                    </ul>
+                </div>
+            `,
+            'ABOUT': `
+                <div class="boring-section">
+                    <div class="boring-title">SIMS_MERGED ARCHITECT EDITION</div>
+                    <p><b>Version:</b> 1.1.2-Stable</p>
+                    <p><b>Architect:</b> Gemini CLI</p>
+                    <p><b>Environment:</b> Darwinistic System Virtualization Sandbox</p>
+                </div>
+                <div class="boring-section">
+                    <div class="boring-title">LEGAL / COMPLIANCE</div>
+                    <p style="font-size:9px; color:#555;">This software is provided as-is for architectural simulation purposes. All simulated "Agents" are autonomous entities. System corruption simulations are for educational purposes only.</p>
+                </div>
+            `
+        };
+
+        document.getElementById('options-btn').onclick = () => showBoring('OPTIONS');
+        document.getElementById('help-btn').onclick = () => showBoring('HELP');
+        document.getElementById('about-btn').onclick = () => showBoring('ABOUT');
+        closeModal.onclick = () => modal.style.display = 'none';
+
+        function showBoring(type) {
+            modalBody.innerHTML = BORING_CONTENT[type];
+            modal.style.display = 'block';
+            window.logToConsole("UI_LOG: Opened " + type + " dialog.");
+        }
+
+        window.logToConsole = function(msg, type) {
+            const con = document.getElementById('console');
+            if(!con) return;
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            if(type === 'warn') div.style.color = '#ff0';
+            div.innerText = "[" + new Date().toLocaleTimeString() + "] " + msg;
+            con.appendChild(div);
+            con.scrollTop = con.scrollHeight;
+        };
+
+        window.logToConsole("SYSTEM_BOOT: GUI Logic Initialized.");
     </script>
 </body>
 </html>

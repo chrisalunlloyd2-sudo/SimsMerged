@@ -1,26 +1,31 @@
-# FINAL BOSS AUTOMATION: ARCHITECT EDITION (v1.0)
-## Current Topology: 30x30 Expanded Grid
+# SIMS_MERGED: PROJECT TOPOLOGY MAP (v1.2-METROPOLIS)
 
-Final_Boss_Automation/
+SimsMerged/
 ├── docs/
-│   ├── SYSTEMS_ARCHITECTURE.md (Updated: Hardware/OS/Network Hybrid)
+│   ├── SYSTEMS_ARCHITECTURE.md (LOCKED: Metropolis Core)
 │   ├── OPERATIONAL_RUNBOOK.md
-│   └── DARWINIAN_SPECS.md (Finalized Game Logic)
+│   └── DARWINIAN_SPECS.md (UPDATED: Urban Metaphor v1.2)
 ├── backend/
-│   ├── main.py (FastAPI CORS Enabled)
-│   └── core/ (Orchestrator & Agent Registrar)
+│   ├── main.py (FastAPI Orchestrator)
+│   └── core/ (Agent/SI Lifecycle Management)
 ├── frontend/
-│   ├── index.html (Graphical Sidebar UI & Legend)
-│   ├── css/ (Retro-Cyber Styles)
+│   ├── index.html (Dashboard with Parameter Suite & Admin Modals)
+│   ├── css/ (Cyber-Metropolis Styles)
 │   └── js/
-│       ├── engine.js (Isometric v2: Zoom, Pan, Data Pipelines)
-│       └── bridge.js (CORS Local Fallback)
-├── GIT_LOG.txt (Checkpoint Ledger)
-└── TEST.bat (Unified Desktop Launch)
+│       ├── engine.js (v1.2: 40x40 Grid, Building Structures, Urban Decorations)
+│       ├── bridge.js (Sync Protocol)
+│       └── telemetry_data.js (Real-Machine Parity Link)
+├── GIT_LOG.txt (UPDATED: v1.2 Checkpoint)
+├── MERGE_DOCUMENTATION.md
+├── TEST.bat (Master Launch)
+└── ECOSYSTEM_NOTES.md (User Evolution Ledger)
 
-## Key Milestones Completed:
-- Full Isometric Engine (toIso/fromIso Matrix Mapping)
-- 42-Branch Darwinistic Architectural Merge
-- Universal Component Settings Suites (Right-Click Config)
-- Global Network Topology & Real-time Packet Simulation
-- Camera Navigation (Drag-Pan / Scroll-Zoom)
+## MILESTONES (LOCKED v1.2):
+- [X] Full 3D Isometric Building Structures
+- [X] Urban Decoration System (Trees/Lamps/Roads)
+- [X] Suicide Inhibitor (SI) Special Agent Binding
+- [X] Administrator 'Purge' Logic for Low-Level Processes
+- [X] Protocol-as-Pipe trajectory rendering (TCP/UDP)
+- [X] Exhaustive Hover Telemetry (Information Veil)
+- [X] Cinematic CRT Scanline & Vignette Overlays
+- [X] Hard-Locked BIOS & Environmental Hardware Infrastructure
