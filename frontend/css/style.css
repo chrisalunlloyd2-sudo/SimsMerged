@@ -2,3 +2,20 @@ body { background-color: #000; color: #0f0; font-family: monospace; }
 #ui-container { text-align: center; }
 canvas { border: 2px solid #0f0; margin-top: 20px; }
 #pulse { font-weight: bold; color: cyan; }
+
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(18, 16, 16, 0) 0,
+        rgba(18, 16, 16, 0.05) 1px,
+        rgba(18, 16, 16, 0) 2px
+    );
+    pointer-events: none;
+    z-index: 500;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.5);
+}

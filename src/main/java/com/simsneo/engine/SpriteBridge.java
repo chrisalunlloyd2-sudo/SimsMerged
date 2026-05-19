@@ -99,4 +99,31 @@ public class SpriteBridge {
             this.trust = trust;
         }
     }
+
+    public static class Point {
+        public double x, y;
+        public Point(double x, double y) { this.x = x; this.y = y; }
+    }
+
+    public static class TrajectoryData {
+        public Point start;
+        public Point end;
+        public Point control;
+        public String protocol;
+
+        public TrajectoryData(Point start, Point end, Point control, String protocol) {
+            this.start = start;
+            this.end = end;
+            this.control = control;
+            this.protocol = protocol;
+        }
+    }
+
+    public TrajectoryData calculateParabolicArc(Point start, Point end) {
+        // Calculate a control point for a quadratic curve to create a parabolic arc
+        double midX = (start.x + end.x) / 2;
+        double midY = (start.y + end.y) / 2 - 100; // Offset for the arc height
+        Point control = new Point(midX, midY);
+        return new TrajectoryData(start, end, control, "BUS");
+    }
 }

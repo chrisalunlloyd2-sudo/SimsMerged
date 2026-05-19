@@ -129,27 +129,33 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
         if(deco.type === 'lamp') { ctx.shadowBlur = 10; ctx.shadowColor = '#0ff'; ctx.fillStyle = '#0ff'; ctx.fillRect(isoX-1, isoY, 2, -12*zoom); ctx.shadowBlur = 0; }
     }
 
+    drawDistricts(x, y, isoX, isoY, th);
+}
+
+function drawDistricts(x, y, isoX, isoY, th) {
     const d = districts.find(d => d.x === x && d.y === y);
     if (d) {
         const info = BUILD_TYPES[d.type] || { color: 'gray' };
         drawStructure(isoX, isoY + th/2, info.color, d.type, info.locked);
+        
+        // Building Details (Windows & Stability Glow)
+        const bSize = 16 * zoom;
+        const h = (info.locked ? 10 : 32) * zoom;
+        if(!info.locked) {
+            ctx.fillStyle = "rgba(0, 255, 255, 0.3)";
+            for(let i=0; i<3; i++) {
+                for(let j=0; j<2; j++) {
+                    ctx.fillRect(isoX - bSize + 5*zoom + j*7*zoom, isoY + th/2 - h + 5*zoom + i*8*zoom, 2*zoom, 2*zoom);
+                }
+            }
+        }
+
         ctx.fillStyle = 'white'; ctx.font = `bold ${Math.max(10, Math.floor(14*zoom))}px Arial`;
         ctx.fillText(d.label || d.type, isoX - 12*zoom, isoY - 20*zoom);
     }
 }
 
-function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const mouseTile = selectedTile;
-    
-    // Draw Grid
-    for (let x = -20; x < MAP_SIZE; x++) {
-        for (let y = -20; y < MAP_SIZE; y++) {
-            drawTile(x, y, '#050a05', (x === mouseTile.x && y === mouseTile.y));
-        }
-    }
-
-    // Protocol Pipes
+function drawTrajectories() {
     const links = [
         { f: 'CPU', t: 'RAM', protocol: 'BUS', c: '#00ff00' },
         { f: 'CPU', t: 'GPU', protocol: 'BUS', c: '#ff00ff' },
@@ -162,14 +168,27 @@ function render() {
         if(from && to) {
             const p1 = toIso(from.x, from.y), p2 = toIso(to.x, to.y);
             ctx.setLineDash(l.protocol === 'BUS' ? [] : [10, 5]);
-            ctx.strokeStyle = l.c + "22"; ctx.lineWidth = l.protocol === 'BUS' ? 1 : 3;
+            ctx.strokeStyle = l.c + "44"; ctx.lineWidth = 2;
             ctx.beginPath(); ctx.moveTo(p1.isoX, p1.isoY); 
-            if(l.protocol === 'BUS') ctx.lineTo(p2.isoX, p2.isoY);
-            else ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 100*zoom, p2.isoX, p2.isoY);
+            ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 100*zoom, p2.isoX, p2.isoY);
             ctx.stroke();
             if(Math.random() < 0.02) spawnPacket(from.x, from.y, to.x, to.y, l.c, l.protocol);
         }
     });
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const mouseTile = selectedTile;
+    
+    // Draw Grid
+    for (let x = -20; x < MAP_SIZE; x++) {
+        for (let y = -20; y < MAP_SIZE; y++) {
+            drawTile(x, y, '#050a05', (x === mouseTile.x && y === mouseTile.y));
+        }
+    }
+
+    drawTrajectories();
 
     packets.forEach((pkt, i) => {
         pkt.p += 0.01;
@@ -197,7 +216,7 @@ function render() {
         ctx.strokeStyle = 'white'; ctx.stroke();
     });
 
-    requestAnimationFrame(render);
+    requestAnimationFrame(draw);
 }
 
 window.setBuildType = function(type) { currentBuildType = type; };
@@ -230,4 +249,4 @@ if (legendContent) {
 }
 
 agents = [ { x: 0, y: 0, name: 'ADMIN_ROOT', role: 'ADMIN' } ];
-render();
+draw();

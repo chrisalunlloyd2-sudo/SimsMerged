@@ -43,5 +43,17 @@ async def quantum_tick():
         "data": metrics
     }
 
+@app.get("/api/trajectories")
+async def get_trajectories():
+    """
+    Returns a list of active 'Packet Flows' between districts (mocked for now).
+    """
+    return [
+        {"from": "CPU", "to": "RAM", "protocol": "BUS", "color": "#00ff00"},
+        {"from": "CPU", "to": "GPU", "protocol": "BUS", "color": "#ff00ff"},
+        {"from": "CPU", "to": "MODEM", "protocol": "TCP/IP", "color": "#00ffff"},
+        {"from": "CPU", "to": "LLM", "protocol": "BUS", "color": "#00ffff"}
+    ]
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
