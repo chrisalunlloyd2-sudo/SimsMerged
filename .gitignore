@@ -1,4 +1,8 @@
 # SimsMerged Git Ignore
+_local_chats/
+.env
+.env.*
+secrets.json
 target/
 *.class
 .idea/
