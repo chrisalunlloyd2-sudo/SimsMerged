@@ -177,6 +177,40 @@ function drawTrajectories() {
     });
 }
 
+function drawBindingChains() {
+    agents.forEach(agent => {
+        if (agent.state === 'DEPRESSED' || agent.emotional_state === 'DEPRESSED') {
+            const hospital = districts.find(d => d.type === 'HOSPITAL');
+            if (hospital) {
+                const p1 = toIso(agent.x, agent.y);
+                const p2 = toIso(hospital.x, hospital.y);
+                ctx.strokeStyle = '#ff00ff';
+                ctx.lineWidth = 4;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(p1.isoX, p1.isoY);
+                ctx.lineTo(p2.isoX, p2.isoY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+    });
+}
+
+function drawThermalMonitor() {
+    const temp = 35 + (agents.length * 2) + (Math.sin(Date.now() / 1000) * 2);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(10, 10, 180, 40);
+    ctx.strokeStyle = temp > 60 ? '#ff0000' : '#00ff00';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(10, 10, 180, 40);
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px Courier New';
+    ctx.fillText(`SYSTEM_TEMPERATURE: ${temp.toFixed(2)}°C`, 20, 25);
+    ctx.fillText(`ACTIVE_KERNELS: ${agents.length}`, 20, 40);
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const mouseTile = selectedTile;
@@ -189,6 +223,8 @@ function draw() {
     }
 
     drawTrajectories();
+    drawBindingChains();
+    drawThermalMonitor();
 
     packets.forEach((pkt, i) => {
         pkt.p += 0.01;

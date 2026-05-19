@@ -25,11 +25,13 @@ public class Sim {
     private Map<String, Relationship> relationships = new HashMap<>();
     private Job job;
     private double wallet = 100.0;
+    private double stability = 1.0;
+    private String emotionalState = "STABLE";
     
     private SimState state = SimState.IDLE;
 
     public enum SimState {
-        IDLE, MOVING, INTERACTING, ROUTING, WORKING
+        IDLE, MOVING, INTERACTING, ROUTING, WORKING, BINDING
     }
 
     public Sim(String name, int x, int y) {
@@ -92,4 +94,8 @@ public class Sim {
     public double getMotive(Motive m) { return motives.getOrDefault(m, 0.0); }
     public SimState getState() { return state; }
     public void setState(SimState state) { this.state = state; }
+    public double getStability() { return stability; }
+    public void setStability(double stability) { this.stability = stability; }
+    public String getEmotionalState() { return emotionalState; }
+    public void setEmotionalState(String emotionalState) { this.emotionalState = emotionalState; }
 }

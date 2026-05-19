@@ -65,6 +65,36 @@ public class SystemIntegrity {
     }
 
     /**
+     * [2026-05-17T18:10:05.452Z] [SimsMerged-v1.3-Metropolis] [Gemini-CLI-Architect]
+     * BLOCK 3: BINDING SEQUENCE
+     * Forces a sim to anchor to the nearest Hospital node until stability > 50%.
+     */
+    public static void processBindingSequence(WorldGrid world, Sim sim) {
+        if ("DEPRESSED".equals(sim.getEmotionalState()) || sim.getStability() < 0.2) {
+            System.out.println("[INTEGRITY] Critical Stability Loss: " + sim.getName() + ". Initiating Binding.");
+            sim.setState(Sim.SimState.BINDING);
+            
+            // Find nearest Hospital
+            GameObject hospital = findNearestObject(world, sim.getGridX(), sim.getGridY(), "HOSPITAL");
+            if (hospital != null) {
+                // Anchor to hospital
+                sim.setGridX(hospital.getGridX());
+                sim.setGridY(hospital.getGridY());
+                
+                // Healing process
+                sim.setStability(sim.getStability() + 0.1);
+                if (sim.getStability() > 0.5) {
+                    System.out.println("[INTEGRITY] Stability Restored: " + sim.getName() + ". Releasing Lock.");
+                    sim.setEmotionalState("STABLE");
+                    sim.setState(Sim.SimState.IDLE);
+                }
+            } else {
+                System.out.println("[INTEGRITY] ERROR: No Hospital node found for binding!");
+            }
+        }
+    }
+
+    /**
      * [2026-05-17T17:56:10.000Z] [SimsMerged-v1.3-Metropolis] [Gemini-CLI-Architect]
      * BIOS HARD-LOCK CHECK
      * Returns true if critical hardware properties are at their baseline values.
