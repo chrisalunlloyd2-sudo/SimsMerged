@@ -1,6 +1,6 @@
 # SimsMerged Metropolis v1.3: The Darwinistic System Simulation
 
-![Metropolis Screenshot](Final_Boss_Environment_Screenshot.png)
+![Metropolis Screenshot](assets/Final_Boss_Environment_Screenshot.png)
 
 ## Overview
 **SimsMerged Metropolis** is a high-fidelity, autonomous system simulation that translates complex computer architecture into a thriving "Urban Metaphor." Built upon the 1700-step Darwinistic merge of SimAgentCity and JavaFX_Neo, it provides a visual and agentic representation of hardware telemetry, protocol trajectories, and systemic health.

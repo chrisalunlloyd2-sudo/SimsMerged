@@ -1,0 +1,33 @@
+﻿name: 🐛 Bug Report
+description: Report a bug to help us improve SimsMerged Metropolis
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us what you expected to happen
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Reproduction Steps
+      description: How do we trigger this bug?
+      placeholder: |
+        1. Start backend...
+        2. Open dashboard...
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Please copy and paste any relevant log output.
+      render: shell

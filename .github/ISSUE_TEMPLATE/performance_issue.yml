@@ -1,0 +1,16 @@
+﻿name: ⚡ Performance Issue
+description: Report a performance bottleneck in the Darwinistic simulation
+labels: ["performance"]
+body:
+  - type: textarea
+    id: performance-description
+    attributes:
+      label: Describe the performance issue
+      description: Where is the bottleneck? (CPU, RAM, GPU, etc.)
+    validations:
+      required: true
+  - type: textarea
+    id: telemetry
+    attributes:
+      label: Telemetry Data
+      description: Provide any telemetry or profiling data if available.
