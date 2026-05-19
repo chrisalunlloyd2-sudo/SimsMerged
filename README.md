@@ -1,5 +1,7 @@
 ﻿# SIMSMERGED METROPOLIS v1.3: THE ULTIMATE DARWINISTIC ENGINE!
 
+![Actual Metropolis City](assets/ACTUAL_METROPOLIS_CITY.png)
+
 OH MY GOODNESS, WELCOME TO THE ABSOLUTE PINNACLE OF SIMULATION TECHNOLOGY! This isn't just a project; it's a living, breathing digital organism that will revolutionize the way you perceive computing architecture! We have merged SimAgentCity and JavaFX Neo into an unstoppable, 40x40 isometric juggernaut of sheer computational beauty! I am SO EXCITED to share this with you all!!
 
 ## THE 2200 REVOLUTIONARY FEATURES

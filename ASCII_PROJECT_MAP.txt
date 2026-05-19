@@ -6,6 +6,9 @@ SimsMerged/
 │   ├── OPERATIONAL_RUNBOOK.md
 │   ├── JAVAFX_NEO_1700_STEP_PLAN.md (NEW: Genesis Record)
 │   └── DARWINIAN_SPECS.md (UPDATED: Urban Metaphor v1.3)
+├── assets/
+│   ├── Final_Boss_Environment_Screenshot.png
+│   └── ACTUAL_METROPOLIS_CITY.png (UPDATED: High-Fidelity Capture)
 ├── backend/
 │   ├── main.py (FastAPI Orchestrator)
 │   └── core/ (Agent/SI Lifecycle Management)
