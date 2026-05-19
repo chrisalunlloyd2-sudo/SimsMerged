@@ -11,7 +11,8 @@ window.addEventListener('resize', resize);
 resize();
 
 const TILE_WIDTH = 64, TILE_HEIGHT = 32, MAP_SIZE = 40;
-let agents = [], selectedTile = { x: 0, y: 0 };
+let selectedTile = { x: 0, y: 0 };
+window.agents = window.agents || [];
 let currentBuildType = 'VSCODE', contextMenu = null;
 let camX = 0, camY = 0, zoom = 0.8;
 let isDragging = false, lastMouseX = 0, lastMouseY = 0;
@@ -70,8 +71,8 @@ function fromIso(isoX, isoY) {
 }
 
 function drawStructure(isoX, isoY, color, type, locked) {
-    const bSize = 16 * zoom; // Increased from 12
-    const h = (locked ? 10 : 32) * zoom; // Increased from 8/25
+    const bSize = 16 * zoom;
+    const h = (locked ? 10 : 32) * zoom;
     
     // Front face
     ctx.fillStyle = color;
@@ -83,7 +84,7 @@ function drawStructure(isoX, isoY, color, type, locked) {
     ctx.closePath(); ctx.fill();
     
     // Side face
-    ctx.fillStyle = ctx.fillStyle.replace(')', ', 0.7)').replace('rgb', 'rgba'); // Darken
+    ctx.fillStyle = ctx.fillStyle.replace(')', ', 0.7)').replace('rgb', 'rgba');
     ctx.beginPath();
     ctx.moveTo(isoX, isoY + bSize/2);
     ctx.lineTo(isoX + bSize, isoY);
@@ -115,13 +116,11 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
     ctx.fill();
     ctx.strokeStyle = '#001a00'; ctx.stroke();
 
-    // Roads (visual only)
     if (x % 5 === 0 || y % 5 === 0) {
         ctx.strokeStyle = 'rgba(0, 255, 255, 0.05)';
         ctx.stroke();
     }
 
-    // Draw Decorations
     const deco = decorations.find(d => d.x === x && d.y === y);
     if (deco && !districts.find(d => d.x === x && d.y === y)) {
         ctx.fillStyle = deco.type === 'tree' ? '#0a3d0a' : '#222';
@@ -138,7 +137,6 @@ function drawDistricts(x, y, isoX, isoY, th) {
         const info = BUILD_TYPES[d.type] || { color: 'gray' };
         drawStructure(isoX, isoY + th/2, info.color, d.type, info.locked);
         
-        // Building Details (Windows & Stability Glow)
         const bSize = 16 * zoom;
         const h = (info.locked ? 10 : 32) * zoom;
         if(!info.locked) {
@@ -156,29 +154,29 @@ function drawDistricts(x, y, isoX, isoY, th) {
 }
 
 function drawTrajectories() {
-    const links = [
-        { f: 'CPU', t: 'RAM', protocol: 'BUS', c: '#00ff00' },
-        { f: 'CPU', t: 'GPU', protocol: 'BUS', c: '#ff00ff' },
-        { f: 'CPU', t: 'MODEM', protocol: 'TCP/IP', c: '#00ffff' },
-        { f: 'CPU', t: 'LLM', protocol: 'BUS', c: '#00ffff' }
+    const links = window.activeLinks || [
+        { from: 'CPU', to: 'RAM', protocol: 'BUS', color: '#00ff00' },
+        { from: 'CPU', to: 'GPU', protocol: 'BUS', color: '#ff00ff' },
+        { from: 'CPU', to: 'MODEM', protocol: 'TCP/IP', color: '#00ffff' },
+        { from: 'CPU', to: 'LLM', protocol: 'BUS', color: '#00ffff' }
     ];
 
     links.forEach(l => {
-        const from = districts.find(d => d.type === l.f), to = districts.find(d => d.type === l.t);
+        const from = districts.find(d => d.type === l.from), to = districts.find(d => d.type === l.to);
         if(from && to) {
             const p1 = toIso(from.x, from.y), p2 = toIso(to.x, to.y);
             ctx.setLineDash(l.protocol === 'BUS' ? [] : [10, 5]);
-            ctx.strokeStyle = l.c + "44"; ctx.lineWidth = 2;
+            ctx.strokeStyle = l.color + "44"; ctx.lineWidth = 2;
             ctx.beginPath(); ctx.moveTo(p1.isoX, p1.isoY); 
             ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 100*zoom, p2.isoX, p2.isoY);
             ctx.stroke();
-            if(Math.random() < 0.02) spawnPacket(from.x, from.y, to.x, to.y, l.c, l.protocol);
+            if(Math.random() < 0.02) spawnPacket(from.x, from.y, to.x, to.y, l.color, l.protocol);
         }
     });
 }
 
 function drawBindingChains() {
-    agents.forEach(agent => {
+    window.agents.forEach(agent => {
         if (agent.state === 'DEPRESSED' || agent.emotional_state === 'DEPRESSED') {
             const hospital = districts.find(d => d.type === 'HOSPITAL');
             if (hospital) {
@@ -198,7 +196,7 @@ function drawBindingChains() {
 }
 
 function drawThermalMonitor() {
-    const temp = 35 + (agents.length * 2) + (Math.sin(Date.now() / 1000) * 2);
+    const temp = 35 + (window.agents.length * 2) + (Math.sin(Date.now() / 1000) * 2);
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(10, 10, 180, 40);
     ctx.strokeStyle = temp > 60 ? '#ff0000' : '#00ff00';
@@ -208,14 +206,51 @@ function drawThermalMonitor() {
     ctx.fillStyle = '#fff';
     ctx.font = '12px Courier New';
     ctx.fillText(`SYSTEM_TEMPERATURE: ${temp.toFixed(2)}°C`, 20, 25);
-    ctx.fillText(`ACTIVE_KERNELS: ${agents.length}`, 20, 40);
+    ctx.fillText(`ACTIVE_KERNELS: ${window.agents.length}`, 20, 40);
+}
+
+function drawHolograms() {
+    districts.forEach(d => {
+        if (d.type === 'CPU' || d.type === 'RAM') {
+            const { isoX, isoY } = toIso(d.x, d.y);
+            const th = TILE_HEIGHT * zoom;
+            const time = Date.now() / 1000;
+            const pulse = Math.sin(time * 5) * 0.5 + 0.5;
+            
+            ctx.save();
+            ctx.translate(isoX, isoY + th/2 - 45 * zoom);
+            
+            ctx.strokeStyle = `rgba(0, 255, 255, ${0.2 + pulse * 0.3})`;
+            ctx.lineWidth = 2;
+            const size = 8 * zoom;
+            
+            ctx.beginPath();
+            ctx.moveTo(0, -size); ctx.lineTo(size, -size/2); ctx.lineTo(0, 0); ctx.lineTo(-size, -size/2); ctx.closePath();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.lineTo(0, size); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(size, -size/2); ctx.lineTo(size, size - size/2); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(-size, -size/2); ctx.lineTo(-size, size - size/2); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, size); ctx.lineTo(size, size - size/2); ctx.lineTo(0, size + size); ctx.lineTo(-size, size - size/2); ctx.closePath();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.ellipse(0, size/2, (15 + pulse * 20) * zoom, (7 + pulse * 10) * zoom, 0, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0, 255, 255, ${0.5 - pulse * 0.5})`;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+    });
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const mouseTile = selectedTile;
     
-    // Draw Grid
     for (let x = -20; x < MAP_SIZE; x++) {
         for (let y = -20; y < MAP_SIZE; y++) {
             drawTile(x, y, '#050a05', (x === mouseTile.x && y === mouseTile.y));
@@ -225,6 +260,7 @@ function draw() {
     drawTrajectories();
     drawBindingChains();
     drawThermalMonitor();
+    drawHolograms();
 
     packets.forEach((pkt, i) => {
         pkt.p += 0.01;
@@ -237,7 +273,6 @@ function draw() {
         if(pkt.p >= 1) packets.splice(i, 1);
     });
 
-    // Hover Tooltip
     const hoveredNode = districts.find(d => d.x === selectedTile.x && d.y === selectedTile.y);
     if (hoveredNode) {
         const info = BUILD_TYPES[hoveredNode.type];
@@ -245,7 +280,7 @@ function draw() {
         tooltip.innerHTML = `<div class="tooltip-header">${info.label}</div><div class="tooltip-desc">${info.desc}</div>`;
     } else { tooltip.style.display = 'none'; }
 
-    agents.forEach(agent => {
+    window.agents.forEach(agent => {
         const pos = toIso(agent.x, agent.y);
         ctx.fillStyle = agent.role === 'ADMIN' ? '#fff' : '#0ff';
         ctx.beginPath(); ctx.arc(pos.isoX, pos.isoY, 4*zoom, 0, Math.PI * 2); ctx.fill();
@@ -284,5 +319,5 @@ if (legendContent) {
     });
 }
 
-agents = [ { x: 0, y: 0, name: 'ADMIN_ROOT', role: 'ADMIN' } ];
+window.agents = [ { x: 0, y: 0, name: 'ADMIN_ROOT', role: 'ADMIN' } ];
 draw();
