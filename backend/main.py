@@ -5,8 +5,14 @@ import asyncio
 import time
 import os
 import json
+from backend.core.quantum_core import QuantumCore
+from backend.core.agent_sentience import SentienceEngine
 
 app = FastAPI()
+
+# Initialize Metropolis Core Components
+quantum_core = QuantumCore()
+sentience_engine = SentienceEngine()
 
 # Enable CORS for file:// access
 app.add_middleware(
@@ -25,6 +31,17 @@ async def get_agents():
         with open(POPULATION_FILE, "r") as f:
             return json.load(f)
     return [{"name": "Default Sim", "age": 0, "energy": 100}]
+
+@app.get("/api/quantum-tick")
+async def quantum_tick():
+    """
+    Exposes the system tick cycle and current stability metrics.
+    """
+    metrics = quantum_core.cycle()
+    return {
+        "status": "synchronized",
+        "data": metrics
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
