@@ -1,4 +1,4 @@
-# DARWINIAN DESIGN SPECIFICATION: SIMSMERGED v1.2 (METROPOLIS EDITION)
+# DARWINIAN DESIGN SPECIFICATION: SIMSMERGED v1.3 (METROPOLIS EDITION)
 
 ## The High-Fidelity Data Metropolis
 SimsMerged has evolved from a simple system sandbox into a sprawling, high-fidelity data metropolis. The philosophy has shifted to **Data-First Simulation**, where physical hardware is environmental infrastructure, and the core gameplay resides in the "Data Layer."
