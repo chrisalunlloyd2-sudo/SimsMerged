@@ -1,4 +1,6 @@
-﻿import random
+$sentience_path = "C:\Users\viper\Desktop\SimsMerged\backend\core\agent_sentience.py"
+$new_code = @"
+import random
 from enum import Enum
 
 class EmotionalState(Enum):
@@ -50,3 +52,6 @@ class SentienceEngine:
             'emotional_state': state.value,
             'confidence': float(top_p * stability)
         }
+"@
+Set-Content -Path $sentience_path -Value $new_code -Encoding UTF8
+Write-Host "Sentience Engine Upgraded!"

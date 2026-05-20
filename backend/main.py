@@ -59,10 +59,25 @@ async def auto_growth_loop():
 
 @app.get("/api/agents")
 async def get_agents():
+    """
+    Returns the current population of agents.
+    Now includes research-driven behavioral decisions.
+    """
+    current_attrs = quantum_core.attributes
+    
     if os.path.exists(POPULATION_FILE):
         with open(POPULATION_FILE, "r") as f:
-            return json.load(f)
-    return [{"name": "Default Sim", "age": 0, "energy": 100}]
+            agents = json.load(f)
+    else:
+        agents = [{"name": "Default Sim", "age": 0, "energy": 100, "stability": 1.0}]
+        
+    for agent in agents:
+        decision = sentience_engine.decide(agent, attributes=current_attrs)
+        agent['state'] = decision['emotional_state']
+        agent['last_action'] = decision['action']
+        agent['confidence'] = decision['confidence']
+        
+    return agents
 
 @app.get("/api/quantum-tick")
 async def quantum_tick(task_id: str = None):
