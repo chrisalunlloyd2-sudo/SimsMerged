@@ -23,11 +23,18 @@ async function SyncLoop() {
         }
 
         // 3. Fetch Quantum Tick (System Health)
-        const tickResponse = await fetch('http://localhost:8000/api/quantum-tick');
+        let tickUrl = 'http://localhost:8000/api/quantum-tick';
+        const researchTaskId = document.getElementById('research-task-id')?.value;
+        if (researchTaskId) {
+            tickUrl += `?task_id=\${researchTaskId}`;
+        }
+
+        const tickResponse = await fetch(tickUrl);
         if (tickResponse.ok) {
             const tickData = await tickResponse.json();
             window.systemStability = tickData.data.stability;
-            window.systemCycle = tickData.data.cycle;
+            window.systemCycle = tickData.data.tick;
+            window.activeResearchAttrs = tickData.data.active_attrs;
         }
 
         // 4. Update UI labels

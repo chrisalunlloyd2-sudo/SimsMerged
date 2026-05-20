@@ -65,10 +65,23 @@ async def get_agents():
     return [{"name": "Default Sim", "age": 0, "energy": 100}]
 
 @app.get("/api/quantum-tick")
-async def quantum_tick():
+async def quantum_tick(task_id: str = None):
     """
     Exposes the system tick cycle and current stability metrics.
+    If task_id is provided, it updates core attributes from the research DB.
     """
+    if task_id:
+        db_path = os.path.join(os.path.dirname(__file__), "data", "ai_attributes.json")
+        if os.path.exists(db_path):
+            with open(db_path, "r", encoding="utf-8") as f:
+                db = json.load(f)
+                task_data = db.get(task_id)
+                if task_data:
+                    # Convert list of dicts to flat KV pair
+                    attr_map = {item['id']: item['val'] for item in task_data}
+                    quantum_core.update_attributes(attr_map)
+                    add_log(f"Quantum Core Synchronized with {task_id} attributes.")
+
     metrics = quantum_core.cycle()
     return {
         "status": "synchronized",
