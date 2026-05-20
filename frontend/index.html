@@ -116,6 +116,7 @@
                 <button class="tool-btn" data-type="HOSPITAL">HOSPITAL (SEC)</button>
                 <button class="tool-btn" data-type="SCHOOL">SCHOOL (EDU)</button>
                 <button class="tool-btn" data-type="GARAGE">TRANS_HUB (CAR)</button>
+                <button class="tool-btn" data-type="BANK" style="color:#ffd700;">CRYPTO BANK</button>
                 
                 <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">LOGIC / RUNTIME</div>
                 <button class="tool-btn" data-type="LOGIC">LOGIC ENGINE</button>
@@ -347,6 +348,58 @@
                     <ul>
                         <li><b>Deployment:</b> Select a tool in the sidebar, configure variables in the Parameter Suite, and left-click the grid.</li>
                         <li><b>Navigation:</b> Use mouse wheel to zoom. Middle-click and drag to pan the view.</li>
+                        <li><b>Analysis:</b> Right-click any active node to see real-time system metrics.</li>
+                    </ul>
+                </div>
+                <div class="boring-section">
+                    <div class="boring-title">HOTKEYS</div>
+                    <ul>
+                        <li><b>[Shift + Drag]:</b> Alternative Pan</li>
+                        <li><b>[Enter]:</b> Confirm Parameter</li>
+                    </ul>
+                </div>
+            `,
+            'ABOUT': `
+                <div class="boring-section">
+                    <div class="boring-title">SIMS_MERGED ARCHITECT EDITION</div>
+                    <p><b>Version:</b> 1.1.2-Stable</p>
+                    <p><b>Architect:</b> Gemini CLI</p>
+                    <p><b>Environment:</b> Darwinistic System Virtualization Sandbox</p>
+                </div>
+                <div class="boring-section">
+                    <div class="boring-title">LEGAL / COMPLIANCE</div>
+                    <p style="font-size:9px; color:#555;">This software is provided as-is for architectural simulation purposes. All simulated "Agents" are autonomous entities. System corruption simulations are for educational purposes only.</p>
+                </div>
+            `
+        };
+
+        document.getElementById('options-btn').onclick = () => showBoring('OPTIONS');
+        document.getElementById('help-btn').onclick = () => showBoring('HELP');
+        document.getElementById('about-btn').onclick = () => showBoring('ABOUT');
+        closeModal.onclick = () => modal.style.display = 'none';
+
+        function showBoring(type) {
+            modalBody.innerHTML = BORING_CONTENT[type];
+            modal.style.display = 'block';
+            window.logToConsole("UI_LOG: Opened " + type + " dialog.");
+        }
+
+        window.logToConsole = function(msg, type) {
+            const con = document.getElementById('console');
+            if(!con) return;
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            if(type === 'warn') div.style.color = '#ff0';
+            div.innerText = "[" + new Date().toLocaleTimeString() + "] " + msg;
+            con.appendChild(div);
+            con.scrollTop = con.scrollHeight;
+        };
+
+        window.logToConsole("SYSTEM_BOOT: GUI Logic Initialized.");
+    </script>
+</body>
+</html>
+         <li><b>Navigation:</b> Use mouse wheel to zoom. Middle-click and drag to pan the view.</li>
                         <li><b>Analysis:</b> Right-click any active node to see real-time system metrics.</li>
                     </ul>
                 </div>

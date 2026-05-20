@@ -28,6 +28,7 @@ for(let i=0; i<100; i++) {
 }
 
 const BUILD_TYPES = {
+    'BANK': { color: '#ffd700', label: 'Crypto Bank', category: 'Finance', desc: 'Decentralized cryptocurrency ledger & Sprite vault.' },
     'CPU': { color: '#ff4d4d', label: 'CPU Cluster', locked: true, category: 'Hardware', desc: 'The silicon central processing unit. Executes all high-level arithmetic and logic operations.' },
     'RAM': { color: '#4dff88', label: 'RAM Banks', locked: true, category: 'Hardware', desc: 'Volatile memory pool for high-speed data buffering.' },
     'GPU': { color: '#4d94ff', label: 'GPU Core', locked: true, category: 'Hardware', desc: 'Handles parallel matrix math and graphical environment rendering.' },
