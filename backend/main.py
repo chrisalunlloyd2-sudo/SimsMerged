@@ -94,5 +94,16 @@ async def get_logs():
     """
     return SYSTEM_LOGS[-20:]
 
+@app.get("/api/research-features")
+async def get_research_features():
+    """
+    Serves the massive 40,500-parameter AI attributes database mapped to the 2700 tasks.
+    """
+    db_path = os.path.join(os.path.dirname(__file__), "data", "ai_attributes.json")
+    if os.path.exists(db_path):
+        with open(db_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"error": "AI attributes database not found"}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

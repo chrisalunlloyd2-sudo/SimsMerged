@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>SimsMerged - Final Boss Automation</title>
@@ -118,6 +118,9 @@
                 <button class="tool-btn" data-type="GARAGE">TRANS_HUB (CAR)</button>
                 <button class="tool-btn" data-type="BANK" style="color:#ffd700;">CRYPTO BANK</button>
                 
+                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">RESEARCH DATABASE</div>
+                <button class="tool-btn" data-type="RESEARCH" style="color:#0f0;">RESEARCH NODE</button>
+                
                 <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">LOGIC / RUNTIME</div>
                 <button class="tool-btn" data-type="LOGIC">LOGIC ENGINE</button>
                 <button class="tool-btn" data-type="MATH">MATH LIBRARY</button>
@@ -235,71 +238,107 @@
 
         window.currentSettings = {};
 
+        function renderSetting(v, container) {
+            const row = document.createElement('div');
+            row.style.marginBottom = '10px';
+            
+            const labelContainer = document.createElement('div');
+            labelContainer.style.display = 'flex';
+            labelContainer.style.justifyContent = 'space-between';
+            
+            const label = document.createElement('label');
+            label.innerText = v.label;
+            
+            const valueReadout = document.createElement('span');
+            valueReadout.id = eadout- + v.id;
+            valueReadout.style.color = '#0f0';
+            valueReadout.innerText = v.val;
+            
+            labelContainer.appendChild(label);
+            labelContainer.appendChild(valueReadout);
+            row.appendChild(labelContainer);
+            
+            let input;
+            if (v.type === 'range') {
+                input = document.createElement('input');
+                input.type = 'range';
+                input.min = v.min;
+                input.max = v.max;
+                if(v.step) input.step = v.step;
+                input.value = v.val;
+                input.style.width = '100%';
+                input.style.cursor = 'pointer';
+            } else if (v.type === 'checkbox') {
+                input = document.createElement('input');
+                input.type = 'checkbox';
+                input.checked = v.val;
+                valueReadout.innerText = v.val ? 'ON' : 'OFF';
+            } else {
+                input = document.createElement('input');
+                input.type = v.type;
+                input.value = v.val;
+                input.style.width = '100%';
+                input.style.background = '#000';
+                input.style.color = '#0f0';
+                input.style.border = '1px solid #005555';
+                input.style.padding = '2px';
+                input.style.fontSize = '10px';
+            }
+
+            input.oninput = input.onchange = () => {
+                const finalVal = input.type === 'checkbox' ? input.checked : input.value;
+                window.currentSettings[v.id] = finalVal;
+                valueReadout.innerText = input.type === 'checkbox' ? (finalVal ? 'ON' : 'OFF') : finalVal;
+                console.log("PARAM_SYNC:", v.id, finalVal);
+            };
+            
+            window.currentSettings[v.id] = v.val;
+            row.appendChild(input);
+            container.appendChild(row);
+        }
+
         function updateParamSuite(type) {
-            paramSuite.innerHTML = `<div style="font-weight:bold; margin-bottom:10px; color:#0ff; border-bottom:1px solid #005555; padding-bottom:5px;">\${type} SYSTEM VARIABLES</div>`;
-            const vars = COMPONENT_VARS[type] || [];
+            paramSuite.innerHTML = <div style="font-weight:bold; margin-bottom:10px; color:#0ff; border-bottom:1px solid #005555; padding-bottom:5px;"> + type +  SYSTEM VARIABLES</div>;
             window.currentSettings = {};
 
-            vars.forEach(v => {
-                const row = document.createElement('div');
-                row.style.marginBottom = '10px';
+            if (type === 'RESEARCH') {
+                const inputRow = document.createElement('div');
+                inputRow.innerHTML = '<label>Task ID (e.g., TASK_1 to TASK_2700):</label><br><input type="text" id="research-task-id" value="TASK_1" style="width:100%; background:#000; color:#0f0; border:1px solid #005555; margin-top:5px; margin-bottom:5px;">';
                 
-                const labelContainer = document.createElement('div');
-                labelContainer.style.display = 'flex';
-                labelContainer.style.justifyContent = 'space-between';
+                const loadBtn = document.createElement('button');
+                loadBtn.innerText = 'LOAD RESEARCH PARAMS (15)';
+                loadBtn.style = 'width:100%; background:#005555; color:#fff; border:none; margin-bottom:10px; padding:5px; cursor:pointer; font-weight:bold;';
                 
-                const label = document.createElement('label');
-                label.innerText = v.label;
+                const resultsDiv = document.createElement('div');
                 
-                const valueReadout = document.createElement('span');
-                valueReadout.id = `readout-\${v.id}`;
-                valueReadout.style.color = '#0f0';
-                valueReadout.innerText = v.val;
-                
-                labelContainer.appendChild(label);
-                labelContainer.appendChild(valueReadout);
-                row.appendChild(labelContainer);
-                
-                let input;
-                if (v.type === 'range') {
-                    input = document.createElement('input');
-                    input.type = 'range';
-                    input.min = v.min;
-                    input.max = v.max;
-                    if(v.step) input.step = v.step;
-                    input.value = v.val;
-                    input.style.width = '100%';
-                    input.style.cursor = 'pointer';
-                } else if (v.type === 'checkbox') {
-                    input = document.createElement('input');
-                    input.type = 'checkbox';
-                    input.checked = v.val;
-                    valueReadout.innerText = v.val ? 'ON' : 'OFF';
-                } else {
-                    input = document.createElement('input');
-                    input.type = v.type;
-                    input.value = v.val;
-                    input.style.width = '100%';
-                    input.style.background = '#000';
-                    input.style.color = '#0f0';
-                    input.style.border = '1px solid #005555';
-                    input.style.padding = '2px';
-                    input.style.fontSize = '10px';
-                }
-
-                input.oninput = input.onchange = () => {
-                    const finalVal = input.type === 'checkbox' ? input.checked : input.value;
-                    window.currentSettings[v.id] = finalVal;
-                    valueReadout.innerText = input.type === 'checkbox' ? (finalVal ? 'ON' : 'OFF') : finalVal;
-                    console.log("PARAM_SYNC:", v.id, finalVal);
+                loadBtn.onclick = async () => {
+                    resultsDiv.innerHTML = '<span style="color:#888;">Fetching hyperparams...</span>';
+                    try {
+                        const res = await fetch('http://127.0.0.1:8000/api/research-features');
+                        const data = await res.json();
+                        const taskId = document.getElementById('research-task-id').value;
+                        const taskData = data[taskId];
+                        if (taskData) {
+                            resultsDiv.innerHTML = '';
+                            taskData.forEach(v => renderSetting(v, resultsDiv));
+                            window.logToConsole('RESEARCH: Loaded parameters for ' + taskId);
+                        } else {
+                            resultsDiv.innerHTML = '<span style="color:#f00;">Task not found in DB.</span>';
+                        }
+                    } catch(e) {
+                        resultsDiv.innerHTML = '<span style="color:#f00;">Backend API Error. Is it running?</span>';
+                    }
                 };
                 
-                window.currentSettings[v.id] = v.val;
-                row.appendChild(input);
-                paramSuite.appendChild(row);
-            });
+                paramSuite.appendChild(inputRow);
+                paramSuite.appendChild(loadBtn);
+                paramSuite.appendChild(resultsDiv);
+                return;
+            }
+
+            const vars = COMPONENT_VARS[type] || [];
+            vars.forEach(v => renderSetting(v, paramSuite));
         }
-        
         buildButtons.forEach(btn => {
             btn.onclick = function() {
                 const type = this.getAttribute('data-type');
@@ -399,55 +438,4 @@
     </script>
 </body>
 </html>
-         <li><b>Navigation:</b> Use mouse wheel to zoom. Middle-click and drag to pan the view.</li>
-                        <li><b>Analysis:</b> Right-click any active node to see real-time system metrics.</li>
-                    </ul>
-                </div>
-                <div class="boring-section">
-                    <div class="boring-title">HOTKEYS</div>
-                    <ul>
-                        <li><b>[Shift + Drag]:</b> Alternative Pan</li>
-                        <li><b>[Enter]:</b> Confirm Parameter</li>
-                    </ul>
-                </div>
-            `,
-            'ABOUT': `
-                <div class="boring-section">
-                    <div class="boring-title">SIMS_MERGED ARCHITECT EDITION</div>
-                    <p><b>Version:</b> 1.1.2-Stable</p>
-                    <p><b>Architect:</b> Gemini CLI</p>
-                    <p><b>Environment:</b> Darwinistic System Virtualization Sandbox</p>
-                </div>
-                <div class="boring-section">
-                    <div class="boring-title">LEGAL / COMPLIANCE</div>
-                    <p style="font-size:9px; color:#555;">This software is provided as-is for architectural simulation purposes. All simulated "Agents" are autonomous entities. System corruption simulations are for educational purposes only.</p>
-                </div>
-            `
-        };
 
-        document.getElementById('options-btn').onclick = () => showBoring('OPTIONS');
-        document.getElementById('help-btn').onclick = () => showBoring('HELP');
-        document.getElementById('about-btn').onclick = () => showBoring('ABOUT');
-        closeModal.onclick = () => modal.style.display = 'none';
-
-        function showBoring(type) {
-            modalBody.innerHTML = BORING_CONTENT[type];
-            modal.style.display = 'block';
-            window.logToConsole("UI_LOG: Opened " + type + " dialog.");
-        }
-
-        window.logToConsole = function(msg, type) {
-            const con = document.getElementById('console');
-            if(!con) return;
-            const div = document.createElement('div');
-            div.className = 'log-entry';
-            if(type === 'warn') div.style.color = '#ff0';
-            div.innerText = "[" + new Date().toLocaleTimeString() + "] " + msg;
-            con.appendChild(div);
-            con.scrollTop = con.scrollHeight;
-        };
-
-        window.logToConsole("SYSTEM_BOOT: GUI Logic Initialized.");
-    </script>
-</body>
-</html>
