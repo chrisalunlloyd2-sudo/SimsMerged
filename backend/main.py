@@ -8,12 +8,14 @@ import json
 import random
 from backend.core.quantum_core import QuantumCore
 from backend.core.agent_sentience import SentienceEngine
+from backend.core.system_integrity import SystemIntegrity
 
 app = FastAPI()
 
 # Initialize Metropolis Core Components
 quantum_core = QuantumCore()
 sentience_engine = SentienceEngine()
+system_integrity = SystemIntegrity()
 
 # Global System Logs
 SYSTEM_LOGS = []
@@ -52,8 +54,6 @@ async def auto_growth_loop():
         stability = metrics.get("stability", 0)
         if stability > 0.8:
             add_log("Auto-Growth Triggered: Stability optimal (> 80%). Adding new node...")
-            # In a real scenario, we'd update a shared state or database.
-            # For now, we just log the event.
         else:
             add_log(f"Auto-Growth Skipped: Stability too low ({stability*100:.1f}%).")
 
@@ -69,13 +69,22 @@ async def get_agents():
         with open(POPULATION_FILE, "r") as f:
             agents = json.load(f)
     else:
-        agents = [{"name": "Default Sim", "age": 0, "energy": 100, "stability": 1.0}]
+        agents = [{"name": "Default Sim", "age": 0, "energy": 100, "stability": 1.0, "x": 0, "y": 0}]
         
     for agent in agents:
         decision = sentience_engine.decide(agent, attributes=current_attrs)
         agent['state'] = decision['emotional_state']
         agent['last_action'] = decision['action']
         agent['confidence'] = decision['confidence']
+        
+        # Apply stability recovery if in a Sanctuary (HOSPITAL)
+        # We'd check position here in a full sim, for now, we apply global recovery based on Integrity
+        integrity_res = system_integrity.process_stability_net(agent.get('stability', 1.0), attributes=current_attrs)
+        agent['stability'] = min(1.0, agent.get('stability', 1.0) + integrity_res['recovery_increment'])
+        
+        if integrity_res['should_purge'] and agent['role'] != 'ADMIN':
+            add_log(f"PURGE_COMMAND: Clearing low-stability kernel {agent['name']} due to KV_CACHE pressure.")
+            # In a full simulation, we'd remove the agent here.
         
     return agents
 
