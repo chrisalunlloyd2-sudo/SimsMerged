@@ -43,6 +43,24 @@ POPULATION_FILE = os.path.join(os.path.dirname(__file__), "..", "agents_populati
 async def startup_event():
     add_log("System Startup: Metropolis Authority Online.")
     asyncio.create_task(auto_growth_loop())
+    asyncio.create_task(security_invader_loop())
+
+async def security_invader_loop():
+    """
+    Randomly spawns security threats (invaders) to test Metropolis defenses.
+    """
+    while True:
+        await asyncio.sleep(random.randint(45, 90))
+        threat_types = ["Rogue Kernel", "Buffer Overflow Packet", "SQL Injection Sprite", "Unsigned Firmware Update"]
+        threat = random.choice(threat_types)
+        add_log(f"SECURITY_ALERT: Detected {threat} attempting to breach Sector {random.randint(1,22)}.", "warn")
+        
+        # Trigger Agent SI logic
+        if quantum_core.stability > 0.6:
+            add_log(f"DEFENSE_SYNC: Bouncers successfully evicted {threat}.", "info")
+        else:
+            quantum_core.stability -= 0.05
+            add_log(f"CRITICAL_FAILURE: {threat} caused 5% stability drop. Emergency Healing Required.", "error")
 
 async def auto_growth_loop():
     """
@@ -141,6 +159,17 @@ async def get_research_features():
         with open(db_path, "r", encoding="utf-8") as f:
             return json.load(f)
     return {"error": "AI attributes database not found"}
+
+@app.get("/api/hardware")
+async def get_hardware_specs():
+    """
+    Serves the real-world nominal hardware specifications for the Metropolis.
+    """
+    specs_path = os.path.join(os.path.dirname(__file__), "data", "hardware_specs.json")
+    if os.path.exists(specs_path):
+        with open(specs_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"error": "Hardware specifications not found"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

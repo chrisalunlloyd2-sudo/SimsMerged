@@ -1,0 +1,70 @@
+{
+  "CPU": {
+    "label": "Silicon Central",
+    "architecture": "x86_64 / Tensor Core Hybrid",
+    "cores": 16,
+    "threads": 32,
+    "frequency": "5.2 GHz",
+    "cache": {
+      "L1": "1 MB",
+      "L2": "16 MB",
+      "L3": "64 MB"
+    },
+    "affinity": "Core_0-15_Locked",
+    "voltage": "1.25V",
+    "nominal_load": "12%"
+  },
+  "RAM": {
+    "label": "Memory Matrix",
+    "type": "DDR5 / HBM3",
+    "capacity": "64 GB",
+    "frequency": "6400 MT/s",
+    "cas_latency": "CL32",
+    "voltage": "1.1V",
+    "topology": "Quad-Channel",
+    "ecc": "Enabled"
+  },
+  "SSD": {
+    "label": "Storage Hive",
+    "interface": "NVMe Gen5 x4",
+    "read_speed": "12,000 MB/s",
+    "write_speed": "10,000 MB/s",
+    "iops": "1,500,000",
+    "firmware": "V-NAND_G8",
+    "partition": "/dev/nvme0n1p1"
+  },
+  "NORTHBRIDGE": {
+    "label": "High-Speed Bus Bridge",
+    "logic": "PCIe 5.0 Root Complex",
+    "lanes": 24,
+    "bandwidth": "128 GB/s",
+    "target": "CPU_RAM_GPU_LINK"
+  },
+  "SOUTHBRIDGE": {
+    "label": "Peripheral Controller",
+    "logic": "SATA/USB/NIC Hub",
+    "lanes": 8,
+    "bandwidth": "16 GB/s",
+    "target": "I_O_SYSTEMS"
+  },
+  "MEM_CONTROLLER": {
+    "label": "Logic Retrieval Unit",
+    "prefetch": "Enabled",
+    "burst_length": 8,
+    "refresh_rate": "7.8us"
+  },
+  "REGISTRY": {
+    "label": "System Registry Hive",
+    "keys": 45023,
+    "active_hives": ["HKEY_LOCAL_MACHINE", "HKEY_CURRENT_USER", "HKEY_CLASSES_ROOT"],
+    "io_throttle": "Disabled"
+  },
+  "GPU": {
+    "label": "Graphics Grid",
+    "vram": "24 GB GDDR6X",
+    "cuda_cores": 10496,
+    "rt_cores": 82,
+    "tensor_cores": 328,
+    "bus_width": "384-bit"
+  }
+}

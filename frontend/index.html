@@ -7,25 +7,42 @@
         #main-container { display: flex; height: 100vh; width: 100vw; }
         
         #sidebar { 
-            width: 280px; background: rgba(0, 5, 15, 0.98); border-right: 2px solid #00ffff; 
-            display: flex; flex-direction: column; padding: 15px; z-index: 100;
+            width: 320px; background: #c0c0c0; border: 2px solid #fff; 
+            border-right: 2px solid #808080; border-bottom: 2px solid #808080;
+            display: flex; flex-direction: column; padding: 5px; z-index: 100;
+            box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #0a0a0a;
         }
-        .sidebar-header { font-size: 16px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #00ffff; padding-bottom: 5px; color: #fff; }
+        .sidebar-header { 
+            background: linear-gradient(90deg, #000080, #1084d0); color: white;
+            padding: 3px 5px; font-size: 12px; font-weight: bold; margin-bottom: 5px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
         
-        #console {
-            flex-grow: 1; background: #000; border: 1px solid #005555; margin-top: 15px; 
-            font-size: 10px; overflow-y: auto; padding: 10px; color: #0f0;
-            text-shadow: 0 0 5px #0f0;
+        .paint-palette {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+            background: #808080; padding: 2px; border: 1px solid #fff;
         }
-        .log-entry { margin-bottom: 4px; border-left: 2px solid #0f0; padding-left: 5px; }
-
         .tool-btn { 
-            background: rgba(0, 85, 85, 0.1); border: 1px solid #005555; color: #aaa; 
-            padding: 10px; margin-bottom: 6px; cursor: pointer; text-align: left; font-size: 13px;
-            font-family: 'Courier New', monospace; font-weight: bold; width: 100%;
+            background: #c0c0c0; border: 1px solid #fff; border-right: 1px solid #808080;
+            border-bottom: 1px solid #808080; color: #000; padding: 4px; 
+            cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 5px;
         }
-        .tool-btn:hover { border-color: #00ffff; color: #fff; }
-        .tool-btn.active { background: #00ffff !important; color: #000 !important; border-color: #fff; box-shadow: 0 0 10px #00ffff; }
+        .tool-btn:active, .tool-btn.active {
+            border: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff;
+            background: #dfdfdf;
+        }
+
+        #msn-chat-container {
+            flex-grow: 1; background: #fff; border: 1px solid #808080; margin-top: 10px;
+            display: flex; flex-direction: column; font-family: 'Tahoma', sans-serif;
+            font-size: 11px;
+        }
+        .msn-header { background: #dfdfdf; padding: 2px 5px; border-bottom: 1px solid #808080; font-weight: bold; color: #000080; }
+        #msn-log { flex-grow: 1; overflow-y: auto; padding: 5px; color: #333; background: #fff; }
+        .msn-entry { margin-bottom: 3px; }
+        .msn-name { font-weight: bold; color: #cc0000; }
+
+        #cyber-console { display: none; } /* Replaced by MSN */
 
         /* Atmospheric Overlays */
         #scanner-overlay {
@@ -105,42 +122,33 @@
                 <div style="color: #888;">Select a tool to configure parameters...</div>
             </div>
 
-            <div id="build-tools">
-                <div style="font-size:10px; color:#888; margin-bottom:5px;">AI / DATA STACK</div>
-                <button class="tool-btn active" data-type="LLM">LLM NODE</button>
-                <button class="tool-btn" data-type="VDB">VECTOR DB</button>
-                <button class="tool-btn" data-type="SPRITE">AUTO_SPRITE</button>
-                <button class="tool-btn" data-type="PLANT" style="color:#fa0;">SPRITE PLANT</button>
-                
-                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">URBAN INFRASTRUCTURE</div>
-                <button class="tool-btn" data-type="HOSPITAL">HOSPITAL (SEC)</button>
-                <button class="tool-btn" data-type="SCHOOL">SCHOOL (EDU)</button>
-                <button class="tool-btn" data-type="GARAGE">TRANS_HUB (CAR)</button>
-                <button class="tool-btn" data-type="BANK" style="color:#ffd700;">CRYPTO BANK</button>
-                
-                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">RESEARCH DATABASE</div>
-                <button class="tool-btn" data-type="RESEARCH" style="color:#0f0;">RESEARCH NODE</button>
-                
-                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">LOGIC / RUNTIME</div>
-                <button class="tool-btn" data-type="LOGIC">LOGIC ENGINE</button>
-                <button class="tool-btn" data-type="MATH">MATH LIBRARY</button>
-                <button class="tool-btn" data-type="LANG">CODE RUNTIME</button>
-                
-                <div style="font-size:10px; color:#888; margin:10px 0 5px 0;">ENVIRONMENT (WEATHER)</div>
-                <button class="tool-btn" data-type="W_RAIN" style="color:#4af;">RAM PRECIP</button>
-                <button class="tool-btn" data-type="W_STORM" style="color:#fa0;">CPU STORM</button>
-                <button class="tool-btn" data-type="W_GLITCH" style="color:#f0f;">DATA GLITCH</button>
-                
-                <div style="font-size:10px; color:#555; margin:10px 0 5px 0;">LOCKED INFRASTRUCTURE</div>
-                <button class="tool-btn" data-type="BIOS" disabled style="opacity:0.4; cursor:not-allowed;">BIOS (HARD-LOCKED)</button>
-                <button class="tool-btn" data-type="PSU" disabled style="opacity:0.4; cursor:not-allowed;">POWER (STATIC)</button>
+            <div class="paint-palette" id="build-tools">
+                <button class="tool-btn active" data-type="CPU" draggable="true">CORE</button>
+                <button class="tool-btn" data-type="RAM" draggable="true">RAM</button>
+                <button class="tool-btn" data-type="SSD" draggable="true">SSD</button>
+                <button class="tool-btn" data-type="GPU" draggable="true">GPU</button>
+                <button class="tool-btn" data-type="NORTHBRIDGE" draggable="true">NORTH</button>
+                <button class="tool-btn" data-type="SOUTHBRIDGE" draggable="true">SOUTH</button>
+                <button class="tool-btn" data-type="REGISTRY" draggable="true">REG</button>
+                <button class="tool-btn" data-type="LLM" draggable="true">AI_NODE</button>
+                <button class="tool-btn" data-type="AGENT" draggable="true">PERSON</button>
+                <button class="tool-btn" data-type="VDB" draggable="true">DATA_DB</button>
+                <button class="tool-btn" data-type="PLANT" draggable="true">FACTORY</button>
+                <button class="tool-btn" data-type="SCHOOL" draggable="true">SCHOOL</button>
+                <button class="tool-btn" data-type="HOSPITAL" draggable="true">HOSPITAL</button>
+                <button class="tool-btn" data-type="BANK" draggable="true">BANK</button>
+                <button class="tool-btn" data-type="HOUSE" draggable="true">HOUSE</button>
+                <button class="tool-btn" data-type="TREE" draggable="true">TREES</button>
+                <button class="tool-btn" data-type="WATER" draggable="true">WATER</button>
+                <button class="tool-btn" data-type="ROAD" draggable="true">ROAD</button>
+                <button class="tool-btn" data-type="RESEARCH" draggable="true">RESEARCH</button>
             </div>
             
-            <button id="checkpoint-btn" style="margin-top:20px; background:transparent; border:1px solid #0f0; color:#0f0; padding:8px; cursor:pointer; font-family:monospace;">FORCE_CHECKPOINT</button>
+            <button id="checkpoint-btn" style="margin-top:5px; background:#c0c0c0; border:1px solid #fff; border-right:1px solid #808080; border-bottom:1px solid #808080; padding:4px; cursor:pointer; font-size:11px;">FORCE_SYNC</button>
             
-            <div id="console"></div>
-            <div id="cyber-console" style="height: 100px; background: rgba(0,20,0,0.9); border: 1px solid #0f0; margin-top: 10px; font-size: 9px; overflow-y: auto; padding: 5px; color: #0f0; font-family: monospace;">
-                [SYSTEM] CYBER_CONSOLE ONLINE...
+            <div id="msn-chat-container">
+                <div class="msn-header">MSN Metropolis (Online)</div>
+                <div id="msn-log"></div>
             </div>
         </div>
         
@@ -181,59 +189,88 @@
         
         const COMPONENT_VARS = {
             'LLM': [
-                { id: 'model', label: 'Base Model', type: 'text', val: 'Llama-3-8B' },
-                { id: 'temp', label: 'Temperature', type: 'range', min: 0, max: 2.0, step: 0.1, val: 0.7 },
-                { id: 'top_p', label: 'Top-P Sampling', type: 'range', min: 0.1, max: 1.0, step: 0.05, val: 0.9 }
+                { id: 'ctx_len', label: 'Max Pos Embeddings', type: 'number', val: 128000 },
+                { id: 'rope_theta', label: 'RoPE Theta', type: 'number', val: 1000000 },
+                { id: 'flash_attn', label: 'FlashAttention-2', type: 'checkbox', val: true },
+                { id: 'kv_quant', label: 'KV Cache Quantization', type: 'text', val: '8-bit' },
+                { id: 'gqa_heads', label: 'GQA KV Heads', type: 'number', val: 8 },
+                { id: 'sliding_win', label: 'Sliding Window', type: 'number', val: 4096 },
+                { id: 'chunk_size', label: 'Context Chunk Size', type: 'number', val: 512 },
+                { id: 'compression', label: 'Context Compression', type: 'checkbox', val: true },
+                { id: 'max_input', label: 'Max Input Tokens', type: 'number', val: 32768 },
+                { id: 'max_output', label: 'Max Output Tokens', type: 'number', val: 4096 },
+                { id: 'trunc_strat', label: 'Truncation Strategy', type: 'text', val: 'FIFO-Rolling' },
+                { id: 'rag_top_k', label: 'RAG Ingestion Top-K', type: 'number', val: 5 },
+                { id: 'soft_prompt', label: 'Soft Prompting Tuning', type: 'checkbox', val: false },
+                { id: 'system_pin', label: 'System Prompt Pinning', type: 'checkbox', val: true },
+                { id: 'ttft_opt', label: 'TTFT Latency Target', type: 'text', val: '<500ms' }
+            ],
+            'BANK': [
+                { id: 'ledger', label: 'Ledger Protocol', type: 'text', val: 'Proof-of-Stake' },
+                { id: 'hash', label: 'Hash Algorithm', type: 'text', val: 'SHA-256' },
+                { id: 'block_time', label: 'Block Time (s)', type: 'range', min: 1, max: 60, val: 12 },
+                { id: 'gas_fee', label: 'Base Gas Fee', type: 'range', min: 0.001, max: 1.0, step: 0.001, val: 0.01 },
+                { id: 'sprite_mint', label: 'Sprite Mint Yield', type: 'number', val: 500 },
+                { id: 'stake_yield', label: 'Staking APY %', type: 'range', min: 0, max: 100, val: 12 },
+                { id: 'liquidity', label: 'Liquidity Pool', type: 'number', val: 1000000 },
+                { id: 'burn_rate', label: 'Auto-Burn Rate %', type: 'range', min: 0, max: 10, step: 0.1, val: 1.5 },
+                { id: 'dex_router', label: 'DEX Router', type: 'checkbox', val: true },
+                { id: 'zk_snarks', label: 'Zero-Knowledge Proofs', type: 'checkbox', val: true },
+                { id: 'validator', label: 'Validator Nodes', type: 'number', val: 64 },
+                { id: 'smart_con', label: 'Smart Contracts', type: 'checkbox', val: true },
+                { id: 'treasury', label: 'Treasury Wallet', type: 'text', val: '0x00000000000' },
+                { id: 'mint_limit', label: 'Max Supply Cap', type: 'number', val: 21000000 },
+                { id: 'oracle', label: 'Price Oracle Node', type: 'checkbox', val: true }
+            ],
+            'AGENT': [
+                { id: 'model_wrap', label: 'AI Model Matrix', type: 'text', val: 'H2O-Danube-1.8B' },
+                { id: 'model_select', label: 'Switch Model (30)', type: 'select', options: [
+                    'Claw-v1.0', 'Claw-v1.5-Pro', 'Claw-v2.0-Alpha', 'Claude-v3.5-Sonnet', 'Claude-v3.0-Opus', 
+                    'Danube-2B-Ultra', 'Danube-1.8B-Base', 'Llama-3-8B-Inst', 'Llama-3-70B-Quant', 'Mistral-v0.3-MoE',
+                    'Gemma-2-9B', 'Phi-3-Mini', 'Qwen-2-72B', 'Grok-1.5-Vision', 'Gemini-1.5-Flash',
+                    'DeepSeek-v2-Lite', 'Falcon-2-11B', 'StableLM-2', 'OLMo-v1.7', 'OpenELM-3B',
+                    'Aria-MoE', 'BitNet-1.58b', 'Mamba-2-Hybrid', 'Jamba-v1.0', 'DBRX-Instruct',
+                    'Command-R-Plus', 'XVERSE-v2', 'Yi-1.5-34B', 'StarCoder-2', 'Arctic-v1-Medium'
+                ], val: 'H2O-Danube-1.8B' },
+                { id: 'sentience', label: 'Sentience Depth', type: 'range', min: 0, max: 1, step: 0.1, val: 0.8 },
+                { id: 'clipboard', label: 'Clipboard Hook', type: 'checkbox', val: true },
+                { id: 'watchdog', label: 'Dual Watchdog', type: 'checkbox', val: true },
+                { id: 'temp', label: 'Inference Temp', type: 'range', min: 0, max: 2, step: 0.1, val: 0.7 },
+                { id: 'prime_dir', label: 'Prime Directive', type: 'text', val: 'Heal and Automate' },
+                { id: 'depin_node', label: 'DePIN Active', type: 'checkbox', val: true },
+                { id: 'automation', label: 'Script Learning', type: 'checkbox', val: true },
+                { id: 'msn_id', label: 'MSN ID Hash', type: 'text', val: '0x123...abc' }
+            ],
+            'SCHOOL': [
+                { id: 'align_rate', label: 'Alignment Speed', type: 'range', min: 1, max: 100, val: 10 },
+                { id: 'curriculum', label: 'Model Fine-Tuning', type: 'text', val: 'RLHF-v2' },
+                { id: 'capacity', label: 'Student Kernels', type: 'number', val: 256 }
+            ],
+            'PLANT': [
+                { id: 'yield', label: 'Swarm Yield', type: 'range', min: 1, max: 50, val: 5 },
+                { id: 'auto', label: 'Auto-Spawn', type: 'checkbox', val: true },
+                { id: 'qc_pass', label: 'Integrity Check', type: 'checkbox', val: true }
+            ],
+            'ROAD': [
+                { id: 'proto', label: 'Default Protocol', type: 'text', val: 'TCP/IP' },
+                { id: 'width', label: 'Bus Width', type: 'number', val: 128 },
+                { id: 'friction', label: 'Node Latency', type: 'range', min: 0, max: 50, val: 2 }
+            ],
+            'WATER': [
+                { id: 'cooling', label: 'BTU Dissipation', type: 'number', val: 5000 },
+                { id: 'flow', label: 'Data Viscosity', type: 'range', min: 0, max: 1, val: 0.5 }
+            ],
+            'TREE': [
+                { id: 'entropy', label: 'Entropy Sink %', type: 'range', min: 0, max: 100, val: 15 },
+                { id: 'health', label: 'Leaf Node Integrity', type: 'number', val: 100 }
             ],
             'VDB': [
                 { id: 'dim', label: 'Vector Dim', type: 'number', val: 1536 },
                 { id: 'metric', label: 'Distance Metric', type: 'text', val: 'Cosine' }
             ],
-            'PLANT': [
-                { id: 'yield', label: 'Swarm Yield', type: 'range', min: 1, max: 50, val: 5 },
-                { id: 'auto', label: 'Auto-Spawn', type: 'checkbox', val: true }
-            ],
             'HOSPITAL': [
                 { id: 'beds', label: 'Quarantine Cap', type: 'number', val: 10 },
                 { id: 'purge', label: 'Deep Flush', type: 'checkbox', val: false }
-            ],
-            'SCHOOL': [
-                { id: 'iq', label: 'Education Rate', type: 'range', min: 1, max: 10, val: 2 }
-            ],
-            'SPRITE': [
-                { id: 'size', label: 'Token Limit', type: 'range', min: 2048, max: 128000, step: 1024, val: 32768 },
-                { id: 'attn', label: 'Attention Heads', type: 'number', val: 32 },
-                { id: 'sliding', label: 'Sliding Window', type: 'checkbox', val: true }
-            ],
-            'STUDIO': [
-                { id: 'port', label: 'Local Port', type: 'number', val: 1234 },
-                { id: 'remote', label: 'Remote API Link', type: 'checkbox', val: false }
-            ],
-            'SPRITE': [
-                { id: 'mode', label: 'Auto-Mode', type: 'text', val: 'Heuristic Learning' },
-                { id: 'speed', label: 'Opti-Rate', type: 'range', min: 1, max: 100, val: 5 },
-                { id: 'target', label: 'Goal', type: 'text', val: 'Minimize Latency' }
-            ],
-            'LOGIC': [
-                { id: 'type', label: 'Logic Type', type: 'text', val: 'Boolean / Fuzzy' },
-                { id: 'gates', label: 'Gate Complexity', type: 'range', min: 1, max: 10, val: 5 }
-            ],
-            'MATH': [
-                { id: 'mode', label: 'Lib Type', type: 'text', val: 'Linear Algebra' },
-                { id: 'prec', label: 'Floating Point', type: 'text', val: 'float64' }
-            ],
-            'LANG': [
-                { id: 'runtime', label: 'Runtime Environment', type: 'text', val: 'Python 3.11' },
-                { id: 'libs', label: 'Pre-loaded Libs', type: 'text', val: 'NumPy, Pandas, PyTorch' }
-            ],
-            'W_RAIN': [
-                { id: 'int', label: 'RAM Pressure %', type: 'range', min: 0, max: 100, val: 50 }
-            ],
-            'W_STORM': [
-                { id: 'int', label: 'CPU Turbulence %', type: 'range', min: 0, max: 100, val: 30 }
-            ],
-            'W_GLITCH': [
-                { id: 'int', label: 'Entropy Level %', type: 'range', min: 0, max: 100, val: 10 }
             ]
         };
 
@@ -299,7 +336,7 @@
         }
 
         function updateParamSuite(type) {
-            paramSuite.innerHTML = <div style="font-weight:bold; margin-bottom:10px; color:#0ff; border-bottom:1px solid #005555; padding-bottom:5px;"> + type +  SYSTEM VARIABLES</div>;
+            paramSuite.innerHTML = `<div style="font-weight:bold; margin-bottom:10px; color:#0ff; border-bottom:1px solid #005555; padding-bottom:5px;">${type} SYSTEM VARIABLES</div>`;
             window.currentSettings = {};
 
             if (type === 'RESEARCH') {
@@ -340,6 +377,7 @@
             const vars = COMPONENT_VARS[type] || [];
             vars.forEach(v => renderSetting(v, paramSuite));
         }
+
         buildButtons.forEach(btn => {
             btn.onclick = function() {
                 const type = this.getAttribute('data-type');
@@ -354,6 +392,17 @@
                 }
             };
         });
+
+        // Initialize MSN Chatter
+        window.msnChat = function(name, msg) {
+            const log = document.getElementById('msn-log');
+            if(!log) return;
+            const div = document.createElement('div');
+            div.className = 'msn-entry';
+            div.innerHTML = `<span class="msn-name">${name}:</span> ${msg}`;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        };
 
         // Initialize first tool
         updateParamSuite('CPU');

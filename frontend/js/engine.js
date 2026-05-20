@@ -28,32 +28,50 @@ for(let i=0; i<100; i++) {
 }
 
 const BUILD_TYPES = {
-    'BANK': { color: '#ffd700', label: 'Crypto Bank', category: 'Finance', desc: 'Decentralized cryptocurrency ledger & Sprite vault.' },
-    'CPU': { color: '#ff4d4d', label: 'CPU Cluster', locked: true, category: 'Hardware', desc: 'The silicon central processing unit. Executes all high-level arithmetic and logic operations.' },
-    'RAM': { color: '#4dff88', label: 'RAM Banks', locked: true, category: 'Hardware', desc: 'Volatile memory pool for high-speed data buffering.' },
-    'GPU': { color: '#4d94ff', label: 'GPU Core', locked: true, category: 'Hardware', desc: 'Handles parallel matrix math and graphical environment rendering.' },
-    'SSD': { color: '#ffffff', label: 'NVMe SSD', locked: true, category: 'Hardware', desc: 'High-speed persistent storage for system binaries.' },
-    'MODEM': { color: '#ff007f', label: 'Modem/Gateway', locked: true, category: 'Network', desc: 'Interface to the external web protocols.' },
-    'VSCODE': { color: '#007acc', label: 'VS Code', category: 'Dev', desc: 'Development environment for kernel scripting.' },
-    'LLM': { color: '#00ffff', label: 'LLM Node', category: 'Software', desc: 'Intelligence compute cluster.' },
-    'VDB': { color: '#ff00ff', label: 'Vector DB', category: 'Software', desc: 'High-dimensional memory indexing.' },
-    'HOSPITAL': { color: '#ff4444', label: 'Sanctuary', category: 'Urban', desc: 'Healing hub for depressed kernels.' },
-    'PLANT': { color: '#ffaa00', label: 'Sprite Plant', category: 'Industrial', desc: 'Manufacturing node for automation swarm units.' }
+    'CPU': { color: '#ff4d4d', label: 'Silicon Central', locked: true, category: 'Hardware', desc: 'Central compute core.' },
+    'RAM': { color: '#4dff88', label: 'Memory Matrix', locked: true, category: 'Hardware', desc: 'Volatile data pool.' },
+    'GPU': { color: '#4d94ff', label: 'Graphics Grid', locked: true, category: 'Hardware', desc: 'Parallel math array.' },
+    'SSD': { color: '#ffffff', label: 'Storage Hive', locked: true, category: 'Hardware', desc: 'Persistent storage node.' },
+    'NORTHBRIDGE': { color: '#00ffff', label: 'Northbridge', locked: true, category: 'Hardware', desc: 'High-speed system link.' },
+    'SOUTHBRIDGE': { color: '#0055ff', label: 'Southbridge', locked: true, category: 'Hardware', desc: 'I/O peripheral hub.' },
+    'REGISTRY': { color: '#ffff00', label: 'Registry Hive', locked: true, category: 'Logic', desc: 'System configuration keys.' },
+    'MEM_CTRL': { color: '#aa00ff', label: 'Mem Controller', locked: true, category: 'Hardware', desc: 'Data retrieval unit.' },
+    'LLM': { color: '#00ffff', label: 'AI Intelligence', category: 'Software', desc: 'Neural inference cluster.' },
+    'AGENT': { color: '#ffcc00', label: 'Agent Hub', category: 'Urban', desc: 'Deployment node for AI Kernels.' },
+    'VDB': { color: '#ff00ff', label: 'Knowledge DB', category: 'Software', desc: 'Vectorized memory indexing.' },
+    'PLANT': { color: '#fa0', label: 'Swarm Factory', category: 'Industrial', desc: 'Automation unit production.' },
+    'SCHOOL': { color: '#4facfe', label: 'Education Node', category: 'Urban', desc: 'Agent alignment & training.' },
+    'HOSPITAL': { color: '#ff4444', label: 'Sanctuary', category: 'Urban', desc: 'System healing & restoration.' },
+    'BANK': { color: '#ffd700', label: 'Crypto Bank', category: 'Finance', desc: 'SHA256 Ledger & Sprite vault.' },
+    'HOUSE': { color: '#888', label: 'Kernel Housing', category: 'Urban', desc: 'Resident agent sub-sectors.' },
+    'TREE': { color: '#0a3d0a', label: 'Logic Foliage', category: 'Env', desc: 'Atmospheric entropy sinks.' },
+    'WATER': { color: '#0055ff', label: 'Data Cooling', category: 'Env', desc: 'Thermal dissipation reservoirs.' },
+    'ROAD': { color: '#222', label: 'Protocol Path', category: 'Network', desc: 'Static dataflow trajectory.' }
 };
 
 let districts = [
-    { x: 0, y: 0, type: 'CPU', label: 'Silicon_Main', settings: {cores: 8, mult: 16} },
-    { x: 1, y: 0, type: 'RAM', label: 'Mem_Pool', settings: {cap: '16GB'} },
-    { x: -1, y: 0, type: 'GPU', label: 'Graphics_Bus', settings: {vram: '8GB'} },
+    { x: 0, y: 0, type: 'CPU', label: 'Silicon_Main' },
+    { x: 3, y: 0, type: 'RAM', label: 'Mem_Pool' },
+    { x: -3, y: 0, type: 'GPU', label: 'Graphics_Grid' },
+    { x: 1, y: 1, type: 'NORTHBRIDGE', label: 'HS_Link' },
+    { x: 1, y: -1, type: 'SOUTHBRIDGE', label: 'IO_Hub' },
+    { x: -5, y: -5, type: 'SSD', label: 'Storage_Hive' },
+    { x: 5, y: -5, type: 'REGISTRY', label: 'Config_Hive' },
     { x: 10, y: 10, type: 'MODEM', settings: {ip: '192.168.1.1'} },
     { x: 5, y: 5, type: 'LLM', label: 'Intelligence' },
     { x: 7, y: 5, type: 'PLANT', label: 'Fabricator' },
     { x: -5, y: 5, type: 'HOSPITAL', label: 'Healing_Node' }
 ];
 
+const PROTOCOLS = {
+    'TCP': { name: 'Walk', speed: 0.005, color: '#00ff00', desc: 'Reliable, ordered flow.' },
+    'UDP': { name: 'Bike', speed: 0.02, color: '#ffff00', desc: 'Fast, lossy jitter flow.' },
+    'BUS': { name: 'File Bus', speed: 0.01, color: '#ff00ff', desc: 'Bulk data transfer.' }
+};
+
 let packets = [];
-function spawnPacket(fromX, fromY, toX, toY, color, protocol) {
-    packets.push({ x: fromX, y: fromY, tx: toX, ty: toY, p: 0, color, protocol });
+function spawnPacket(fromX, fromY, toX, toY, color, protocol, speed) {
+    packets.push({ x: fromX, y: fromY, tx: toX, ty: toY, p: 0, color, protocol, speed });
 }
 
 function toIso(x, y) {
@@ -73,8 +91,13 @@ function fromIso(isoX, isoY) {
 
 function drawStructure(isoX, isoY, color, type, locked) {
     const bSize = 16 * zoom;
-    const h = (locked ? 10 : 32) * zoom;
+    let h = (locked ? 10 : 32) * zoom;
     
+    if (type === 'TREE') h = 8 * zoom;
+    if (type === 'WATER') h = 2 * zoom;
+    if (type === 'ROAD') h = 1 * zoom;
+    if (type === 'AGENT') h = 12 * zoom;
+
     // Front face
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -101,7 +124,10 @@ function drawStructure(isoX, isoY, color, type, locked) {
     ctx.lineTo(isoX, isoY - bSize - h);
     ctx.lineTo(isoX - bSize, isoY - bSize/2 - h);
     ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.0; ctx.stroke();
+    
+    if (type !== 'WATER' && type !== 'ROAD') {
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 0.5 * zoom; ctx.stroke();
+    }
 }
 
 function drawTile(x, y, color = '#050a05', isHovered = false) {
@@ -122,13 +148,6 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
         ctx.stroke();
     }
 
-    const deco = decorations.find(d => d.x === x && d.y === y);
-    if (deco && !districts.find(d => d.x === x && d.y === y)) {
-        ctx.fillStyle = deco.type === 'tree' ? '#0a3d0a' : '#222';
-        ctx.beginPath(); ctx.arc(isoX, isoY + th/2, 3*zoom, 0, Math.PI*2); ctx.fill();
-        if(deco.type === 'lamp') { ctx.shadowBlur = 10; ctx.shadowColor = '#0ff'; ctx.fillStyle = '#0ff'; ctx.fillRect(isoX-1, isoY, 2, -12*zoom); ctx.shadowBlur = 0; }
-    }
-
     drawDistricts(x, y, isoX, isoY, th);
 }
 
@@ -140,7 +159,7 @@ function drawDistricts(x, y, isoX, isoY, th) {
         
         const bSize = 16 * zoom;
         const h = (info.locked ? 10 : 32) * zoom;
-        if(!info.locked) {
+        if(!info.locked && info.category !== 'Env') {
             ctx.fillStyle = "rgba(0, 255, 255, 0.3)";
             for(let i=0; i<3; i++) {
                 for(let j=0; j<2; j++) {
@@ -156,22 +175,27 @@ function drawDistricts(x, y, isoX, isoY, th) {
 
 function drawTrajectories() {
     const links = window.activeLinks || [
-        { from: 'CPU', to: 'RAM', protocol: 'BUS', color: '#00ff00' },
-        { from: 'CPU', to: 'GPU', protocol: 'BUS', color: '#ff00ff' },
-        { from: 'CPU', to: 'MODEM', protocol: 'TCP/IP', color: '#00ffff' },
-        { from: 'CPU', to: 'LLM', protocol: 'BUS', color: '#00ffff' }
+        { from: 'CPU', to: 'RAM', protocol: 'BUS' },
+        { from: 'CPU', to: 'GPU', protocol: 'BUS' },
+        { from: 'CPU', to: 'MODEM', protocol: 'TCP' },
+        { from: 'CPU', to: 'LLM', protocol: 'TCP' }
     ];
 
     links.forEach(l => {
         const from = districts.find(d => d.type === l.from), to = districts.find(d => d.type === l.to);
         if(from && to) {
             const p1 = toIso(from.x, from.y), p2 = toIso(to.x, to.y);
+            const proto = PROTOCOLS[l.protocol] || PROTOCOLS['TCP'];
+            
             ctx.setLineDash(l.protocol === 'BUS' ? [] : [10, 5]);
-            ctx.strokeStyle = l.color + "44"; ctx.lineWidth = 2;
+            ctx.strokeStyle = proto.color + "44"; ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(p1.isoX, p1.isoY); 
-            ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 100*zoom, p2.isoX, p2.isoY);
+            ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 50*zoom, p2.isoX, p2.isoY);
             ctx.stroke();
-            if(Math.random() < 0.02) spawnPacket(from.x, from.y, to.x, to.y, l.color, l.protocol);
+            
+            if(Math.random() < 0.03) {
+                spawnPacket(from.x, from.y, to.x, to.y, proto.color, l.protocol, proto.speed);
+            }
         }
     });
 }
@@ -323,8 +347,34 @@ function draw() {
     drawHolograms();
     drawCryptoSprites();
 
+    // 6. Sprite AI Sentience & MSN Chatter
+    const now = Date.now();
+    if (!window.lastMsnTick || now - window.lastMsnTick > 5000) {
+        window.lastMsnTick = now;
+        const agent = window.agents[Math.floor(Math.random() * window.agents.length)];
+        if (agent) {
+            const msgs = [
+                `Synchronizing DePIN node at [${agent.x}, ${agent.y}]`,
+                `SHA256 Hash Verified: 0x${Math.random().toString(16).slice(2, 10)}...`,
+                `H2O-Danube optimization cycle complete. Stability: ${window.systemStability}`,
+                `Dual-Watchdog active. No memory leaks detected.`,
+                `Routing packets via ${Object.keys(PROTOCOLS)[Math.floor(Math.random()*3)]} protocol.`,
+                `Prime Directive: Heal and Automate sectors.`,
+                `Recording automation script for coordinate ${Math.floor(agent.x)},${Math.floor(agent.y)}`
+            ];
+            if (window.msnChat) window.msnChat(agent.name || 'AGENT_CORE', msgs[Math.floor(Math.random() * msgs.length)]);
+            
+            // Clipboard Ability (Simulated)
+            if (Math.random() < 0.1 && agent.settings?.clipboard) {
+                const state = `SIM_STATE: ${agent.name} at ${agent.x},${agent.y} | STATUS: ${agent.state}`;
+                navigator.clipboard.writeText(state).catch(() => {});
+                window.logToConsole(`AGENT_EVENT: ${agent.name} copied state to clipboard.`);
+            }
+        }
+    }
+
     packets.forEach((pkt, i) => {
-        pkt.p += 0.01;
+        pkt.p += pkt.speed || 0.01;
         const curX = pkt.x + (pkt.tx - pkt.x) * pkt.p, curY = pkt.y + (pkt.ty - pkt.y) * pkt.p, pos = toIso(curX, curY);
         let finalX = pos.isoX, finalY = pos.isoY;
         if(pkt.protocol !== 'BUS') finalY -= Math.sin(pkt.p * Math.PI) * 60 * zoom;
@@ -338,7 +388,27 @@ function draw() {
     if (hoveredNode) {
         const info = BUILD_TYPES[hoveredNode.type];
         tooltip.style.display = 'block'; tooltip.style.left = (lastMouseX + 20) + 'px'; tooltip.style.top = (lastMouseY + 20) + 'px';
-        tooltip.innerHTML = `<div class="tooltip-header">${info.label}</div><div class="tooltip-desc">${info.desc}</div>`;
+        
+        let specHtml = `<div class="tooltip-header">${info.label}</div><div class="tooltip-desc">${info.desc}</div>`;
+        
+        // Exhaustive Hardware Data Injection
+        const specs = window.hardwareSpecs ? window.hardwareSpecs[hoveredNode.type] : null;
+        if (specs) {
+            specHtml += `<div style="margin-top:10px; border-top:1px solid #005555; padding-top:5px; font-size:10px;">`;
+            for (const [key, value] of Object.entries(specs)) {
+                if (typeof value === 'object') {
+                    specHtml += `<div class="tooltip-row"><span class="tooltip-label">${key.toUpperCase()}:</span></div>`;
+                    for (const [subKey, subVal] of Object.entries(value)) {
+                        specHtml += `<div class="tooltip-row" style="padding-left:10px;"><span class="tooltip-label">${subKey}:</span><span class="tooltip-value">${subVal}</span></div>`;
+                    }
+                } else {
+                    specHtml += `<div class="tooltip-row"><span class="tooltip-label">${key.toUpperCase()}:</span><span class="tooltip-value">${value}</span></div>`;
+                }
+            }
+            specHtml += `</div>`;
+        }
+        
+        tooltip.innerHTML = specHtml;
     } else { tooltip.style.display = 'none'; }
 
     window.agents.forEach(agent => {
@@ -350,6 +420,37 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
+
+// 7. Drag-and-Drop Genesis Engine
+canvas.addEventListener('dragover', (e) => e.preventDefault());
+canvas.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData('text/plain');
+    if (BUILD_TYPES[type]) {
+        const rect = canvas.getBoundingClientRect();
+        const tile = fromIso(e.clientX - rect.left, e.clientY - rect.top);
+        
+        const existing = districts.find(d => d.x === tile.x && d.y === tile.y);
+        if (existing && BUILD_TYPES[existing.type].locked) return;
+        
+        districts = districts.filter(d => d.x !== tile.x || d.y !== tile.y);
+        districts.push({ 
+            x: tile.x, y: tile.y, type: type, 
+            label: `${type}_Node_${Math.floor(Math.random()*1000)}`,
+            settings: JSON.parse(JSON.stringify(window.currentSettings || {})) 
+        });
+        
+        window.logToConsole(`GENESIS_EVENT: Deployed ${type} at [${tile.x}, ${tile.y}]`);
+        if (window.msnChat) window.msnChat('SYSTEM', `New DePIN node ${type} initialized with SHA256: 0x${Math.random().toString(16).slice(2, 10)}`);
+    }
+});
+
+const paletteButtons = document.querySelectorAll('.tool-btn');
+paletteButtons.forEach(btn => {
+    btn.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', btn.getAttribute('data-type'));
+    });
+});
 
 window.setBuildType = function(type) { currentBuildType = type; };
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); if(e.deltaY < 0) zoom *= 1.1; else zoom /= 1.1; zoom = Math.min(Math.max(0.1, zoom), 5); });

@@ -42,6 +42,15 @@ async function SyncLoop() {
             window.updateStatus("SYNCED: METROPOLIS ACTIVE");
         }
 
+        // 5. Fetch Hardware Specs (Once)
+        if (!window.hardwareSpecs) {
+            const hardwareResponse = await fetch('http://localhost:8000/api/hardware');
+            if (hardwareResponse.ok) {
+                window.hardwareSpecs = await hardwareResponse.json();
+                console.log("HARDWARE_SYNC: Real nominal values loaded.");
+            }
+        }
+
     } catch (e) {
         console.error("Telemetry Bridge Error:", e);
         if (window.updateStatus) {
