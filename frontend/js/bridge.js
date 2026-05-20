@@ -34,12 +34,24 @@ async function SyncLoop() {
             const tickData = await tickResponse.json();
             window.systemStability = tickData.data.stability;
             window.systemCycle = tickData.data.tick;
+            window.systemHeat = tickData.data.heat;
+            window.systemFrequency = tickData.data.frequency;
+            window.ramLoad = tickData.data.ram_load;
+            window.isSwapping = tickData.data.is_swapping;
+            window.casLatency = tickData.data.cas_latency;
             window.activeResearchAttrs = tickData.data.active_attrs;
         }
 
         // 4. Update UI labels
         if (window.updateStatus) {
             window.updateStatus("SYNCED: METROPOLIS ACTIVE");
+        }
+
+        const clockEl = document.getElementById('cpu-clock');
+        if (clockEl && window.systemFrequency) {
+            clockEl.innerText = (window.systemFrequency * (window.systemFrequency < 100 ? 1 : 0.001)).toFixed(2) + " GHz";
+            if (window.systemHeat > 80) clockEl.style.color = '#f00';
+            else clockEl.style.color = '#0f0';
         }
 
         // 5. Fetch Hardware Specs (Once)

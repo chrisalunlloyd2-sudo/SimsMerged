@@ -1,0 +1,20 @@
+{
+  "SCRIPT_001": {
+    "name": "Heal_Core_0",
+    "steps": [
+        {"x": 0, "y": 0, "action": "scan"},
+        {"x": -5, "y": 5, "action": "heal"}
+    ],
+    "author": "ADMIN_ROOT",
+    "verified": true
+  },
+  "SCRIPT_002": {
+    "name": "Automate_Bank_Miniting",
+    "steps": [
+        {"x": 5, "y": 5, "action": "process"},
+        {"x": 10, "y": 10, "action": "mint"}
+    ],
+    "author": "H2O-Danube",
+    "verified": true
+  }
+}

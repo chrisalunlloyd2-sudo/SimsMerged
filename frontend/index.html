@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>SimsMerged - Final Boss Automation</title>
@@ -42,8 +42,6 @@
         .msn-entry { margin-bottom: 3px; }
         .msn-name { font-weight: bold; color: #cc0000; }
 
-        #cyber-console { display: none; } /* Replaced by MSN */
-
         /* Atmospheric Overlays */
         #scanner-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -58,8 +56,16 @@
             pointer-events: none; z-index: 401;
         }
 
-        #viewport { flex-grow: 1; position: relative; background: #000500; }
-        canvas { display: block; width: 100%; height: 100%; }
+        #viewport { flex-grow: 1; position: relative; background: #000500 url('assets/DESKTOP_BG.png') center/cover; }
+        canvas { display: block; width: 100%; height: 100%; position: relative; z-index: 10; }
+        
+        #desktop-icons {
+            position: absolute; top: 20px; right: 20px; display: grid; grid-template-columns: 1fr; gap: 15px; z-index: 20;
+        }
+        .desktop-icon {
+            display: flex; flex-direction: column; align-items: center; color: white; font-size: 10px; cursor: pointer;
+        }
+        .icon-box { width: 32px; height: 32px; background: #007acc; border: 1px solid #fff; margin-bottom: 3px; }
         
         #hud-top {
             position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8);
@@ -90,36 +96,19 @@
         .legend-item { display: flex; align-items: center; margin-bottom: 6px; color: #ccc; }
         .legend-color { width: 10px; height: 10px; margin-right: 8px; border: 1px solid #fff; }
 
-        /* Admin Modal Styles */
-        .modal {
-            display: none; position: fixed; z-index: 200; left: 0; top: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-        }
-        .modal-content {
-            background: #111; border: 2px solid #00ffff; margin: 10% auto;
-            padding: 20px; width: 50%; color: #ccc; font-size: 12px;
-            max-height: 70vh; overflow-y: auto;
-        }
+        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
+        .modal-content { background: #111; border: 2px solid #00ffff; margin: 10% auto; padding: 20px; width: 50%; color: #ccc; font-size: 12px; max-height: 70vh; overflow-y: auto; }
         .close-modal { float: right; color: #f00; cursor: pointer; font-weight: bold; }
-        .boring-section { border-bottom: 1px solid #333; margin-bottom: 15px; padding-bottom: 10px; }
-        .boring-title { color: #0ff; font-weight: bold; margin-bottom: 5px; }
     </style>
 </head>
 <body>
     <div id="main-container">
         <div id="sidebar">
-            <div class="sidebar-header">SIMS_MERGED v1.1</div>
+            <div class="sidebar-header">SIMS_MERGED v1.3 - MS PAINT EDITION</div>
             <div style="font-size: 11px; color: #0f0; margin-bottom: 5px;">ACTIVE: <span id="active-tool-display">CPU CORE</span></div>
             
-            <div id="admin-tools" style="display:flex; gap:5px; margin-bottom:10px;">
-                <button class="control-btn" id="options-btn" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid #555; color:#888; font-size:10px; padding:4px; cursor:pointer;">OPTIONS</button>
-                <button class="control-btn" id="help-btn" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid #555; color:#888; font-size:10px; padding:4px; cursor:pointer;">HELP</button>
-                <button class="control-btn" id="about-btn" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid #555; color:#888; font-size:10px; padding:4px; cursor:pointer;">ABOUT</button>
-            </div>
-
-            <div id="parameter-suite" style="background: rgba(0,255,255,0.05); border: 1px solid #005555; padding: 10px; margin-bottom: 15px; font-size: 11px; color: #fff; max-height: 250px; overflow-y: auto;">
-                <!-- Populated dynamically -->
-                <div style="color: #888;">Select a tool to configure parameters...</div>
+            <div id="parameter-suite" style="background: rgba(255,255,255,0.1); border: 1px inset #808080; padding: 10px; margin-bottom: 15px; font-size: 11px; color: #000; max-height: 250px; overflow-y: auto;">
+                <div style="color: #444;">Select a tool to configure parameters...</div>
             </div>
 
             <div class="paint-palette" id="build-tools">
@@ -144,35 +133,22 @@
                 <button class="tool-btn" data-type="RESEARCH" draggable="true">RESEARCH</button>
             </div>
             
-            <button id="checkpoint-btn" style="margin-top:5px; background:#c0c0c0; border:1px solid #fff; border-right:1px solid #808080; border-bottom:1px solid #808080; padding:4px; cursor:pointer; font-size:11px;">FORCE_SYNC</button>
-            
             <div id="msn-chat-container">
-                <div class="msn-header">MSN Metropolis (Online)</div>
+                <div class="msn-header">MSN Metropolis (Live)</div>
                 <div id="msn-log"></div>
             </div>
         </div>
         
-        <!-- BORING ADMIN MODAL -->
-        <div id="admin-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" id="close-admin">&times; CLOSE</span>
-                <div id="modal-body"></div>
-            </div>
-        </div>
-
         <div id="viewport">
             <div id="scanner-overlay"></div>
             <div id="vignette"></div>
             <div id="hud-top">
-                LOCAL_MACHINE_PARITY: <span id="telemetry-status">LINKING...</span><br>
-                CRYPTO_MINT_RATE: <span id="mint-rate">0.0000 SPRITE/s</span><br>
-                SPRITE_BALANCE: <span id="crypto-balance" style="color:#ffd700; font-weight:bold;">0.0000</span>
+                HOST_MACHINE: <span id="telemetry-status" style="color:#0f0;">CONNECTED</span><br>
+                CPU_CLOCK: <span id="cpu-clock" style="color:#0f0;">-- GHz</span><br>
+                CRYPTO_MINT: <span id="mint-rate">0.00 SPRITE/s</span><br>
+                BALANCE: <span id="crypto-balance" style="color:#ffd700; font-weight:bold;">0.00</span>
             </div>
             <div id="hover-tooltip"></div>
-            <div id="legend">
-                <div style="font-weight:bold; color:#0ff; margin-bottom:10px; border-bottom:1px solid #005555; padding-bottom:4px;">TOPOLOGY LEGEND</div>
-                <div id="legend-content"></div>
-            </div>
             <canvas id="gameCanvas"></canvas>
         </div>
     </div>
@@ -180,6 +156,7 @@
     <script src="js/telemetry_data.js"></script>
     <script src="js/console.js"></script>
     <script src="js/engine.js"></script>
+    <script src="js/resource_monitor.js"></script>
     <script src="js/bridge.js"></script>
     
     <script>
@@ -187,195 +164,59 @@
         const buildButtons = document.querySelectorAll('.tool-btn');
         const paramSuite = document.getElementById('parameter-suite');
         
-        const COMPONENT_VARS = {
-            'LLM': [
-                { id: 'ctx_len', label: 'Max Pos Embeddings', type: 'number', val: 128000 },
-                { id: 'rope_theta', label: 'RoPE Theta', type: 'number', val: 1000000 },
-                { id: 'flash_attn', label: 'FlashAttention-2', type: 'checkbox', val: true },
-                { id: 'kv_quant', label: 'KV Cache Quantization', type: 'text', val: '8-bit' },
-                { id: 'gqa_heads', label: 'GQA KV Heads', type: 'number', val: 8 },
-                { id: 'sliding_win', label: 'Sliding Window', type: 'number', val: 4096 },
-                { id: 'chunk_size', label: 'Context Chunk Size', type: 'number', val: 512 },
-                { id: 'compression', label: 'Context Compression', type: 'checkbox', val: true },
-                { id: 'max_input', label: 'Max Input Tokens', type: 'number', val: 32768 },
-                { id: 'max_output', label: 'Max Output Tokens', type: 'number', val: 4096 },
-                { id: 'trunc_strat', label: 'Truncation Strategy', type: 'text', val: 'FIFO-Rolling' },
-                { id: 'rag_top_k', label: 'RAG Ingestion Top-K', type: 'number', val: 5 },
-                { id: 'soft_prompt', label: 'Soft Prompting Tuning', type: 'checkbox', val: false },
-                { id: 'system_pin', label: 'System Prompt Pinning', type: 'checkbox', val: true },
-                { id: 'ttft_opt', label: 'TTFT Latency Target', type: 'text', val: '<500ms' }
-            ],
-            'BANK': [
-                { id: 'ledger', label: 'Ledger Protocol', type: 'text', val: 'Proof-of-Stake' },
-                { id: 'hash', label: 'Hash Algorithm', type: 'text', val: 'SHA-256' },
-                { id: 'block_time', label: 'Block Time (s)', type: 'range', min: 1, max: 60, val: 12 },
-                { id: 'gas_fee', label: 'Base Gas Fee', type: 'range', min: 0.001, max: 1.0, step: 0.001, val: 0.01 },
-                { id: 'sprite_mint', label: 'Sprite Mint Yield', type: 'number', val: 500 },
-                { id: 'stake_yield', label: 'Staking APY %', type: 'range', min: 0, max: 100, val: 12 },
-                { id: 'liquidity', label: 'Liquidity Pool', type: 'number', val: 1000000 },
-                { id: 'burn_rate', label: 'Auto-Burn Rate %', type: 'range', min: 0, max: 10, step: 0.1, val: 1.5 },
-                { id: 'dex_router', label: 'DEX Router', type: 'checkbox', val: true },
-                { id: 'zk_snarks', label: 'Zero-Knowledge Proofs', type: 'checkbox', val: true },
-                { id: 'validator', label: 'Validator Nodes', type: 'number', val: 64 },
-                { id: 'smart_con', label: 'Smart Contracts', type: 'checkbox', val: true },
-                { id: 'treasury', label: 'Treasury Wallet', type: 'text', val: '0x00000000000' },
-                { id: 'mint_limit', label: 'Max Supply Cap', type: 'number', val: 21000000 },
-                { id: 'oracle', label: 'Price Oracle Node', type: 'checkbox', val: true }
-            ],
-            'AGENT': [
-                { id: 'model_wrap', label: 'AI Model Matrix', type: 'text', val: 'H2O-Danube-1.8B' },
-                { id: 'model_select', label: 'Switch Model (30)', type: 'select', options: [
-                    'Claw-v1.0', 'Claw-v1.5-Pro', 'Claw-v2.0-Alpha', 'Claude-v3.5-Sonnet', 'Claude-v3.0-Opus', 
-                    'Danube-2B-Ultra', 'Danube-1.8B-Base', 'Llama-3-8B-Inst', 'Llama-3-70B-Quant', 'Mistral-v0.3-MoE',
-                    'Gemma-2-9B', 'Phi-3-Mini', 'Qwen-2-72B', 'Grok-1.5-Vision', 'Gemini-1.5-Flash',
-                    'DeepSeek-v2-Lite', 'Falcon-2-11B', 'StableLM-2', 'OLMo-v1.7', 'OpenELM-3B',
-                    'Aria-MoE', 'BitNet-1.58b', 'Mamba-2-Hybrid', 'Jamba-v1.0', 'DBRX-Instruct',
-                    'Command-R-Plus', 'XVERSE-v2', 'Yi-1.5-34B', 'StarCoder-2', 'Arctic-v1-Medium'
-                ], val: 'H2O-Danube-1.8B' },
-                { id: 'sentience', label: 'Sentience Depth', type: 'range', min: 0, max: 1, step: 0.1, val: 0.8 },
-                { id: 'clipboard', label: 'Clipboard Hook', type: 'checkbox', val: true },
-                { id: 'watchdog', label: 'Dual Watchdog', type: 'checkbox', val: true },
-                { id: 'temp', label: 'Inference Temp', type: 'range', min: 0, max: 2, step: 0.1, val: 0.7 },
-                { id: 'prime_dir', label: 'Prime Directive', type: 'text', val: 'Heal and Automate' },
-                { id: 'depin_node', label: 'DePIN Active', type: 'checkbox', val: true },
-                { id: 'automation', label: 'Script Learning', type: 'checkbox', val: true },
-                { id: 'msn_id', label: 'MSN ID Hash', type: 'text', val: '0x123...abc' }
-            ],
-            'SCHOOL': [
-                { id: 'align_rate', label: 'Alignment Speed', type: 'range', min: 1, max: 100, val: 10 },
-                { id: 'curriculum', label: 'Model Fine-Tuning', type: 'text', val: 'RLHF-v2' },
-                { id: 'capacity', label: 'Student Kernels', type: 'number', val: 256 }
-            ],
-            'PLANT': [
-                { id: 'yield', label: 'Swarm Yield', type: 'range', min: 1, max: 50, val: 5 },
-                { id: 'auto', label: 'Auto-Spawn', type: 'checkbox', val: true },
-                { id: 'qc_pass', label: 'Integrity Check', type: 'checkbox', val: true }
-            ],
-            'ROAD': [
-                { id: 'proto', label: 'Default Protocol', type: 'text', val: 'TCP/IP' },
-                { id: 'width', label: 'Bus Width', type: 'number', val: 128 },
-                { id: 'friction', label: 'Node Latency', type: 'range', min: 0, max: 50, val: 2 }
-            ],
-            'WATER': [
-                { id: 'cooling', label: 'BTU Dissipation', type: 'number', val: 5000 },
-                { id: 'flow', label: 'Data Viscosity', type: 'range', min: 0, max: 1, val: 0.5 }
-            ],
-            'TREE': [
-                { id: 'entropy', label: 'Entropy Sink %', type: 'range', min: 0, max: 100, val: 15 },
-                { id: 'health', label: 'Leaf Node Integrity', type: 'number', val: 100 }
-            ],
-            'VDB': [
-                { id: 'dim', label: 'Vector Dim', type: 'number', val: 1536 },
-                { id: 'metric', label: 'Distance Metric', type: 'text', val: 'Cosine' }
-            ],
-            'HOSPITAL': [
-                { id: 'beds', label: 'Quarantine Cap', type: 'number', val: 10 },
-                { id: 'purge', label: 'Deep Flush', type: 'checkbox', val: false }
-            ]
-        };
-
         window.currentSettings = {};
 
         function renderSetting(v, container) {
             const row = document.createElement('div');
             row.style.marginBottom = '10px';
-            
             const labelContainer = document.createElement('div');
-            labelContainer.style.display = 'flex';
-            labelContainer.style.justifyContent = 'space-between';
-            
-            const label = document.createElement('label');
-            label.innerText = v.label;
-            
-            const valueReadout = document.createElement('span');
-            valueReadout.id = eadout- + v.id;
-            valueReadout.style.color = '#0f0';
-            valueReadout.innerText = v.val;
-            
-            labelContainer.appendChild(label);
-            labelContainer.appendChild(valueReadout);
+            labelContainer.style.display = 'flex'; labelContainer.style.justifyContent = 'space-between';
+            const label = document.createElement('label'); label.innerText = v.label;
+            const readout = document.createElement('span'); readout.id = `readout-${v.id}`;
+            readout.style.color = '#000080'; readout.innerText = v.val;
+            labelContainer.appendChild(label); labelContainer.appendChild(readout);
             row.appendChild(labelContainer);
             
             let input;
             if (v.type === 'range') {
-                input = document.createElement('input');
-                input.type = 'range';
-                input.min = v.min;
-                input.max = v.max;
-                if(v.step) input.step = v.step;
-                input.value = v.val;
-                input.style.width = '100%';
-                input.style.cursor = 'pointer';
+                input = document.createElement('input'); input.type = 'range';
+                input.min = v.min; input.max = v.max; input.step = v.step || 1;
+                input.value = v.val; input.style.width = '100%';
             } else if (v.type === 'checkbox') {
-                input = document.createElement('input');
-                input.type = 'checkbox';
-                input.checked = v.val;
-                valueReadout.innerText = v.val ? 'ON' : 'OFF';
+                input = document.createElement('input'); input.type = 'checkbox';
+                input.checked = v.val; readout.innerText = v.val ? 'ON' : 'OFF';
             } else {
-                input = document.createElement('input');
-                input.type = v.type;
-                input.value = v.val;
-                input.style.width = '100%';
-                input.style.background = '#000';
-                input.style.color = '#0f0';
-                input.style.border = '1px solid #005555';
-                input.style.padding = '2px';
-                input.style.fontSize = '10px';
+                input = document.createElement('input'); input.type = 'text';
+                input.value = v.val; input.style.width = '100%'; input.style.fontSize = '10px';
             }
 
             input.oninput = input.onchange = () => {
-                const finalVal = input.type === 'checkbox' ? input.checked : input.value;
-                window.currentSettings[v.id] = finalVal;
-                valueReadout.innerText = input.type === 'checkbox' ? (finalVal ? 'ON' : 'OFF') : finalVal;
-                console.log("PARAM_SYNC:", v.id, finalVal);
+                const val = input.type === 'checkbox' ? input.checked : input.value;
+                window.currentSettings[v.id] = val;
+                readout.innerText = input.type === 'checkbox' ? (val ? 'ON' : 'OFF') : val;
             };
-            
             window.currentSettings[v.id] = v.val;
-            row.appendChild(input);
-            container.appendChild(row);
+            row.appendChild(input); container.appendChild(row);
         }
 
         function updateParamSuite(type) {
-            paramSuite.innerHTML = `<div style="font-weight:bold; margin-bottom:10px; color:#0ff; border-bottom:1px solid #005555; padding-bottom:5px;">${type} SYSTEM VARIABLES</div>`;
-            window.currentSettings = {};
-
+            paramSuite.innerHTML = `<div style="font-weight:bold; margin-bottom:8px; color:#000080; border-bottom:1px solid #808080;">${type} PARAMS</div>`;
             if (type === 'RESEARCH') {
-                const inputRow = document.createElement('div');
-                inputRow.innerHTML = '<label>Task ID (e.g., TASK_1 to TASK_2700):</label><br><input type="text" id="research-task-id" value="TASK_1" style="width:100%; background:#000; color:#0f0; border:1px solid #005555; margin-top:5px; margin-bottom:5px;">';
-                
-                const loadBtn = document.createElement('button');
-                loadBtn.innerText = 'LOAD RESEARCH PARAMS (15)';
-                loadBtn.style = 'width:100%; background:#005555; color:#fff; border:none; margin-bottom:10px; padding:5px; cursor:pointer; font-weight:bold;';
-                
-                const resultsDiv = document.createElement('div');
-                
-                loadBtn.onclick = async () => {
-                    resultsDiv.innerHTML = '<span style="color:#888;">Fetching hyperparams...</span>';
-                    try {
-                        const res = await fetch('http://127.0.0.1:8000/api/research-features');
-                        const data = await res.json();
-                        const taskId = document.getElementById('research-task-id').value;
-                        const taskData = data[taskId];
-                        if (taskData) {
-                            resultsDiv.innerHTML = '';
-                            taskData.forEach(v => renderSetting(v, resultsDiv));
-                            window.logToConsole('RESEARCH: Loaded parameters for ' + taskId);
-                        } else {
-                            resultsDiv.innerHTML = '<span style="color:#f00;">Task not found in DB.</span>';
-                        }
-                    } catch(e) {
-                        resultsDiv.innerHTML = '<span style="color:#f00;">Backend API Error. Is it running?</span>';
+                const row = document.createElement('div');
+                row.innerHTML = '<input type="text" id="task-id" value="TASK_1" style="width:70%"><button id="load-research">LOAD</button>';
+                paramSuite.appendChild(row);
+                document.getElementById('load-research').onclick = async () => {
+                    const id = document.getElementById('task-id').value;
+                    const res = await fetch('http://localhost:8000/api/research-features');
+                    const data = await res.json();
+                    if(data[id]) {
+                        paramSuite.innerHTML = '';
+                        data[id].forEach(v => renderSetting(v, paramSuite));
                     }
                 };
-                
-                paramSuite.appendChild(inputRow);
-                paramSuite.appendChild(loadBtn);
-                paramSuite.appendChild(resultsDiv);
                 return;
             }
-
-            const vars = COMPONENT_VARS[type] || [];
-            vars.forEach(v => renderSetting(v, paramSuite));
+            // Add other static types here if needed
         }
 
         buildButtons.forEach(btn => {
@@ -384,109 +225,24 @@
                 buildButtons.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 toolDisplay.innerText = this.innerText;
-                
                 updateParamSuite(type);
-
-                if (window.setBuildType) {
-                    window.setBuildType(type);
-                }
+                if (window.setBuildType) window.setBuildType(type);
             };
+            btn.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', btn.getAttribute('data-type'));
+            });
         });
 
-        // Initialize MSN Chatter
         window.msnChat = function(name, msg) {
             const log = document.getElementById('msn-log');
             if(!log) return;
             const div = document.createElement('div');
             div.className = 'msn-entry';
             div.innerHTML = `<span class="msn-name">${name}:</span> ${msg}`;
-            log.appendChild(div);
-            log.scrollTop = log.scrollHeight;
+            log.appendChild(div); log.scrollTop = log.scrollHeight;
         };
 
-        // Initialize first tool
         updateParamSuite('CPU');
-
-        document.getElementById('checkpoint-btn').onclick = function() {
-            window.logToConsole("CHECKPOINT: Triggering ledger sync...", "warn");
-            setTimeout(() => window.logToConsole("SUCCESS: Local ledger updated."), 1000);
-        };
-
-        const modal = document.getElementById('admin-modal');
-        const modalBody = document.getElementById('modal-body');
-        const closeModal = document.getElementById('close-admin');
-
-        const BORING_CONTENT = {
-            'OPTIONS': `
-                <div class="boring-section">
-                    <div class="boring-title">UI CONFIGURATION</div>
-                    <label><input type="checkbox" checked> Enable Grid Overlay</label><br>
-                    <label><input type="checkbox" checked> Show Data Packets</label><br>
-                    <label><input type="checkbox"> High-Performance Mode (Culls FX)</label>
-                </div>
-                <div class="boring-section">
-                    <div class="boring-title">SYSTEM PREFERENCES</div>
-                    <label>Telemetry Interval: <input type="number" value="1000" style="width:50px; background:#000; border:1px solid #333; color:#0f0;"> ms</label><br>
-                    <label>Auto-Save frequency: <input type="number" value="5" style="width:40px; background:#000; border:1px solid #333; color:#0f0;"> min</label>
-                </div>
-            `,
-            'HELP': `
-                <div class="boring-section">
-                    <div class="boring-title">SYSTEM ARCHITECT MANUAL</div>
-                    <p>Welcome to SimsMerged. To build your virtual machine topology:</p>
-                    <ul>
-                        <li><b>Deployment:</b> Select a tool in the sidebar, configure variables in the Parameter Suite, and left-click the grid.</li>
-                        <li><b>Navigation:</b> Use mouse wheel to zoom. Middle-click and drag to pan the view.</li>
-                        <li><b>Analysis:</b> Right-click any active node to see real-time system metrics.</li>
-                    </ul>
-                </div>
-                <div class="boring-section">
-                    <div class="boring-title">HOTKEYS</div>
-                    <ul>
-                        <li><b>[Shift + Drag]:</b> Alternative Pan</li>
-                        <li><b>[Enter]:</b> Confirm Parameter</li>
-                    </ul>
-                </div>
-            `,
-            'ABOUT': `
-                <div class="boring-section">
-                    <div class="boring-title">SIMS_MERGED ARCHITECT EDITION</div>
-                    <p><b>Version:</b> 1.1.2-Stable</p>
-                    <p><b>Architect:</b> Gemini CLI</p>
-                    <p><b>Environment:</b> Darwinistic System Virtualization Sandbox</p>
-                </div>
-                <div class="boring-section">
-                    <div class="boring-title">LEGAL / COMPLIANCE</div>
-                    <p style="font-size:9px; color:#555;">This software is provided as-is for architectural simulation purposes. All simulated "Agents" are autonomous entities. System corruption simulations are for educational purposes only.</p>
-                </div>
-            `
-        };
-
-        document.getElementById('options-btn').onclick = () => showBoring('OPTIONS');
-        document.getElementById('help-btn').onclick = () => showBoring('HELP');
-        document.getElementById('about-btn').onclick = () => showBoring('ABOUT');
-        closeModal.onclick = () => modal.style.display = 'none';
-
-        function showBoring(type) {
-            modalBody.innerHTML = BORING_CONTENT[type];
-            modal.style.display = 'block';
-            window.logToConsole("UI_LOG: Opened " + type + " dialog.");
-        }
-
-        window.logToConsole = function(msg, type) {
-            const con = document.getElementById('console');
-            if(!con) return;
-            const div = document.createElement('div');
-            div.className = 'log-entry';
-            if(type === 'warn') div.style.color = '#ff0';
-            div.innerText = "[" + new Date().toLocaleTimeString() + "] " + msg;
-            con.appendChild(div);
-            con.scrollTop = con.scrollHeight;
-        };
-
-        window.logToConsole("SYSTEM_BOOT: GUI Logic Initialized.");
     </script>
 </body>
 </html>
-
-

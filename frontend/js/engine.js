@@ -1,10 +1,10 @@
-﻿const canvas = document.getElementById('gameCanvas');
+const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('hover-tooltip');
 
 function resize() {
     const parent = canvas.parentElement;
-    canvas.width = parent.clientWidth || window.innerWidth - 280;
+    canvas.width = parent.clientWidth || window.innerWidth - 320;
     canvas.height = parent.clientHeight || window.innerHeight;
 }
 window.addEventListener('resize', resize);
@@ -13,25 +13,15 @@ resize();
 const TILE_WIDTH = 64, TILE_HEIGHT = 32, MAP_SIZE = 40;
 let selectedTile = { x: 0, y: 0 };
 window.agents = window.agents || [];
-let currentBuildType = 'VSCODE', contextMenu = null;
+let currentBuildType = 'CPU';
 let camX = 0, camY = 0, zoom = 0.8;
 let isDragging = false, lastMouseX = 0, lastMouseY = 0;
-
-// Generated Urban Decorations (Logic Trees)
-const decorations = [];
-for(let i=0; i<100; i++) {
-    decorations.push({
-        x: Math.floor(Math.random() * MAP_SIZE * 2 - MAP_SIZE),
-        y: Math.floor(Math.random() * MAP_SIZE * 2 - MAP_SIZE),
-        type: Math.random() > 0.5 ? 'tree' : 'lamp'
-    });
-}
 
 const BUILD_TYPES = {
     'CPU': { color: '#ff4d4d', label: 'Silicon Central', locked: true, category: 'Hardware', desc: 'Central compute core.' },
     'RAM': { color: '#4dff88', label: 'Memory Matrix', locked: true, category: 'Hardware', desc: 'Volatile data pool.' },
     'GPU': { color: '#4d94ff', label: 'Graphics Grid', locked: true, category: 'Hardware', desc: 'Parallel math array.' },
-    'SSD': { color: '#ffffff', label: 'Storage Hive', locked: true, category: 'Hardware', desc: 'Persistent storage node.' },
+    'SSD': { color: '#ffffff', label: 'NVMe SSD', locked: true, category: 'Hardware', desc: 'Persistent storage node.' },
     'NORTHBRIDGE': { color: '#00ffff', label: 'Northbridge', locked: true, category: 'Hardware', desc: 'High-speed system link.' },
     'SOUTHBRIDGE': { color: '#0055ff', label: 'Southbridge', locked: true, category: 'Hardware', desc: 'I/O peripheral hub.' },
     'REGISTRY': { color: '#ffff00', label: 'Registry Hive', locked: true, category: 'Logic', desc: 'System configuration keys.' },
@@ -57,11 +47,33 @@ let districts = [
     { x: 1, y: -1, type: 'SOUTHBRIDGE', label: 'IO_Hub' },
     { x: -5, y: -5, type: 'SSD', label: 'Storage_Hive' },
     { x: 5, y: -5, type: 'REGISTRY', label: 'Config_Hive' },
+    { x: -10, y: -10, type: 'LLM', label: 'Desktop_Layer' },
     { x: 10, y: 10, type: 'MODEM', settings: {ip: '192.168.1.1'} },
     { x: 5, y: 5, type: 'LLM', label: 'Intelligence' },
     { x: 7, y: 5, type: 'PLANT', label: 'Fabricator' },
     { x: -5, y: 5, type: 'HOSPITAL', label: 'Healing_Node' }
 ];
+
+const RENDER_LOG = [];
+function addRenderLog(msg) {
+    RENDER_LOG.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+    if(RENDER_LOG.length > 20) RENDER_LOG.shift();
+}
+
+function drawRenderFile() {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 20, 0, 0.8)';
+    ctx.fillRect(10, canvas.height - 220, 300, 200);
+    ctx.strokeStyle = '#0f0'; ctx.lineWidth = 1;
+    ctx.strokeRect(10, canvas.height - 220, 300, 200);
+    
+    ctx.fillStyle = '#0f0'; ctx.font = '10px Courier New';
+    ctx.fillText("RENDER_FILE.SYS (Live Draw-Calls)", 20, canvas.height - 205);
+    RENDER_LOG.forEach((line, i) => {
+        ctx.fillText(line, 20, canvas.height - 185 + (i * 10));
+    });
+    ctx.restore();
+}
 
 const PROTOCOLS = {
     'TCP': { name: 'Walk', speed: 0.005, color: '#00ff00', desc: 'Reliable, ordered flow.' },
@@ -72,6 +84,7 @@ const PROTOCOLS = {
 let packets = [];
 function spawnPacket(fromX, fromY, toX, toY, color, protocol, speed) {
     packets.push({ x: fromX, y: fromY, tx: toX, ty: toY, p: 0, color, protocol, speed });
+    addRenderLog(`SPAWN_PACKET: ${protocol} at [${fromX},${fromY}] -> [${toX},${toY}]`);
 }
 
 function toIso(x, y) {
@@ -92,37 +105,27 @@ function fromIso(isoX, isoY) {
 function drawStructure(isoX, isoY, color, type, locked) {
     const bSize = 16 * zoom;
     let h = (locked ? 10 : 32) * zoom;
-    
     if (type === 'TREE') h = 8 * zoom;
     if (type === 'WATER') h = 2 * zoom;
     if (type === 'ROAD') h = 1 * zoom;
     if (type === 'AGENT') h = 12 * zoom;
 
-    // Front face
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.moveTo(isoX - bSize, isoY);
-    ctx.lineTo(isoX, isoY + bSize/2);
-    ctx.lineTo(isoX, isoY + bSize/2 - h);
-    ctx.lineTo(isoX - bSize, isoY - h);
+    ctx.moveTo(isoX - bSize, isoY); ctx.lineTo(isoX, isoY + bSize/2);
+    ctx.lineTo(isoX, isoY + bSize/2 - h); ctx.lineTo(isoX - bSize, isoY - h);
     ctx.closePath(); ctx.fill();
     
-    // Side face
     ctx.fillStyle = ctx.fillStyle.replace(')', ', 0.7)').replace('rgb', 'rgba');
     ctx.beginPath();
-    ctx.moveTo(isoX, isoY + bSize/2);
-    ctx.lineTo(isoX + bSize, isoY);
-    ctx.lineTo(isoX + bSize, isoY - h);
-    ctx.lineTo(isoX, isoY + bSize/2 - h);
+    ctx.moveTo(isoX, isoY + bSize/2); ctx.lineTo(isoX + bSize, isoY);
+    ctx.lineTo(isoX + bSize, isoY - h); ctx.lineTo(isoX, isoY + bSize/2 - h);
     ctx.closePath(); ctx.fill();
 
-    // Top face
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.moveTo(isoX, isoY - h);
-    ctx.lineTo(isoX + bSize, isoY - bSize/2 - h);
-    ctx.lineTo(isoX, isoY - bSize - h);
-    ctx.lineTo(isoX - bSize, isoY - bSize/2 - h);
+    ctx.moveTo(isoX, isoY - h); ctx.lineTo(isoX + bSize, isoY - bSize/2 - h);
+    ctx.lineTo(isoX, isoY - bSize - h); ctx.lineTo(isoX - bSize, isoY - bSize/2 - h);
     ctx.closePath(); ctx.fill();
     
     if (type !== 'WATER' && type !== 'ROAD') {
@@ -143,244 +146,61 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
     ctx.fill();
     ctx.strokeStyle = '#001a00'; ctx.stroke();
 
-    if (x % 5 === 0 || y % 5 === 0) {
-        ctx.strokeStyle = 'rgba(0, 255, 255, 0.05)';
-        ctx.stroke();
-    }
-
-    drawDistricts(x, y, isoX, isoY, th);
-}
-
-function drawDistricts(x, y, isoX, isoY, th) {
     const d = districts.find(d => d.x === x && d.y === y);
     if (d) {
-        const info = BUILD_TYPES[d.type] || { color: 'gray' };
-        drawStructure(isoX, isoY + th/2, info.color, d.type, info.locked);
+        let info = BUILD_TYPES[d.type] || { color: 'gray' };
+        let finalColor = info.color;
         
-        const bSize = 16 * zoom;
-        const h = (info.locked ? 10 : 32) * zoom;
-        if(!info.locked && info.category !== 'Env') {
-            ctx.fillStyle = "rgba(0, 255, 255, 0.3)";
-            for(let i=0; i<3; i++) {
-                for(let j=0; j<2; j++) {
-                    ctx.fillRect(isoX - bSize + 5*zoom + j*7*zoom, isoY + th/2 - h + 5*zoom + i*8*zoom, 2*zoom, 2*zoom);
-                }
-            }
+        // Real-world Heat Tinting for CPU
+        if (d.type === 'CPU') {
+            const heat = window.systemHeat || 35;
+            const r = Math.min(255, 100 + (heat * 1.5));
+            finalColor = `rgb(${r}, 77, 77)`;
+        }
+        
+        // SSD Swap Glow (Step 26 Option B)
+        if (d.type === 'SSD' && window.isSwapping) {
+            ctx.shadowBlur = 20; ctx.shadowColor = '#ffaa00';
+            finalColor = '#ffaa00';
         }
 
-        ctx.fillStyle = 'white'; ctx.font = `bold ${Math.max(10, Math.floor(14*zoom))}px Arial`;
+        drawStructure(isoX, isoY + th/2, finalColor, d.type, info.locked);
+        ctx.shadowBlur = 0;
+        
+        ctx.fillStyle = 'white'; ctx.font = `bold ${Math.max(10, 14*zoom)}px Arial`;
         ctx.fillText(d.label || d.type, isoX - 12*zoom, isoY - 20*zoom);
     }
-}
-
-function drawTrajectories() {
-    const links = window.activeLinks || [
-        { from: 'CPU', to: 'RAM', protocol: 'BUS' },
-        { from: 'CPU', to: 'GPU', protocol: 'BUS' },
-        { from: 'CPU', to: 'MODEM', protocol: 'TCP' },
-        { from: 'CPU', to: 'LLM', protocol: 'TCP' }
-    ];
-
-    links.forEach(l => {
-        const from = districts.find(d => d.type === l.from), to = districts.find(d => d.type === l.to);
-        if(from && to) {
-            const p1 = toIso(from.x, from.y), p2 = toIso(to.x, to.y);
-            const proto = PROTOCOLS[l.protocol] || PROTOCOLS['TCP'];
-            
-            ctx.setLineDash(l.protocol === 'BUS' ? [] : [10, 5]);
-            ctx.strokeStyle = proto.color + "44"; ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(p1.isoX, p1.isoY); 
-            ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 50*zoom, p2.isoX, p2.isoY);
-            ctx.stroke();
-            
-            if(Math.random() < 0.03) {
-                spawnPacket(from.x, from.y, to.x, to.y, proto.color, l.protocol, proto.speed);
-            }
-        }
-    });
-}
-
-function drawBindingChains() {
-    window.agents.forEach(agent => {
-        if (agent.state === 'DEPRESSED' || agent.emotional_state === 'DEPRESSED') {
-            const hospital = districts.find(d => d.type === 'HOSPITAL');
-            if (hospital) {
-                const p1 = toIso(agent.x, agent.y);
-                const p2 = toIso(hospital.x, hospital.y);
-                ctx.strokeStyle = '#ff00ff';
-                ctx.lineWidth = 4;
-                ctx.setLineDash([5, 5]);
-                ctx.beginPath();
-                ctx.moveTo(p1.isoX, p1.isoY);
-                ctx.lineTo(p2.isoX, p2.isoY);
-                ctx.stroke();
-                ctx.setLineDash([]);
-            }
-        }
-    });
-}
-
-function drawThermalMonitor() {
-    const temp = 35 + (window.agents.length * 2) + (Math.sin(Date.now() / 1000) * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(10, 10, 180, 40);
-    ctx.strokeStyle = temp > 60 ? '#ff0000' : '#00ff00';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, 180, 40);
-    
-    ctx.fillStyle = '#fff';
-    ctx.font = '12px Courier New';
-    ctx.fillText(`SYSTEM_TEMPERATURE: ${temp.toFixed(2)}Â°C`, 20, 25);
-    ctx.fillText(`ACTIVE_KERNELS: ${window.agents.length}`, 20, 40);
-}
-
-function drawHolograms() {
-    districts.forEach(d => {
-        if (d.type === 'CPU' || d.type === 'RAM') {
-            const { isoX, isoY } = toIso(d.x, d.y);
-            const th = TILE_HEIGHT * zoom;
-            const time = Date.now() / 1000;
-            const pulse = Math.sin(time * 5) * 0.5 + 0.5;
-            
-            ctx.save();
-            ctx.translate(isoX, isoY + th/2 - 45 * zoom);
-            
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.2 + pulse * 0.3})`;
-            ctx.lineWidth = 2;
-            const size = 8 * zoom;
-            
-            ctx.beginPath();
-            ctx.moveTo(0, -size); ctx.lineTo(size, -size/2); ctx.lineTo(0, 0); ctx.lineTo(-size, -size/2); ctx.closePath();
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(0, 0); ctx.lineTo(0, size); ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(size, -size/2); ctx.lineTo(size, size - size/2); ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(-size, -size/2); ctx.lineTo(-size, size - size/2); ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(0, size); ctx.lineTo(size, size - size/2); ctx.lineTo(0, size + size); ctx.lineTo(-size, size - size/2); ctx.closePath();
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.ellipse(0, size/2, (15 + pulse * 20) * zoom, (7 + pulse * 10) * zoom, 0, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.5 - pulse * 0.5})`;
-            ctx.stroke();
-            
-            ctx.restore();
-        }
-    });
 }
 
 let cryptoBalance = 0;
 let lastCryptoTick = Date.now();
 
-function drawCryptoSprites() {
-    let mintRate = 0;
-    
-    districts.forEach(d => {
-        if (d.type === 'BANK') {
-            let baseMint = parseFloat(d.settings?.sprite_mint || 500);
-            let gas = parseFloat(d.settings?.gas_fee || 0.01);
-            let burn = parseFloat(d.settings?.burn_rate || 1.5) / 100.0;
-            
-            let netYield = baseMint - (baseMint * gas) - (baseMint * burn);
-            mintRate += netYield;
-
-            const { isoX, isoY } = toIso(d.x, d.y);
-            const time = Date.now() / 1000;
-            const bounce = Math.sin(time * 3) * 10 * zoom;
-            
-            ctx.save();
-            ctx.translate(isoX, isoY - 40 * zoom - bounce);
-            
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#ffd700';
-            ctx.fillStyle = '#ffd700';
-            ctx.beginPath();
-            ctx.ellipse(0, 0, 10 * zoom, 15 * zoom, 0, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = '#cca300';
-            ctx.lineWidth = 2 * zoom;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, 6 * zoom, 10 * zoom, 0, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            ctx.fillStyle = '#fff';
-            ctx.font = old \px Arial;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('S', 0, 0);
-            
-            ctx.restore();
-        }
-    });
-    
-    const now = Date.now();
-    const dt = (now - lastCryptoTick) / 1000.0;
-    lastCryptoTick = now;
-    
-    if (mintRate > 0) {
-        cryptoBalance += mintRate * dt;
-        const rateEl = document.getElementById('mint-rate');
-        const balEl = document.getElementById('crypto-balance');
-        if (rateEl) rateEl.innerText = mintRate.toFixed(2) + ' SPRITE/s';
-        if (balEl) balEl.innerText = cryptoBalance.toFixed(2);
-    }
-}
-
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const mouseTile = selectedTile;
-    
+    const freq = window.systemFrequency || 5.2;
+    const speedMult = freq / 5.2;
+
     for (let x = -20; x < MAP_SIZE; x++) {
         for (let y = -20; y < MAP_SIZE; y++) {
             drawTile(x, y, '#050a05', (x === mouseTile.x && y === mouseTile.y));
         }
     }
 
-    drawTrajectories();
-    drawBindingChains();
-    drawThermalMonitor();
-    drawHolograms();
-    drawCryptoSprites();
-
-    // 6. Sprite AI Sentience & MSN Chatter
-    const now = Date.now();
-    if (!window.lastMsnTick || now - window.lastMsnTick > 5000) {
-        window.lastMsnTick = now;
-        const agent = window.agents[Math.floor(Math.random() * window.agents.length)];
-        if (agent) {
-            const msgs = [
-                `Synchronizing DePIN node at [${agent.x}, ${agent.y}]`,
-                `SHA256 Hash Verified: 0x${Math.random().toString(16).slice(2, 10)}...`,
-                `H2O-Danube optimization cycle complete. Stability: ${window.systemStability}`,
-                `Dual-Watchdog active. No memory leaks detected.`,
-                `Routing packets via ${Object.keys(PROTOCOLS)[Math.floor(Math.random()*3)]} protocol.`,
-                `Prime Directive: Heal and Automate sectors.`,
-                `Recording automation script for coordinate ${Math.floor(agent.x)},${Math.floor(agent.y)}`
-            ];
-            if (window.msnChat) window.msnChat(agent.name || 'AGENT_CORE', msgs[Math.floor(Math.random() * msgs.length)]);
-            
-            // Clipboard Ability (Simulated)
-            if (Math.random() < 0.1 && agent.settings?.clipboard) {
-                const state = `SIM_STATE: ${agent.name} at ${agent.x},${agent.y} | STATUS: ${agent.state}`;
-                navigator.clipboard.writeText(state).catch(() => {});
-                window.logToConsole(`AGENT_EVENT: ${agent.name} copied state to clipboard.`);
-            }
-        }
-    }
-
     packets.forEach((pkt, i) => {
-        pkt.p += pkt.speed || 0.01;
+        // CAS Latency Gating (Step 26 Option A)
+        const isMemPacket = pkt.tx === 3 && pkt.ty === 0; // RAM Target
+        if (isMemPacket && pkt.p > 0.4 && pkt.p < 0.5) {
+            const waitTime = window.casLatency || 32;
+            pkt.wait = (pkt.wait || 0) + (1 * speedMult);
+            if (pkt.wait < waitTime) return; // Hold packet at controller
+        }
+
+        pkt.p += (pkt.speed || 0.01) * speedMult;
         const curX = pkt.x + (pkt.tx - pkt.x) * pkt.p, curY = pkt.y + (pkt.ty - pkt.y) * pkt.p, pos = toIso(curX, curY);
         let finalX = pos.isoX, finalY = pos.isoY;
         if(pkt.protocol !== 'BUS') finalY -= Math.sin(pkt.p * Math.PI) * 60 * zoom;
-        ctx.fillStyle = pkt.color; ctx.shadowBlur = 10; ctx.shadowColor = pkt.color;
-        ctx.beginPath(); ctx.arc(finalX, finalY, 2*zoom, 0, Math.PI*2); ctx.fill();
-        ctx.shadowBlur = 0;
+        ctx.fillStyle = pkt.color; ctx.beginPath(); ctx.arc(finalX, finalY, 2*zoom, 0, Math.PI*2); ctx.fill();
         if(pkt.p >= 1) packets.splice(i, 1);
     });
 
@@ -388,40 +208,49 @@ function draw() {
     if (hoveredNode) {
         const info = BUILD_TYPES[hoveredNode.type];
         tooltip.style.display = 'block'; tooltip.style.left = (lastMouseX + 20) + 'px'; tooltip.style.top = (lastMouseY + 20) + 'px';
-        
-        let specHtml = `<div class="tooltip-header">${info.label}</div><div class="tooltip-desc">${info.desc}</div>`;
-        
-        // Exhaustive Hardware Data Injection
+        let specHtml = `<div class="tooltip-header">${info.label}</div>`;
         const specs = window.hardwareSpecs ? window.hardwareSpecs[hoveredNode.type] : null;
         if (specs) {
-            specHtml += `<div style="margin-top:10px; border-top:1px solid #005555; padding-top:5px; font-size:10px;">`;
             for (const [key, value] of Object.entries(specs)) {
                 if (typeof value === 'object') {
-                    specHtml += `<div class="tooltip-row"><span class="tooltip-label">${key.toUpperCase()}:</span></div>`;
-                    for (const [subKey, subVal] of Object.entries(value)) {
-                        specHtml += `<div class="tooltip-row" style="padding-left:10px;"><span class="tooltip-label">${subKey}:</span><span class="tooltip-value">${subVal}</span></div>`;
+                    specHtml += `<div class="tooltip-row"><b>${key}:</b></div>`;
+                    for(let [sk, sv] of Object.entries(value)) {
+                        specHtml += `<div class="tooltip-row" style="padding-left:10px;"><span>${sk}:</span><span>${sv}</span></div>`;
                     }
                 } else {
-                    specHtml += `<div class="tooltip-row"><span class="tooltip-label">${key.toUpperCase()}:</span><span class="tooltip-value">${value}</span></div>`;
+                    specHtml += `<div class="tooltip-row"><span>${key}:</span><span>${value}</span></div>`;
                 }
             }
-            specHtml += `</div>`;
         }
-        
         tooltip.innerHTML = specHtml;
     } else { tooltip.style.display = 'none'; }
 
-    window.agents.forEach(agent => {
-        const pos = toIso(agent.x, agent.y);
-        ctx.fillStyle = agent.role === 'ADMIN' ? '#fff' : '#0ff';
-        ctx.beginPath(); ctx.arc(pos.isoX, pos.isoY, 4*zoom, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'white'; ctx.stroke();
+    // Trajectories (Real Data Flow)
+    const links = [
+        { from: 'CPU', to: 'RAM', protocol: 'BUS' },
+        { from: 'CPU', to: 'GPU', protocol: 'BUS' },
+        { from: 'CPU', to: 'NORTHBRIDGE', protocol: 'BUS' },
+        { from: 'NORTHBRIDGE', to: 'RAM', protocol: 'BUS' },
+        { from: 'SOUTHBRIDGE', to: 'SSD', protocol: 'TCP' },
+        { from: 'CPU', to: 'LLM', protocol: 'UDP' }
+    ];
+    links.forEach(l => {
+        const from = districts.find(d => d.type === l.from), to = districts.find(d => d.type === l.to);
+        if(from && to) {
+            const p1 = toIso(from.x, from.y), p2 = toIso(to.x, to.y);
+            const proto = PROTOCOLS[l.protocol] || PROTOCOLS['TCP'];
+            ctx.strokeStyle = proto.color + "22"; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(p1.isoX, p1.isoY); 
+            ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 50*zoom, p2.isoX, p2.isoY);
+            ctx.stroke();
+            if(Math.random() < 0.02 * speedMult) spawnPacket(from.x, from.y, to.x, to.y, proto.color, l.protocol, proto.speed);
+        }
     });
 
+    drawRenderFile();
     requestAnimationFrame(draw);
 }
 
-// 7. Drag-and-Drop Genesis Engine
 canvas.addEventListener('dragover', (e) => e.preventDefault());
 canvas.addEventListener('drop', (e) => {
     e.preventDefault();
@@ -429,60 +258,20 @@ canvas.addEventListener('drop', (e) => {
     if (BUILD_TYPES[type]) {
         const rect = canvas.getBoundingClientRect();
         const tile = fromIso(e.clientX - rect.left, e.clientY - rect.top);
-        
-        const existing = districts.find(d => d.x === tile.x && d.y === tile.y);
-        if (existing && BUILD_TYPES[existing.type].locked) return;
-        
-        districts = districts.filter(d => d.x !== tile.x || d.y !== tile.y);
-        districts.push({ 
-            x: tile.x, y: tile.y, type: type, 
-            label: `${type}_Node_${Math.floor(Math.random()*1000)}`,
-            settings: JSON.parse(JSON.stringify(window.currentSettings || {})) 
-        });
-        
-        window.logToConsole(`GENESIS_EVENT: Deployed ${type} at [${tile.x}, ${tile.y}]`);
-        if (window.msnChat) window.msnChat('SYSTEM', `New DePIN node ${type} initialized with SHA256: 0x${Math.random().toString(16).slice(2, 10)}`);
+        districts.push({ x: tile.x, y: tile.y, type: type, label: `${type}_Node` });
+        addRenderLog(`GENESIS: Deployed ${type} at [${tile.x}, ${tile.y}]`);
     }
 });
 
 const paletteButtons = document.querySelectorAll('.tool-btn');
 paletteButtons.forEach(btn => {
-    btn.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', btn.getAttribute('data-type'));
-    });
+    btn.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', btn.getAttribute('data-type')));
 });
 
-window.setBuildType = function(type) { currentBuildType = type; };
-canvas.addEventListener('wheel', (e) => { e.preventDefault(); if(e.deltaY < 0) zoom *= 1.1; else zoom /= 1.1; zoom = Math.min(Math.max(0.1, zoom), 5); });
-canvas.addEventListener('mousedown', (e) => {
-    if(e.button === 1 || (e.button === 0 && e.shiftKey)) { isDragging = true; lastMouseX = e.clientX; lastMouseY = e.clientY; }
-    else if(e.button === 0) {
-        const target = districts.find(d => d.x === selectedTile.x && d.y === selectedTile.y);
-        if (target && BUILD_TYPES[target.type].locked) return;
-        districts = districts.filter(d => d.x !== selectedTile.x || d.y !== selectedTile.y);
-        districts.push({ x: selectedTile.x, y: selectedTile.y, type: currentBuildType, settings: JSON.parse(JSON.stringify(window.currentSettings || {})) });
-    }
-});
-window.addEventListener('mousemove', (e) => {
+canvas.addEventListener('mousemove', (e) => {
     lastMouseX = e.clientX; lastMouseY = e.clientY;
-    if(isDragging) { camX += (e.clientX - lastMouseX); camY += (e.clientY - lastMouseY); }
-    const rect = canvas.getBoundingClientRect(); selectedTile = fromIso(e.clientX - rect.left, e.clientY - rect.top);
+    const rect = canvas.getBoundingClientRect();
+    selectedTile = fromIso(e.clientX - rect.left, e.clientY - rect.top);
 });
-window.addEventListener('mouseup', () => { isDragging = false; });
 
-const legendContent = document.getElementById('legend-content');
-if (legendContent) {
-    legendContent.innerHTML = '';
-    Object.entries(BUILD_TYPES).forEach(([key, info]) => {
-        const item = document.createElement('div');
-        item.className = 'legend-item';
-        item.innerHTML = `<div class="legend-color" style="background: ${info.color}"></div><span>${info.label}</span>`;
-        legendContent.appendChild(item);
-    });
-}
-
-window.agents = [ { x: 0, y: 0, name: 'ADMIN_ROOT', role: 'ADMIN' } ];
 draw();
-
-
-
