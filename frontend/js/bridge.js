@@ -39,7 +39,17 @@ async function SyncLoop() {
             window.ramLoad = tickData.data.ram_load;
             window.isSwapping = tickData.data.is_swapping;
             window.casLatency = tickData.data.cas_latency;
+            window.dirtyPages = tickData.data.dirty_pages || [];
+            window.vramShadow = tickData.data.vram_shadow;
+            window.coldPages = tickData.data.cold_pages || [];
+            window.iopsLag = tickData.data.iops_lag;
+            window.speculativeActive = tickData.data.speculative_execution;
+            window.memPressure = tickData.data.memory_pressure;
+            window.isRefreshing = tickData.data.is_refreshing;
             window.activeResearchAttrs = tickData.data.active_attrs;
+            window.systemWeather = tickData.data.weather;
+            window.cyberEconomy = tickData.data.economy;
+            window.cityProgression = tickData.data.progression;
         }
 
         // 4. Update UI labels
@@ -52,6 +62,35 @@ async function SyncLoop() {
             clockEl.innerText = (window.systemFrequency * (window.systemFrequency < 100 ? 1 : 0.001)).toFixed(2) + " GHz";
             if (window.systemHeat > 80) clockEl.style.color = '#f00';
             else clockEl.style.color = '#0f0';
+        }
+        
+        const weatherEl = document.getElementById('env-weather');
+        if (weatherEl && window.systemWeather) {
+            weatherEl.innerText = window.systemWeather;
+            if (window.systemWeather.includes("STORM") || window.systemWeather.includes("CORRUPTION")) {
+                weatherEl.style.color = '#f00';
+            } else {
+                weatherEl.style.color = '#0ff';
+            }
+        }
+        
+        const mintRateEl = document.getElementById('mint-rate');
+        const cryptoBalEl = document.getElementById('crypto-balance');
+        if (window.cyberEconomy) {
+            if (mintRateEl) mintRateEl.innerText = window.cyberEconomy.mint_rate.toFixed(2) + " SPRITE/s";
+            if (cryptoBalEl) cryptoBalEl.innerText = window.cyberEconomy.balance.toFixed(2);
+        }
+        
+        const lvlEl = document.getElementById('city-level');
+        const xpEl = document.getElementById('city-xp');
+        const unlockEl = document.getElementById('city-unlock');
+        if (window.cityProgression) {
+            if (lvlEl) lvlEl.innerText = window.cityProgression.level;
+            if (xpEl) xpEl.innerText = window.cityProgression.progress_pct;
+            if (unlockEl && window.cityProgression.recent_unlocks && window.cityProgression.recent_unlocks.length > 0) {
+                const recent = window.cityProgression.recent_unlocks;
+                unlockEl.innerText = recent[recent.length - 1];
+            }
         }
 
         // 5. Fetch Hardware Specs (Once)

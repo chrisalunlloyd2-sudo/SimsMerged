@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flappy Agent</title>
+    <style>
+        body { margin: 0; padding: 0; background: #000; overflow: hidden; color: #fff; font-family: monospace; }
+        canvas { display: block; background: #87CEEB; margin: 0 auto; }
+        #score { position: absolute; top: 10px; width: 100%; text-align: center; font-size: 24px; font-weight: bold; color: #fff; text-shadow: 2px 2px 0 #000; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="score">0</div>
+    <canvas id="game" width="320" height="480"></canvas>
+    <script>
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+
+        let frames = 0, score = 0, best = 0;
+        let currentstate;
+        const state = { getReady: 0, Game: 1, over: 2 };
+
+        const bird = {
+            x: 50, y: 150, width: 34, height: 24,
+            gravity: 0.25, jump: 4.6, speed: 0, rotation: 0,
+            draw: function() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.fillStyle = '#ffcc00'; // Agent yellow
+                ctx.beginPath();
+                ctx.arc(0, 0, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000'; // Eye
+                ctx.beginPath();
+                ctx.arc(6, -4, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            },
+            flap: function() { this.speed = -this.jump; },
+            update: function() {
+                if(currentstate === state.getReady) {
+                    this.y = 150; this.rotation = 0; this.speed = 0;
+                } else {
+                    this.speed += this.gravity;
+                    this.y += this.speed;
+                    if(this.y + this.height/2 >= canvas.height - 112) {
+                        this.y = canvas.height - 112 - this.height/2;
+                        if(currentstate === state.Game) { currentstate = state.over; }
+                    }
+                    if(this.speed >= this.jump) { this.rotation = 90 * Math.PI/180; }
+                    else { this.rotation = -25 * Math.PI/180; }
+                }
+            }
+        };
+
+        const pipes = {
+            position: [],
+            width: 53,
+            maxYPos: -150,
+            dx: 2,
+            draw: function() {
+                for(let i = 0; i < this.position.length; i++) {
+                    let p = this.position[i];
+                    let topYPos = p.y;
+                    let bottomYPos = p.y + 85 + 200; // gap is 85
+                    ctx.fillStyle = '#0a0'; // green pipe
+                    ctx.fillRect(p.x, topYPos, this.width, 200); // top pipe
+                    ctx.fillRect(p.x, bottomYPos, this.width, canvas.height - bottomYPos - 112); // bottom pipe
+                }
+            },
+            update: function() {
+                if(currentstate !== state.Game) return;
+                if(frames % 100 === 0) {
+                    this.position.push({ x: canvas.width, y: this.maxYPos * (Math.random() + 1) });
+                }
+                for(let i = 0; i < this.position.length; i++) {
+                    let p = this.position[i];
+                    let bottomPipeYPos = p.y + 85 + 200;
+                    
+                    // Collision
+                    if(bird.x + 12 > p.x && bird.x - 12 < p.x + this.width && bird.y + 12 > p.y && bird.y - 12 < p.y + 200) {
+                        currentstate = state.over;
+                    }
+                    if(bird.x + 12 > p.x && bird.x - 12 < p.x + this.width && bird.y + 12 > bottomPipeYPos && bird.y - 12 < canvas.height - 112) {
+                        currentstate = state.over;
+                    }
+                    
+                    p.x -= this.dx;
+                    if(p.x + this.width <= 0) { this.position.shift(); score++; scoreEl.innerText = score; }
+                }
+            },
+            reset: function() { this.position = []; }
+        };
+
+        const bg = {
+            draw: function() {
+                ctx.fillStyle = '#87CEEB';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ded895'; // ground
+                ctx.fillRect(0, canvas.height - 112, canvas.width, 112);
+            }
+        };
+
+        function draw() {
+            bg.draw();
+            pipes.draw();
+            bird.draw();
+            if(currentstate === state.getReady) {
+                ctx.fillStyle = '#000'; ctx.font = '16px monospace';
+                ctx.fillText("Click/Space to Jump", 70, 200);
+            }
+            if(currentstate === state.over) {
+                ctx.fillStyle = '#000'; ctx.font = '16px monospace';
+                ctx.fillText("GAME OVER", 120, 200);
+                ctx.fillText("Click to Restart", 90, 230);
+            }
+        }
+
+        function update() {
+            bird.update();
+            pipes.update();
+        }
+
+        function loop() {
+            update();
+            draw();
+            frames++;
+            requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('mousedown', function() {
+            switch(currentstate) {
+                case state.getReady: currentstate = state.Game; break;
+                case state.Game: bird.flap(); break;
+                case state.over:
+                    pipes.reset();
+                    bird.speed = 0; bird.rotation = 0; score = 0; scoreEl.innerText = score;
+                    currentstate = state.getReady; break;
+            }
+        });
+        
+        window.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                switch(currentstate) {
+                    case state.getReady: currentstate = state.Game; break;
+                    case state.Game: bird.flap(); break;
+                    case state.over:
+                        pipes.reset();
+                        bird.speed = 0; bird.rotation = 0; score = 0; scoreEl.innerText = score;
+                        currentstate = state.getReady; break;
+                }
+            }
+        });
+
+        currentstate = state.getReady;
+        loop();
+    </script>
+</body>
+</html>

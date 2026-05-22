@@ -1,37 +1,44 @@
 Write-Host 'INITIALIZING THE ULTIMATE METROPOLIS ENGINE: BLOCK 4 - SYNERGY & TELEMETRY' -ForegroundColor Cyan
 
-# 1. Dependency Checks
+# 1. Path Configuration
+$JAVA_HOME = "C:\Users\viper\JavaSetup\jdk-17.0.8.1+1"
+$PYTHON_PATH = "C:\Users\viper\python\python.exe"
+$MVN_PATH = "C:\Users\viper\JavaSetup\apache-maven-3.9.4\bin\mvn.cmd"
+
+$env:JAVA_HOME = $JAVA_HOME
+$env:PATH = "$JAVA_HOME\bin;$env:PATH"
+
+# 2. Dependency Checks
 Write-Host '--- Phase 1: Dependency Validation ---' -ForegroundColor Yellow
-$javaOk = (Get-Command java -ErrorAction SilentlyContinue) -ne $null
-$pythonOk = (Get-Command python -ErrorAction SilentlyContinue) -ne $null
-$mvnOk = (Get-Command mvn -ErrorAction SilentlyContinue) -ne $null
+$javaOk = Test-Path "$JAVA_HOME\bin\java.exe"
+$pythonOk = Test-Path $PYTHON_PATH
+$mvnOk = Test-Path $MVN_PATH
 
-if (-not $javaOk) { Write-Host '[!] Java not found. Please install JDK 17+.' -ForegroundColor Red }
-if (-not $pythonOk) { Write-Host '[!] Python not found. Please install Python 3.9+.' -ForegroundColor Red }
-if (-not $mvnOk) { Write-Host '[!] Maven not found. Please install Maven.' -ForegroundColor Red }
+if (-not $javaOk) { Write-Host "[!] Java not found at $JAVA_HOME" -ForegroundColor Red }
+if (-not $pythonOk) { Write-Host "[!] Python not found at $PYTHON_PATH" -ForegroundColor Red }
+if (-not $mvnOk) { Write-Host "[!] Maven not found at $MVN_PATH" -ForegroundColor Red }
 
-if (-not ($javaOk -and $pythonOk)) {
+if (-not ($javaOk -and $pythonOk -and $mvnOk)) {
     Write-Host 'CRITICAL DEPENDENCIES MISSING. ABORTING LAUNCH.' -ForegroundColor Red
-    # We don't exit here so the user can see the message in some environments, 
-    # but we skip the launch.
 } else {
     Write-Host '[+] All dependencies verified.' -ForegroundColor Green
 
-    # 2. Sequence Simulation
+    # 3. Sequence Simulation
     Write-Host '--- Phase 2: Quantum Harmonization ---' -ForegroundColor Yellow
     0..10 | ForEach-Object {
         Write-Host "Syncing System Matrix: $(($_ * 10))%..." -ForegroundColor Green
         Start-Sleep -Milliseconds 100
     }
 
-    # 3. Launching Backend
+    # 4. Launching Backend
     Write-Host '--- Phase 3: Deploying Metropolis Authority ---' -ForegroundColor Yellow
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "python backend/main.py" -WindowStyle Normal
+    # Using the new run_backend.py to ensure project root is in PYTHONPATH
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "& '$PYTHON_PATH' run_backend.py" -WindowStyle Normal
 
-    # 4. Launching Java Engine
+    # 5. Launching Java Engine
     Write-Host '--- Phase 4: Igniting Java Neo Engine ---' -ForegroundColor Yellow
     if (Test-Path "pom.xml") {
-        Start-Process powershell -ArgumentList "-NoExit", "-Command", "mvn javafx:run" -WindowStyle Normal
+        Start-Process powershell -ArgumentList "-NoExit", "-Command", "& '$MVN_PATH' javafx:run" -WindowStyle Normal
     } else {
         Write-Host '[!] pom.xml not found. Skipping Java launch.' -ForegroundColor Gray
     }

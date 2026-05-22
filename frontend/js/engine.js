@@ -14,18 +14,85 @@ const TILE_WIDTH = 64, TILE_HEIGHT = 32, MAP_SIZE = 40;
 let selectedTile = { x: 0, y: 0 };
 window.agents = window.agents || [];
 let currentBuildType = 'CPU';
-let camX = 0, camY = 0, zoom = 0.8;
+let camX = 0, camY = 0, zoom = 1.0;
 let isDragging = false, lastMouseX = 0, lastMouseY = 0;
 
+// Mouse Interaction & Viewport Control
+canvas.oncontextmenu = (e) => e.preventDefault(); 
+
+canvas.onmousedown = (e) => {
+    if (e.button === 0) { // Left Click
+        const tile = fromIso(e.clientX, e.clientY);
+        const existing = districts.find(d => d.x === tile.x && d.y === tile.y);
+        if (existing) {
+            addRenderLog(`SELECT: ${existing.type} at [${tile.x}, ${tile.y}]`);
+        } else {
+            addRenderLog(`INTERACT: Empty Tile [${tile.x}, ${tile.y}]`);
+        }
+    } else if (e.button === 2) { // Right Click
+        isDragging = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+    }
+};
+
+window.onmouseup = () => { isDragging = false; };
+
+canvas.onmousemove = (e) => {
+    lastMouseX = e.clientX; 
+    lastMouseY = e.clientY;
+    if (isDragging) {
+        camX += (e.clientX - lastMouseX);
+        camY += (e.clientY - lastMouseY);
+    }
+    const rect = canvas.getBoundingClientRect();
+    selectedTile = fromIso(e.clientX, e.clientY);
+};
+
+canvas.onwheel = (e) => {
+    e.preventDefault();
+    const zoomSpeed = 0.1;
+    if (e.deltaY < 0) zoom = Math.min(zoom + zoomSpeed, 2.0);
+    else zoom = Math.max(zoom - zoomSpeed, 0.4);
+};
+
+function toIso(x, y) {
+    return { 
+        isoX: (x - y) * (TILE_WIDTH / 2) * zoom + canvas.width / 2 + camX, 
+        isoY: (x + y) * (TILE_HEIGHT / 2) * zoom + canvas.height / 2 + camY 
+    };
+}
+
+function fromIso(screenX, screenY) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (screenX - rect.left - canvas.width / 2 - camX) / zoom;
+    const y = (screenY - rect.top - canvas.height / 2 - camY) / zoom;
+    const isoX = (x / (TILE_WIDTH / 2) + y / (TILE_HEIGHT / 2)) / 2;
+    const isoY = (y / (TILE_HEIGHT / 2) - x / (TILE_WIDTH / 2)) / 2;
+    return { x: Math.floor(isoX), y: Math.floor(isoY) };
+}
+
+// System Information Mapping (GEMINI Mandate)
+const SYSTEM_INFO_MAP = {
+    'CPU': 'CENTRAL_CONTROL_UNIT: Orchestrates thread scheduling and instruction pipeline.',
+    'RAM': 'VOLATILE_MEMORY_BANK: High-speed buffer for active agent cognition states.',
+    'SSD': 'PERSISTENT_STORAGE_HIVE: Hashed storage for historical agent memories.',
+    'GPU': 'PARALLEL_COMPUTE_ARRAY: Offloads heavy visual rendering and matrix math.',
+    'LLM': 'NEURAL_INFERENCE_CORE: Powered by H2O-Danube for agent decision logic.',
+    'AGENT': 'ACTIVE_KERNEL_PROCESS: A living process mapped from the host machine.',
+    'HOSPITAL': 'SYSTEM_RECOVERY_NODE: Restores stability to corrupted agent sub-sectors.',
+    'BANK': 'DEPIN_LEDGER_AUTHORITY: Manages SPRITE minting and SHA-256 verification.'
+};
+
 const BUILD_TYPES = {
-    'CPU': { color: '#ff4d4d', label: 'Silicon Central', locked: true, category: 'Hardware', desc: 'Central compute core.' },
-    'RAM': { color: '#4dff88', label: 'Memory Matrix', locked: true, category: 'Hardware', desc: 'Volatile data pool.' },
-    'GPU': { color: '#4d94ff', label: 'Graphics Grid', locked: true, category: 'Hardware', desc: 'Parallel math array.' },
-    'SSD': { color: '#ffffff', label: 'NVMe SSD', locked: true, category: 'Hardware', desc: 'Persistent storage node.' },
-    'NORTHBRIDGE': { color: '#00ffff', label: 'Northbridge', locked: true, category: 'Hardware', desc: 'High-speed system link.' },
-    'SOUTHBRIDGE': { color: '#0055ff', label: 'Southbridge', locked: true, category: 'Hardware', desc: 'I/O peripheral hub.' },
-    'REGISTRY': { color: '#ffff00', label: 'Registry Hive', locked: true, category: 'Logic', desc: 'System configuration keys.' },
-    'MEM_CTRL': { color: '#aa00ff', label: 'Mem Controller', locked: true, category: 'Hardware', desc: 'Data retrieval unit.' },
+    'CPU': { color: '#ff4d4d', label: 'Silicon Central', locked: false, category: 'Hardware', desc: 'Central compute core.' },
+    'RAM': { color: '#4dff88', label: 'Memory Matrix', locked: false, category: 'Hardware', desc: 'Volatile data pool.' },
+    'GPU': { color: '#4d94ff', label: 'Graphics Grid', locked: false, category: 'Hardware', desc: 'Parallel math array.' },
+    'SSD': { color: '#ffffff', label: 'NVMe SSD', locked: false, category: 'Hardware', desc: 'Persistent storage node.' },
+    'NORTHBRIDGE': { color: '#00ffff', label: 'Northbridge', locked: false, category: 'Hardware', desc: 'High-speed system link.' },
+    'SOUTHBRIDGE': { color: '#0055ff', label: 'Southbridge', locked: false, category: 'Hardware', desc: 'I/O peripheral hub.' },
+    'REGISTRY': { color: '#ffff00', label: 'Registry Hive', locked: false, category: 'Logic', desc: 'System configuration keys.' },
+    'MEM_CTRL': { color: '#aa00ff', label: 'Mem Controller', locked: false, category: 'Hardware', desc: 'Data retrieval unit.' },
     'LLM': { color: '#00ffff', label: 'AI Intelligence', category: 'Software', desc: 'Neural inference cluster.' },
     'AGENT': { color: '#ffcc00', label: 'Agent Hub', category: 'Urban', desc: 'Deployment node for AI Kernels.' },
     'VDB': { color: '#ff00ff', label: 'Knowledge DB', category: 'Software', desc: 'Vectorized memory indexing.' },
@@ -58,48 +125,6 @@ const RENDER_LOG = [];
 function addRenderLog(msg) {
     RENDER_LOG.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
     if(RENDER_LOG.length > 20) RENDER_LOG.shift();
-}
-
-function drawRenderFile() {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0, 20, 0, 0.8)';
-    ctx.fillRect(10, canvas.height - 220, 300, 200);
-    ctx.strokeStyle = '#0f0'; ctx.lineWidth = 1;
-    ctx.strokeRect(10, canvas.height - 220, 300, 200);
-    
-    ctx.fillStyle = '#0f0'; ctx.font = '10px Courier New';
-    ctx.fillText("RENDER_FILE.SYS (Live Draw-Calls)", 20, canvas.height - 205);
-    RENDER_LOG.forEach((line, i) => {
-        ctx.fillText(line, 20, canvas.height - 185 + (i * 10));
-    });
-    ctx.restore();
-}
-
-const PROTOCOLS = {
-    'TCP': { name: 'Walk', speed: 0.005, color: '#00ff00', desc: 'Reliable, ordered flow.' },
-    'UDP': { name: 'Bike', speed: 0.02, color: '#ffff00', desc: 'Fast, lossy jitter flow.' },
-    'BUS': { name: 'File Bus', speed: 0.01, color: '#ff00ff', desc: 'Bulk data transfer.' }
-};
-
-let packets = [];
-function spawnPacket(fromX, fromY, toX, toY, color, protocol, speed) {
-    packets.push({ x: fromX, y: fromY, tx: toX, ty: toY, p: 0, color, protocol, speed });
-    addRenderLog(`SPAWN_PACKET: ${protocol} at [${fromX},${fromY}] -> [${toX},${toY}]`);
-}
-
-function toIso(x, y) {
-    return { 
-        isoX: (x - y) * (TILE_WIDTH / 2) * zoom + canvas.width / 2 + camX, 
-        isoY: (x + y) * (TILE_HEIGHT / 2) * zoom + canvas.height / 2 + camY 
-    };
-}
-
-function fromIso(isoX, isoY) {
-    const screenX = (isoX - canvas.width / 2 - camX) / zoom;
-    const screenY = (isoY - canvas.height / 2 - camY) / zoom;
-    const x = (screenX / (TILE_WIDTH / 2) + screenY / (TILE_HEIGHT / 2)) / 2;
-    const y = (screenY / (TILE_HEIGHT / 2) - screenX / (TILE_WIDTH / 2)) / 2;
-    return { x: Math.floor(x), y: Math.floor(y) };
 }
 
 function drawStructure(isoX, isoY, color, type, locked) {
@@ -138,117 +163,93 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
     const tw = TILE_WIDTH * zoom, th = TILE_HEIGHT * zoom;
     if (isoX < -tw || isoX > canvas.width + tw || isoY < -th || isoY > canvas.height + th) return;
     
+    let finalColor = color;
+    const isHardware = districts.some(d => d.x === x && d.y === y && BUILD_TYPES[d.type] && BUILD_TYPES[d.type].category === 'Hardware');
+    
     ctx.beginPath();
     ctx.moveTo(isoX, isoY); ctx.lineTo(isoX + tw / 2, isoY + th / 2);
     ctx.lineTo(isoX, isoY + th); ctx.lineTo(isoX - tw / 2, isoY + th / 2);
     ctx.closePath();
-    ctx.fillStyle = isHovered ? '#102510' : color;
+    ctx.fillStyle = isHovered ? '#102510' : finalColor;
     ctx.fill();
-    ctx.strokeStyle = '#001a00'; ctx.stroke();
+    ctx.strokeStyle = isHardware ? '#00ffff44' : '#001a00'; 
+    ctx.lineWidth = isHardware ? 2 : 1;
+    ctx.stroke();
 
     const d = districts.find(d => d.x === x && d.y === y);
     if (d) {
         let info = BUILD_TYPES[d.type] || { color: 'gray' };
-        let finalColor = info.color;
-        
-        // Real-world Heat Tinting for CPU
-        if (d.type === 'CPU') {
-            const heat = window.systemHeat || 35;
-            const r = Math.min(255, 100 + (heat * 1.5));
-            finalColor = `rgb(${r}, 77, 77)`;
-        }
-        
-        // SSD Swap Glow (Step 26 Option B)
-        if (d.type === 'SSD' && window.isSwapping) {
-            ctx.shadowBlur = 20; ctx.shadowColor = '#ffaa00';
-            finalColor = '#ffaa00';
-        }
-
-        drawStructure(isoX, isoY + th/2, finalColor, d.type, info.locked);
-        ctx.shadowBlur = 0;
-        
+        drawStructure(isoX, isoY + th/2, info.color, d.type, info.locked);
         ctx.fillStyle = 'white'; ctx.font = `bold ${Math.max(10, 14*zoom)}px Arial`;
         ctx.fillText(d.label || d.type, isoX - 12*zoom, isoY - 20*zoom);
     }
 }
 
-let cryptoBalance = 0;
-let lastCryptoTick = Date.now();
-
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const mouseTile = selectedTile;
-    const freq = window.systemFrequency || 5.2;
-    const speedMult = freq / 5.2;
-
     for (let x = -20; x < MAP_SIZE; x++) {
         for (let y = -20; y < MAP_SIZE; y++) {
-            drawTile(x, y, '#050a05', (x === mouseTile.x && y === mouseTile.y));
+            drawTile(x, y, '#050a05', (x === selectedTile.x && y === selectedTile.y));
         }
     }
 
-    packets.forEach((pkt, i) => {
-        // CAS Latency Gating (Step 26 Option A)
-        const isMemPacket = pkt.tx === 3 && pkt.ty === 0; // RAM Target
-        if (isMemPacket && pkt.p > 0.4 && pkt.p < 0.5) {
-            const waitTime = window.casLatency || 32;
-            pkt.wait = (pkt.wait || 0) + (1 * speedMult);
-            if (pkt.wait < waitTime) return; // Hold packet at controller
+    window.agents.forEach(agent => {
+        const { isoX, isoY } = toIso(agent.x, agent.y);
+        const color = agent.role === 'DOCTOR' ? '#ff4444' : (agent.role === 'TEACHER' ? '#4facfe' : '#ffcc00');
+        
+        // --- DRAW SSPRITE (Animated Agent) ---
+        const bob = Math.sin(Date.now() * 0.005) * 5 * zoom;
+        const baseSize = 8 * zoom;
+        
+        // Body (MS Paint Style)
+        ctx.fillStyle = color;
+        ctx.fillRect(isoX - baseSize, isoY - baseSize*2 + bob, baseSize*2, baseSize*3);
+        ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.strokeRect(isoX - baseSize, isoY - baseSize*2 + bob, baseSize*2, baseSize*3);
+        
+        // Head
+        ctx.beginPath();
+        ctx.arc(isoX, isoY - baseSize*3 + bob, baseSize, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+        
+        // Eyes (Blinking simulation)
+        const isBlinking = Math.random() < 0.01;
+        if (!isBlinking) {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(isoX - 3*zoom, isoY - baseSize*3.2 + bob, 2*zoom, 2*zoom);
+            ctx.fillRect(isoX + 1*zoom, isoY - baseSize*3.2 + bob, 2*zoom, 2*zoom);
         }
 
-        pkt.p += (pkt.speed || 0.01) * speedMult;
-        const curX = pkt.x + (pkt.tx - pkt.x) * pkt.p, curY = pkt.y + (pkt.ty - pkt.y) * pkt.p, pos = toIso(curX, curY);
-        let finalX = pos.isoX, finalY = pos.isoY;
-        if(pkt.protocol !== 'BUS') finalY -= Math.sin(pkt.p * Math.PI) * 60 * zoom;
-        ctx.fillStyle = pkt.color; ctx.beginPath(); ctx.arc(finalX, finalY, 2*zoom, 0, Math.PI*2); ctx.fill();
-        if(pkt.p >= 1) packets.splice(i, 1);
+        // Draw Label
+        ctx.fillStyle = 'white'; ctx.font = `${Math.max(8, 10*zoom)}px Arial`;
+        ctx.fillText(`[Lvl ${agent.level}] ${agent.title || 'Agent'}`, isoX - 30*zoom, isoY - 55*zoom + bob);
+        ctx.fillText(agent.name, isoX - 15*zoom, isoY - 45*zoom + bob);
     });
 
-    const hoveredNode = districts.find(d => d.x === selectedTile.x && d.y === selectedTile.y);
-    if (hoveredNode) {
-        const info = BUILD_TYPES[hoveredNode.type];
-        tooltip.style.display = 'block'; tooltip.style.left = (lastMouseX + 20) + 'px'; tooltip.style.top = (lastMouseY + 20) + 'px';
-        let specHtml = `<div class="tooltip-header">${info.label}</div>`;
-        const specs = window.hardwareSpecs ? window.hardwareSpecs[hoveredNode.type] : null;
-        if (specs) {
-            for (const [key, value] of Object.entries(specs)) {
-                if (typeof value === 'object') {
-                    specHtml += `<div class="tooltip-row"><b>${key}:</b></div>`;
-                    for(let [sk, sv] of Object.entries(value)) {
-                        specHtml += `<div class="tooltip-row" style="padding-left:10px;"><span>${sk}:</span><span>${sv}</span></div>`;
-                    }
-                } else {
-                    specHtml += `<div class="tooltip-row"><span>${key}:</span><span>${value}</span></div>`;
-                }
-            }
-        }
-        tooltip.innerHTML = specHtml;
-    } else { tooltip.style.display = 'none'; }
-
-    // Trajectories (Real Data Flow)
-    const links = [
-        { from: 'CPU', to: 'RAM', protocol: 'BUS' },
-        { from: 'CPU', to: 'GPU', protocol: 'BUS' },
-        { from: 'CPU', to: 'NORTHBRIDGE', protocol: 'BUS' },
-        { from: 'NORTHBRIDGE', to: 'RAM', protocol: 'BUS' },
-        { from: 'SOUTHBRIDGE', to: 'SSD', protocol: 'TCP' },
-        { from: 'CPU', to: 'LLM', protocol: 'UDP' }
-    ];
-    links.forEach(l => {
-        const from = districts.find(d => d.type === l.from), to = districts.find(d => d.type === l.to);
-        if(from && to) {
-            const p1 = toIso(from.x, from.y), p2 = toIso(to.x, to.y);
-            const proto = PROTOCOLS[l.protocol] || PROTOCOLS['TCP'];
-            ctx.strokeStyle = proto.color + "22"; ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(p1.isoX, p1.isoY); 
-            ctx.quadraticCurveTo((p1.isoX+p2.isoX)/2, (p1.isoY+p2.isoY)/2 - 50*zoom, p2.isoX, p2.isoY);
-            ctx.stroke();
-            if(Math.random() < 0.02 * speedMult) spawnPacket(from.x, from.y, to.x, to.y, proto.color, l.protocol, proto.speed);
-        }
-    });
-
-    drawRenderFile();
+    apply_interaction_logic();
     requestAnimationFrame(draw);
+}
+
+function apply_interaction_logic() {
+    const hoveredNode = districts.find(d => d.x === selectedTile.x && d.y === selectedTile.y);
+    const hoveredAgent = window.agents.find(a => a.x === selectedTile.x && a.y === selectedTile.y);
+
+    if (hoveredNode || hoveredAgent) {
+        const info = hoveredNode ? BUILD_TYPES[hoveredNode.type] : { label: hoveredAgent.name, desc: `Role: ${hoveredAgent.role}` };
+        const sysPart = hoveredNode ? (SYSTEM_INFO_MAP[hoveredNode.type] || 'Standard Infrastructure Component') : SYSTEM_INFO_MAP['AGENT'];
+        
+        tooltip.style.display = 'block'; 
+        tooltip.style.left = (lastMouseX + 20) + 'px'; 
+        tooltip.style.top = (lastMouseY + 20) + 'px';
+        
+        tooltip.innerHTML = `
+            <div class="tooltip-header">${info.label} <span class="sys-info-tag">SYSTEM_INFO</span></div>
+            <div class="tooltip-row"><span class="tooltip-label">COORDINATES:</span><span class="tooltip-value">[${selectedTile.x}, ${selectedTile.y}]</span></div>
+            <div class="tooltip-desc" style="color: #00ffff; font-weight: bold; margin-bottom: 5px;">${sysPart}</div>
+            <div class="tooltip-desc">${info.desc || ''}</div>
+        `;
+    } else {
+        tooltip.style.display = 'none';
+    }
 }
 
 canvas.addEventListener('dragover', (e) => e.preventDefault());
@@ -256,22 +257,10 @@ canvas.addEventListener('drop', (e) => {
     e.preventDefault();
     const type = e.dataTransfer.getData('text/plain');
     if (BUILD_TYPES[type]) {
-        const rect = canvas.getBoundingClientRect();
-        const tile = fromIso(e.clientX - rect.left, e.clientY - rect.top);
+        const tile = fromIso(e.clientX, e.clientY);
         districts.push({ x: tile.x, y: tile.y, type: type, label: `${type}_Node` });
         addRenderLog(`GENESIS: Deployed ${type} at [${tile.x}, ${tile.y}]`);
     }
-});
-
-const paletteButtons = document.querySelectorAll('.tool-btn');
-paletteButtons.forEach(btn => {
-    btn.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', btn.getAttribute('data-type')));
-});
-
-canvas.addEventListener('mousemove', (e) => {
-    lastMouseX = e.clientX; lastMouseY = e.clientY;
-    const rect = canvas.getBoundingClientRect();
-    selectedTile = fromIso(e.clientX - rect.left, e.clientY - rect.top);
 });
 
 draw();

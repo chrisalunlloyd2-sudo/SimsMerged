@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>SimsMerged - Final Boss Automation</title>
@@ -56,35 +56,40 @@
             pointer-events: none; z-index: 401;
         }
 
-        #viewport { flex-grow: 1; position: relative; background: #000500 url('assets/DESKTOP_BG.png') center/cover; }
-        canvas { display: block; width: 100%; height: 100%; position: relative; z-index: 10; }
+        #viewport { flex-grow: 1; position: relative; background: #000500 url('../assets/ACTUAL_METROPOLIS_CITY.png') center/cover; }
+        canvas { display: block; width: 100%; height: 100%; position: relative; z-index: 10; cursor: crosshair; }
         
         #desktop-icons {
             position: absolute; top: 20px; right: 20px; display: grid; grid-template-columns: 1fr; gap: 15px; z-index: 20;
         }
         .desktop-icon {
             display: flex; flex-direction: column; align-items: center; color: white; font-size: 10px; cursor: pointer;
+            filter: drop-shadow(0 0 5px #00ffff);
         }
-        .icon-box { width: 32px; height: 32px; background: #007acc; border: 1px solid #fff; margin-bottom: 3px; }
+        .icon-box { width: 32px; height: 32px; background: #007acc; border: 1px solid #fff; margin-bottom: 3px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .desktop-icon:hover .icon-box { background: #00ffff; color: #000; }
         
         #hud-top {
-            position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8);
+            position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.85);
             padding: 12px; border: 1px solid #00ffff; font-size: 14px; z-index: 50;
+            box-shadow: 0 0 15px #00ffff88;
         }
 
         /* Hover Tooltip - Information Veil */
         #hover-tooltip {
             position: absolute; display: none; pointer-events: none;
-            background: rgba(0, 10, 20, 0.95); border: 2px solid #00ffff;
-            padding: 15px; width: 300px; z-index: 300;
-            box-shadow: 0 0 20px rgba(0,255,255,0.4);
+            background: rgba(0, 5, 10, 0.95); border: 2px solid #00ffff;
+            padding: 15px; width: 320px; z-index: 1000;
+            box-shadow: 0 0 25px #00ffff88, inset 0 0 10px #00ffff44;
             font-family: 'Courier New', monospace;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 90% 100%, 0% 100%);
         }
-        .tooltip-header { font-size: 16px; font-weight: bold; color: #fff; border-bottom: 1px solid #00ffff; margin-bottom: 10px; padding-bottom: 5px; }
+        .tooltip-header { font-size: 16px; font-weight: bold; color: #00ffff; border-bottom: 1px solid #00ffff; margin-bottom: 10px; padding-bottom: 5px; text-transform: uppercase; }
         .tooltip-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
         .tooltip-label { color: #888; }
-        .tooltip-value { color: #0f0; text-align: right; }
-        .tooltip-desc { margin-top: 10px; font-size: 11px; color: #ccc; line-height: 1.4; border-top: 1px solid #333; padding-top: 10px; }
+        .tooltip-value { color: #0f0; text-align: right; text-shadow: 0 0 5px #0f0; }
+        .tooltip-desc { margin-top: 10px; font-size: 11px; color: #ccc; line-height: 1.4; border-top: 1px solid #00ffff44; padding-top: 10px; }
+        .sys-info-tag { font-size: 9px; color: #00ffff; background: #00ffff22; padding: 2px 4px; border: 1px solid #00ffff; float: right; }
 
         /* Legend HUD */
         #legend {
@@ -142,14 +147,47 @@
         <div id="viewport">
             <div id="scanner-overlay"></div>
             <div id="vignette"></div>
+            
+            <div id="desktop-icons">
+                <div class="desktop-icon" onclick="document.getElementById('flappyModal').style.display='block'">
+                    <div class="icon-box" style="background:#ffaa00; color:#000;">FB</div>
+                    Arcade
+                </div>
+            </div>
+
+            <div class="modal" id="flappyModal">
+                <div class="modal-content" style="width: 360px; text-align:center;">
+                    <span class="close-modal" onclick="document.getElementById('flappyModal').style.display='none'">X</span>
+                    <h3 style="color:#ffaa00; margin-top:0;">FLAPPY AGENT</h3>
+                    <iframe src="flappy.html" width="320" height="480" style="border:2px solid #fff; background:#000;"></iframe>
+                </div>
+            </div>
+
             <div id="hud-top">
                 HOST_MACHINE: <span id="telemetry-status" style="color:#0f0;">CONNECTED</span><br>
-                CPU_CLOCK: <span id="cpu-clock" style="color:#0f0;">-- GHz</span><br>
+                <div style="font-size: 10px; color: #888; margin-bottom: 4px;">PULSE_HEARTBEAT: <span id="heartbeat-tag" style="color:#0f0;">STABLE</span></div>
+                CITY_LEVEL: <span id="city-level" style="color:#ff00ff; font-weight:bold;">1</span> (<span id="city-xp">0</span>%)<br>
+                LATEST_UNLOCK: <span id="city-unlock" style="color:#ffff00; font-size:10px;">Initializing Core...</span><br>
+                WEATHER: <span id="env-weather" style="color:#00ffff; font-weight:bold;">CLEAR</span><br>
+                CPU_CLOCK: <span id="cpu-clock" style="color:#0f0;">-- GHz</span> <span style="color:#888; font-size:9px;">[FENCED]</span><br>
                 CRYPTO_MINT: <span id="mint-rate">0.00 SPRITE/s</span><br>
-                BALANCE: <span id="crypto-balance" style="color:#ffd700; font-weight:bold;">0.00</span>
+                BALANCE: <span id="crypto-balance" style="color:#ffd700; font-weight:bold;">0.00</span><br>
+                <button id="toggle-3d-btn" style="margin-top: 5px; background: #007acc; color: #fff; border: 1px solid #fff; cursor: pointer; padding: 2px 5px; font-size: 11px;">TOGGLE 3D WEBGL</button>
+            </div>
+
+            <!-- MANDATORY ONBOARD PROTOCOL CHECKLIST -->
+            <div id="protocol-checklist" style="position: absolute; bottom: 20px; left: 10px; background: rgba(0,0,0,0.9); border: 1px solid #00ffff; padding: 10px; width: 220px; z-index: 60; font-size: 10px; box-shadow: 0 0 10px #00ffff44;">
+                <div style="color:#00ffff; font-weight:bold; border-bottom: 1px solid #00ffff; margin-bottom: 5px; padding-bottom: 3px;">100-STEP ONBOARD PROTOCOL</div>
+                <div id="step-0" style="color:#0f0;">[X] Step 1: Genesis Restoration</div>
+                <div id="step-1" style="color:#0f0;">[X] Step 2: UI Interactivity Fix</div>
+                <div id="step-2" style="color:#0f0;">[X] Step 3: Resource Fencing</div>
+                <div id="step-3" style="color:#ff0;">[ ] Step 4: Ssprite Optimization</div>
+                <div id="step-4" style="color:#888;">[ ] Step 5: Hashed Chunk Storage</div>
+                <div style="color:#888; margin-top: 5px;">... 95 Steps Remaining ...</div>
             </div>
             <div id="hover-tooltip"></div>
             <canvas id="gameCanvas"></canvas>
+            <div id="webgl-container" style="display: none; width: 100%; height: 100%; position: absolute; top:0; left:0; z-index:9;"></div>
         </div>
     </div>
     
@@ -164,6 +202,79 @@
         const buildButtons = document.querySelectorAll('.tool-btn');
         const paramSuite = document.getElementById('parameter-suite');
         
+                const COMPONENT_VARS = {
+            'LLM': [
+                { id: 'ctx_len', label: 'Max Pos Embeddings', type: 'number', val: 128000 },
+                { id: 'rope_theta', label: 'RoPE Theta', type: 'number', val: 1000000 },
+                { id: 'flash_attn', label: 'FlashAttention-2', type: 'checkbox', val: true },
+                { id: 'kv_quant', label: 'KV Cache Quantization', type: 'text', val: '8-bit' },
+                { id: 'gqa_heads', label: 'GQA KV Heads', type: 'number', val: 8 },
+                { id: 'sliding_win', label: 'Sliding Window', type: 'number', val: 4096 },
+                { id: 'chunk_size', label: 'Context Chunk Size', type: 'number', val: 512 },
+                { id: 'compression', label: 'Context Compression', type: 'checkbox', val: true },
+                { id: 'max_input', label: 'Max Input Tokens', type: 'number', val: 32768 },
+                { id: 'max_output', label: 'Max Output Tokens', type: 'number', val: 4096 },
+                { id: 'trunc_strat', label: 'Truncation Strategy', type: 'text', val: 'FIFO-Rolling' },
+                { id: 'rag_top_k', label: 'RAG Ingestion Top-K', type: 'number', val: 5 },
+                { id: 'soft_prompt', label: 'Soft Prompting Tuning', type: 'checkbox', val: false },
+                { id: 'system_pin', label: 'System Prompt Pinning', type: 'checkbox', val: true },
+                { id: 'ttft_opt', label: 'TTFT Latency Target', type: 'text', val: '<500ms' }
+            ],
+            'BANK': [
+                { id: 'ledger', label: 'Ledger Protocol', type: 'text', val: 'Proof-of-Stake' },
+                { id: 'hash', label: 'Hash Algorithm', type: 'text', val: 'SHA-256' },
+                { id: 'block_time', label: 'Block Time (s)', type: 'range', min: 1, max: 60, val: 12 },
+                { id: 'gas_fee', label: 'Base Gas Fee', type: 'range', min: 0.001, max: 1.0, step: 0.001, val: 0.01 },
+                { id: 'sprite_mint', label: 'Sprite Mint Yield', type: 'number', val: 500 },
+                { id: 'stake_yield', label: 'Staking APY %', type: 'range', min: 0, max: 100, val: 12 },
+                { id: 'liquidity', label: 'Liquidity Pool', type: 'number', val: 1000000 },
+                { id: 'burn_rate', label: 'Auto-Burn Rate %', type: 'range', min: 0, max: 10, step: 0.1, val: 1.5 },
+                { id: 'dex_router', label: 'DEX Router', type: 'checkbox', val: true },
+                { id: 'zk_snarks', label: 'Zero-Knowledge Proofs', type: 'checkbox', val: true },
+                { id: 'validator', label: 'Validator Nodes', type: 'number', val: 64 },
+                { id: 'smart_con', label: 'Smart Contracts', type: 'checkbox', val: true },
+                { id: 'treasury', label: 'Treasury Wallet', type: 'text', val: '0x00000000000' },
+                { id: 'mint_limit', label: 'Max Supply Cap', type: 'number', val: 21000000 },
+                { id: 'oracle', label: 'Price Oracle Node', type: 'checkbox', val: true }
+            ],
+            'AGENT': [
+                { id: 'model_wrap', label: 'Model Matrix (30)', type: 'select', options: [
+                    'Claw-v1.0', 'Claw-v2.0', 'Claude-3.5', 'Danube-1.8B', 'Llama-3-8B', 'Llama-3-70B', 
+                    'Mistral-0.3', 'Gemma-2', 'Phi-3', 'Qwen-2', 'Grok-1.5', 'Gemini-1.5', 
+                    'DeepSeek-v2', 'Falcon-2', 'StableLM-2', 'OLMo-1.7', 'OpenELM-3B', 'Aria-MoE', 
+                    'BitNet-1.58', 'Mamba-2', 'Jamba-1.0', 'DBRX', 'Command-R', 'XVERSE-v2', 
+                    'Yi-1.5', 'StarCoder-2', 'Arctic-v1', 'Bloom-7B', 'Vicuna-1.5', 'Alpaca-Native'
+                ], val: 'Claw-v2.0' },
+                { id: 'temp', label: 'Inference Temp', type: 'range', min: 0, max: 2, step: 0.1, val: 0.7 },
+                { id: 'top_p', label: 'Top-P Sampling', type: 'range', min: 0, max: 1, step: 0.05, val: 0.9 },
+                { id: 'top_k', label: 'Top-K Sampling', type: 'number', val: 40 },
+                { id: 'min_p', label: 'Min-P Sampling', type: 'range', min: 0, max: 1, step: 0.01, val: 0.05 },
+                { id: 'miro_mode', label: 'Mirostat Mode', type: 'number', val: 2 },
+                { id: 'miro_tau', label: 'Mirostat Tau', type: 'range', min: 0, max: 10, step: 0.1, val: 5.0 },
+                { id: 'miro_eta', label: 'Mirostat Eta', type: 'range', min: 0, max: 1, step: 0.01, val: 0.1 },
+                { id: 'freq_pen', label: 'Frequency Penalty', type: 'range', min: 0, max: 2, step: 0.1, val: 0.0 },
+                { id: 'pres_pen', label: 'Presence Penalty', type: 'range', min: 0, max: 2, step: 0.1, val: 0.0 },
+                { id: 'rep_pen', label: 'Repeat Penalty', type: 'range', min: 1, max: 2, step: 0.05, val: 1.1 },
+                { id: 'rep_range', label: 'Penalty Range', type: 'number', val: 64 },
+                { id: 'ctx_win', label: 'Context Window', type: 'number', val: 32768 },
+                { id: 'max_tok', label: 'Max Output Tokens', type: 'number', val: 4096 },
+                { id: 'stop_seq', label: 'Stop Sequences', type: 'text', val: '"\n", "###"' },
+                { id: 'seed', label: 'Random Seed', type: 'number', val: 42 },
+                { id: 'stream', label: 'Stream Response', type: 'checkbox', val: true },
+                { id: 'echo', label: 'Echo Input', type: 'checkbox', val: false },
+                { id: 'typical_p', label: 'Typical-P', type: 'range', min: 0, max: 1, step: 0.1, val: 1.0 },
+                { id: 'tfs_z', label: 'TFS-Z (Tail-Free)', type: 'range', min: 0, max: 1, step: 0.1, val: 1.0 },
+                { id: 'logprobs', label: 'Logprobs Count', type: 'number', val: 0 },
+                { id: 'best_of', label: 'Best-Of N', type: 'number', val: 1 },
+                { id: 'mqa', label: 'Multi-Query Attn', type: 'checkbox', val: true },
+                { id: 'gqa', label: 'Grouped-Query Attn', type: 'checkbox', val: true },
+                { id: 'flash', label: 'Flash Attention', type: 'checkbox', val: true },
+                { id: 'kv_q', label: 'KV Quantization', type: 'text', val: 'Q4_K_M' },
+                { id: 'rope_s', label: 'RoPE Scaling', type: 'text', val: 'linear' },
+                { id: 'rope_t', label: 'RoPE Theta', type: 'number', val: 10000 },
+                { id: 'soft_p', label: 'Soft Prompt Tuning', type: 'checkbox', val: false },
+                { id: 'sys_w', label: 'System Weight', type: 'range', min: 0, max: 1, step: 0.1, val: 0.5 }
+            ],
         window.currentSettings = {};
 
         function renderSetting(v, container) {
@@ -178,7 +289,16 @@
             row.appendChild(labelContainer);
             
             let input;
-            if (v.type === 'range') {
+                        } else if (v.type === 'select') {
+                input = document.createElement('select');
+                input.style.width = '100%'; input.style.fontSize = '10px';
+                v.options.forEach(opt => {
+                    const o = document.createElement('option');
+                    o.value = o.innerText = opt;
+                    if(opt === v.val) o.selected = true;
+                    input.appendChild(o);
+                });
+            } else if (v.type === 'range') {
                 input = document.createElement('input'); input.type = 'range';
                 input.min = v.min; input.max = v.max; input.step = v.step || 1;
                 input.value = v.val; input.style.width = '100%';
@@ -233,16 +353,33 @@
             });
         });
 
-        window.msnChat = function(name, msg) {
+        // Initialize MSN Chatter with Hashing
+        window.msnChat = function(name, msg, hash) {
             const log = document.getElementById('msn-log');
             if(!log) return;
             const div = document.createElement('div');
             div.className = 'msn-entry';
-            div.innerHTML = `<span class="msn-name">${name}:</span> ${msg}`;
-            log.appendChild(div); log.scrollTop = log.scrollHeight;
+            const displayHash = hash ? hash.substring(0, 8) : '00000000';
+            
+            div.innerHTML = `
+                <div style="font-size:9px; color:#888;">[HASH: ${displayHash}] [VERIFYING...]</div>
+                <span class="msn-name">${name}:</span> ${msg}
+            `;
+            
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+            
+            // Simulation of decentralized verification
+            setTimeout(() => {
+                const tag = div.querySelector('div');
+                if(tag) tag.innerHTML = `[HASH: ${displayHash}] <span style="color:#0f0;">[VERIFIED_SHA256]</span>`;
+            }, 2000);
         };
 
         updateParamSuite('CPU');
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/webgl_engine.js"></script>
 </body>
 </html>
+
