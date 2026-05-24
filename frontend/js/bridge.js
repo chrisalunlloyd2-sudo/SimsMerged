@@ -1,11 +1,29 @@
+// TIMESTAMP: 2026-05-23T04:05:00Z
+// PROJECT_ID: SimsMerged-v1.3
+// AGENT_ID: Antigravity-Architect
+
 async function SyncLoop() {
     try {
-        // 1. Fetch Agents
-        const agentResponse = await fetch('http://localhost:8000/api/agents');
-        if (agentResponse.ok) {
-            const agentData = await agentResponse.json();
-            // Map and filter agents if necessary, ensuring they have positions
-            window.agents = agentData.map(a => ({
+        const payload = {
+            env_nodes: districts || [],
+            task_id: window.activeTaskId || ''
+        };
+
+        const response = await fetch('http://localhost:8000/api/metropolis-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const state = await response.json();
+
+        // 1. Unpack Agents
+        if (state.agents) {
+            window.agents = state.agents.map(a => ({
                 ...a,
                 x: a.x || Math.random() * 20,
                 y: a.y || Math.random() * 20,
@@ -13,43 +31,33 @@ async function SyncLoop() {
             }));
         }
 
-        // 2. Fetch Trajectories (Packet Flows)
-        const trajectoryResponse = await fetch('http://localhost:8000/api/trajectories');
-        if (trajectoryResponse.ok) {
-            const trajectoryData = await trajectoryResponse.json();
-            // We can use this to dynamically update the trajectories shown in engine.js
-            // For now, let's assume engine.js can access a global 'activeLinks'
-            window.activeLinks = trajectoryData;
+        // 2. Unpack Trajectories
+        if (state.trajectories) {
+            window.activeLinks = state.trajectories;
         }
 
-        // 3. Fetch Quantum Tick (System Health)
-        let tickUrl = 'http://localhost:8000/api/quantum-tick';
-        const researchTaskId = document.getElementById('research-task-id')?.value;
-        if (researchTaskId) {
-            tickUrl += `?task_id=\${researchTaskId}`;
-        }
-
-        const tickResponse = await fetch(tickUrl);
-        if (tickResponse.ok) {
-            const tickData = await tickResponse.json();
-            window.systemStability = tickData.data.stability;
-            window.systemCycle = tickData.data.tick;
-            window.systemHeat = tickData.data.heat;
-            window.systemFrequency = tickData.data.frequency;
-            window.ramLoad = tickData.data.ram_load;
-            window.isSwapping = tickData.data.is_swapping;
-            window.casLatency = tickData.data.cas_latency;
-            window.dirtyPages = tickData.data.dirty_pages || [];
-            window.vramShadow = tickData.data.vram_shadow;
-            window.coldPages = tickData.data.cold_pages || [];
-            window.iopsLag = tickData.data.iops_lag;
-            window.speculativeActive = tickData.data.speculative_execution;
-            window.memPressure = tickData.data.memory_pressure;
-            window.isRefreshing = tickData.data.is_refreshing;
-            window.activeResearchAttrs = tickData.data.active_attrs;
-            window.systemWeather = tickData.data.weather;
-            window.cyberEconomy = tickData.data.economy;
-            window.cityProgression = tickData.data.progression;
+        // 3. Unpack Quantum Tick (System Health)
+        if (state.quantum_tick) {
+            const tickData = state.quantum_tick;
+            window.systemStability = tickData.stability;
+            window.systemCycle = tickData.tick;
+            window.systemHeat = tickData.heat;
+            window.systemFrequency = tickData.frequency;
+            window.ramLoad = tickData.ram_load;
+            window.isSwapping = tickData.is_swapping;
+            window.casLatency = tickData.cas_latency;
+            window.dirtyPages = tickData.dirty_pages || [];
+            window.vramShadow = tickData.vram_shadow;
+            window.coldPages = tickData.cold_pages || [];
+            window.iopsLag = tickData.iops_lag;
+            window.speculativeActive = tickData.speculative_execution;
+            window.memPressure = tickData.memory_pressure;
+            window.isRefreshing = tickData.is_refreshing;
+            window.activeResearchAttrs = tickData.active_attrs;
+            window.systemWeather = tickData.weather;
+            window.cyberEconomy = tickData.economy;
+            window.cityProgression = tickData.progression;
+            window.chargeLeakage = tickData.charge_leakage;
         }
 
         // 4. Update UI labels
@@ -93,7 +101,33 @@ async function SyncLoop() {
             }
         }
 
-        // 5. Fetch Hardware Specs (Once)
+        // 5. MSN Chat Processing
+        if (state.chat) {
+            state.chat.forEach(msg => {
+                if (!window.processedChatIds) window.processedChatIds = new Set();
+                const msgId = msg.name + msg.time;
+                if (!window.processedChatIds.has(msgId)) {
+                    window.msnChat(msg.name, msg.text, msg.hash);
+                    window.processedChatIds.add(msgId);
+                }
+            });
+        }
+
+        // 6. Ledger Render
+        if (document.getElementById('ledgerModal').style.display === 'block' && state.ledger) {
+            const content = document.getElementById('ledger-content');
+            content.innerHTML = state.ledger.map(t => `
+                <div style="margin-bottom:5px; border-bottom:1px solid #040;">
+                    <span style="color:#888;">[${new Date(t.timestamp * 1000).toLocaleTimeString()}]</span> 
+                    <span style="color:#fff;">AGENT: ${t.agent}</span> | 
+                    <span style="color:#0f0;">ACTION: ${t.action}</span><br>
+                    <span style="color:#444; font-size:9px;">HASH: ${t.hash}</span>
+                </div>
+            `).join('');
+            content.scrollTop = content.scrollHeight;
+        }
+
+        // 7. Fetch Hardware Specs (Once)
         if (!window.hardwareSpecs) {
             const hardwareResponse = await fetch('http://localhost:8000/api/hardware');
             if (hardwareResponse.ok) {
@@ -111,8 +145,8 @@ async function SyncLoop() {
         // Fallback mock data
         if (!window.agents || window.agents.length === 0) {
             window.agents = [
-                { name: "Sim (Local)", x: 5, y: 5, role: 'KERNEL' },
-                { name: "Admin (Local)", x: 2, y: 2, role: 'ADMIN' }
+                { name: "Sim (Local)", x: 5, y: 5, level: 1, title: 'Kernel Node', role: 'KERNEL' },
+                { name: "Admin (Local)", x: 2, y: 2, level: 5, title: 'Root Domain', role: 'ADMIN' }
             ];
         }
     }

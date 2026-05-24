@@ -56,7 +56,7 @@
             pointer-events: none; z-index: 401;
         }
 
-        #viewport { flex-grow: 1; position: relative; background: #000500 url('../assets/ACTUAL_METROPOLIS_CITY.png') center/cover; }
+        #viewport { flex-grow: 1; position: relative; background: #000500; }
         canvas { display: block; width: 100%; height: 100%; position: relative; z-index: 10; cursor: crosshair; }
         
         #desktop-icons {
@@ -152,6 +152,20 @@
                 <div class="desktop-icon" onclick="document.getElementById('flappyModal').style.display='block'">
                     <div class="icon-box" style="background:#ffaa00; color:#000;">FB</div>
                     Arcade
+                </div>
+                <div class="desktop-icon" onclick="openLedgerExplorer()">
+                    <div class="icon-box" style="background:#00ff00; color:#000;">L</div>
+                    Ledger
+                </div>
+            </div>
+
+            <div class="modal" id="ledgerModal">
+                <div class="modal-content" style="width: 80%; font-family: monospace; background: #000; color: #0f0; border: 2px solid #0f0;">
+                    <span class="close-modal" onclick="document.getElementById('ledgerModal').style.display='none'">X</span>
+                    <h3 style="color:#0f0; border-bottom: 1px solid #0f0; padding-bottom: 5px;">DEPIN LIVE LEDGER EXPLORER</h3>
+                    <div id="ledger-content" style="height: 400px; overflow-y: auto; font-size: 11px;">
+                        [INITIALIZING SECURE LINK...]
+                    </div>
                 </div>
             </div>
 
@@ -336,7 +350,12 @@
                 };
                 return;
             }
-            // Add other static types here if needed
+            
+            if (COMPONENT_VARS[type]) {
+                COMPONENT_VARS[type].forEach(v => renderSetting(v, paramSuite));
+            } else {
+                paramSuite.innerHTML += `<div style="color:#666;">No configurable parameters for ${type}.</div>`;
+            }
         }
 
         buildButtons.forEach(btn => {
@@ -374,6 +393,11 @@
                 const tag = div.querySelector('div');
                 if(tag) tag.innerHTML = `[HASH: ${displayHash}] <span style="color:#0f0;">[VERIFIED_SHA256]</span>`;
             }, 2000);
+        };
+
+        // Define Ledger Opener
+        window.openLedgerExplorer = function() {
+            document.getElementById('ledgerModal').style.display = 'block';
         };
 
         updateParamSuite('CPU');

@@ -6,11 +6,16 @@ import os
 class RealMachineBridge:
     def __init__(self):
         self.last_stats = {}
+        self.last_fetch_time = 0
+        self.cache_duration = 2.0 # 2.0 second telemetry cache
 
     def get_actual_metrics(self):
         """
-        Executes exhaustive PowerShell commands to fetch REAL host machine telemetry.
+        Executes exhaustive PowerShell commands to fetch REAL host machine telemetry with a 2-second cache.
         """
+        now = time.time()
+        if self.last_stats and (now - self.last_fetch_time < self.cache_duration):
+            return self.last_stats
         try:
             # 1. CPU: Exhaustive
             cpu_cmd = "Get-CimInstance Win32_Processor | Select-Object -Property LoadPercentage, MaxClockSpeed, L2CacheSize, L3CacheSize, NumberOfCores, NumberOfLogicalProcessors | ConvertTo-Json"
@@ -71,6 +76,7 @@ class RealMachineBridge:
                 "real_mem_total_kb": total_phys,
                 "timestamp": time.time()
             }
+            self.last_fetch_time = now
             return self.last_stats
         except Exception as e:
             return {"error": str(e)}

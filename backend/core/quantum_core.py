@@ -133,8 +133,18 @@ class QuantumCore:
         self.dirty_pages.add((x, y))
         self.update_access_time(x, y)
 
-    def cycle(self):
+    def cycle(self, env_nodes=None):
         self.system_tick += 1
+        
+        # ENVIRONMENTAL THERMAL DISSIPATION
+        dissipation_rate = 0.5 # Base cooling
+        if env_nodes:
+            water_count = len([n for n in env_nodes if n.get('type') == 'WATER'])
+            tree_count = len([n for n in env_nodes if n.get('type') == 'TREE'])
+            # Each water node adds 2.0 cooling, trees add 0.5
+            dissipation_rate += (water_count * 2.0) + (tree_count * 0.5)
+        
+        self.heat -= dissipation_rate
         
         # DRAM REFRESH CYCLE LOGIC (Step 35 Option B)
         self.refresh_timer += 1

@@ -23,20 +23,33 @@ machine_bridge = RealMachineBridge()
 cyber_economy = CyberEconomy()
 progression_engine = ProgressionEngine()
 
-# Global System Logs
+# Global System Logs & MSN Messages
 SYSTEM_LOGS = []
+GLOBAL_MESSAGES = []
 
 def add_log(message, level="info"):
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
     # MANDATORY ATOMIC SIGNATURE: [TIMESTAMP] [PROJECT_ID] [AGENT_ID]
-    signature = f"[{timestamp}] [SimsMerged-v1.3] [Gemini-CLI-Architect]"
+    signature = f"[{timestamp}] [SimsMerged-v1.3] [Antigravity-Agent]"
     log_entry = f"{signature} {message}"
     SYSTEM_LOGS.append(log_entry)
     if len(SYSTEM_LOGS) > 100:
         SYSTEM_LOGS.pop(0)
     print(log_entry)
+    
+    # Persistent Syslog Daemon file logging
+    try:
+        log_file_path = os.path.join(project_root, "syslog.log")
+        with open(log_file_path, "a", encoding="utf-8") as f:
+            f.write(log_entry + "\n")
+    except Exception as e:
+        print(f"[SYSLOG_ERR] Failed to write log: {e}")
 
-# Enable CORS for all access
+def add_message(name, text, hash=None):
+    GLOBAL_MESSAGES.append({"name": name, "text": text, "hash": hash, "time": time.time()})
+    if len(GLOBAL_MESSAGES) > 50:
+        GLOBAL_MESSAGES.pop(0)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -107,6 +120,20 @@ async def auto_growth_loop():
 @app.get("/api/machine-heartbeat")
 async def get_heartbeat():
     return machine_bridge.get_actual_metrics()
+
+@app.get("/api/chat")
+async def get_chat():
+    return GLOBAL_MESSAGES
+
+@app.get("/api/ledger")
+async def get_ledger():
+    try:
+        if os.path.exists(LEDGER_FILE):
+            with open(LEDGER_FILE, "r") as f:
+                return json.load(f)[-50:]
+    except:
+        pass
+    return []
 
 import math
 import hashlib
@@ -288,6 +315,38 @@ async def get_agents():
         integrity_res = system_integrity.process_stability_net(isolated_stability, attributes=current_attrs)
         agent['stability'] = min(1.0, isolated_stability + integrity_res['recovery_increment'])
         
+        # MSN Social Logic
+        if random.random() < 0.05: # 5% chance per agent per sync
+            messages = {
+                'process': [
+                    "Just optimized a priority queue. Feels good.",
+                    "Another packet down. I'm on fire!",
+                    "Instruction pipeline is looking clean today."
+                ],
+                'sync': [
+                    "Backing up my memories to the Storage Hive.",
+                    "SHA-256 verification complete. I'm persistent!",
+                    "Anyone else feeling a bit fragmented today?"
+                ],
+                'move': [
+                    "Headed to the RAM pool for a quick buffer.",
+                    "The view from Sector 7 is amazing.",
+                    "Pathfinding is a bit laggy today."
+                ],
+                'negotiate_casino': [
+                    "Just doubled my SPRITE at the Hotel Casino!",
+                    "The house always wins... except when I'm playing.",
+                    "Negotiating some high-value assets right now."
+                ],
+                'heal_hospital': [
+                    "Feeling much better after that stability flush.",
+                    "Thanks to the Doctors for the quick recovery!",
+                    "System integrity restored. Back to work."
+                ]
+            }
+            msg_pool = messages.get(agent['last_action'], ["Status: STABLE. Metropolis is online."])
+            add_message(agent['name'], random.choice(msg_pool), agent['last_hash'])
+        
         agents.append(agent)
             
     quantum_core.update_core_assignment(agents)
@@ -305,8 +364,69 @@ async def flush_memory():
     add_log(f"MEMORY_FLUSH: Synchronized {count} dirty pages to Storage Hive.")
     return {"status": "flushed", "pages": count}
 
-@app.get("/api/quantum-tick")
-async def quantum_tick(task_id: str = None):
+from pydantic import BaseModel
+from typing import List, Optional
+
+class TickRequest(BaseModel):
+    env_nodes: Optional[List[dict]] = None
+
+class UnifiedStateRequest(BaseModel):
+    env_nodes: Optional[List[dict]] = None
+    task_id: Optional[str] = None
+
+@app.post("/api/metropolis-state")
+async def get_metropolis_state(req: UnifiedStateRequest):
+    """
+    Unified Metropolis State: Aggregates all 5 live telemetry loops into a single fetch.
+    """
+    # 1. Update Quantum Core with attributes if task_id provided
+    if req.task_id:
+        db_path = os.path.join(os.path.dirname(__file__), "data", "ai_attributes.json")
+        if os.path.exists(db_path):
+            try:
+                with open(db_path, "r", encoding="utf-8") as f:
+                    db = json.load(f)
+                    task_data = db.get(req.task_id)
+                    if task_data:
+                        attr_map = {item['id']: item['val'] for item in task_data}
+                        quantum_core.update_attributes(attr_map)
+                        add_log(f"Quantum Core Synchronized with {req.task_id} attributes.")
+            except:
+                pass
+
+    # 2. Execute Quantum Core Tick cycle
+    env_nodes = req.env_nodes or []
+    metrics = quantum_core.cycle(env_nodes=env_nodes)
+    economy_data = cyber_economy.process_tick()
+    progression_data = progression_engine.get_state()
+    metrics['stability'] = min(1.0, metrics['stability'] * progression_data['buffs']['stability_recovery'])
+    metrics['economy'] = economy_data
+    metrics['progression'] = progression_data
+    metrics['charge_leakage'] = quantum_core.charge_leakage
+    metrics['dirty_pages'] = [list(p) for p in quantum_core.dirty_pages]
+    metrics['weather'] = system_integrity.current_weather
+
+    # 3. Get current agents population
+    agents = await get_agents()
+
+    # 4. Get active packet trajectories
+    trajectories = await get_trajectories()
+
+    # 5. Get recent live ledger entries
+    ledger = await get_ledger()
+
+    return {
+        "agents": agents,
+        "trajectories": trajectories,
+        "quantum_tick": metrics,
+        "chat": GLOBAL_MESSAGES,
+        "ledger": ledger
+    }
+
+@app.post("/api/quantum-tick")
+async def quantum_tick(request: TickRequest, task_id: str = None):
+    env_nodes = request.env_nodes or []
+    
     if task_id:
         db_path = os.path.join(os.path.dirname(__file__), "data", "ai_attributes.json")
         if os.path.exists(db_path):
@@ -317,7 +437,8 @@ async def quantum_tick(task_id: str = None):
                     attr_map = {item['id']: item['val'] for item in task_data}
                     quantum_core.update_attributes(attr_map)
                     add_log(f"Quantum Core Synchronized with {task_id} attributes.")
-    metrics = quantum_core.cycle()
+                    
+    metrics = quantum_core.cycle(env_nodes=env_nodes)
     economy_data = cyber_economy.process_tick()
     progression_data = progression_engine.get_state()
     
@@ -326,6 +447,8 @@ async def quantum_tick(task_id: str = None):
     
     metrics['economy'] = economy_data
     metrics['progression'] = progression_data
+    metrics['charge_leakage'] = quantum_core.charge_leakage
+    
     # Include dirty pages in metrics
     metrics['dirty_pages'] = [list(p) for p in quantum_core.dirty_pages]
     metrics['weather'] = system_integrity.current_weather

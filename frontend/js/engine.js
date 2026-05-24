@@ -158,13 +158,14 @@ function drawStructure(isoX, isoY, color, type, locked) {
     }
 }
 
-function drawTile(x, y, color = '#050a05', isHovered = false) {
+function drawTile(x, y, color = '#050a05', isHovered = false, districtMap) {
     const { isoX, isoY } = toIso(x, y);
     const tw = TILE_WIDTH * zoom, th = TILE_HEIGHT * zoom;
     if (isoX < -tw || isoX > canvas.width + tw || isoY < -th || isoY > canvas.height + th) return;
     
     let finalColor = color;
-    const isHardware = districts.some(d => d.x === x && d.y === y && BUILD_TYPES[d.type] && BUILD_TYPES[d.type].category === 'Hardware');
+    const d = districtMap[`${x},${y}`];
+    const isHardware = d && BUILD_TYPES[d.type] && BUILD_TYPES[d.type].category === 'Hardware';
     
     ctx.beginPath();
     ctx.moveTo(isoX, isoY); ctx.lineTo(isoX + tw / 2, isoY + th / 2);
@@ -176,7 +177,6 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
     ctx.lineWidth = isHardware ? 2 : 1;
     ctx.stroke();
 
-    const d = districts.find(d => d.x === x && d.y === y);
     if (d) {
         let info = BUILD_TYPES[d.type] || { color: 'gray' };
         drawStructure(isoX, isoY + th/2, info.color, d.type, info.locked);
@@ -185,16 +185,69 @@ function drawTile(x, y, color = '#050a05', isHovered = false) {
     }
 }
 
+function drawTraffic(typeMap) {
+    if (!window.activeLinks) return;
+    
+    window.activeLinks.forEach(link => {
+        const fromNodes = typeMap[link.from] || [];
+        const toNodes = typeMap[link.to] || [];
+        
+        if (fromNodes.length > 0 && toNodes.length > 0) {
+            fromNodes.forEach(fNode => {
+                toNodes.forEach(tNode => {
+                    const from = toIso(fNode.x, fNode.y);
+                    const to = toIso(tNode.x, tNode.y);
+                    
+                    // Draw Data Pipe
+                    ctx.strokeStyle = link.color + '44'; // Semi-transparent
+                    ctx.lineWidth = 1 * zoom;
+                    ctx.beginPath();
+                    ctx.moveTo(from.isoX, from.isoY);
+                    ctx.lineTo(to.isoX, to.isoY);
+                    ctx.stroke();
+                    
+                    // Animate Packets
+                    if (Math.random() < 0.05) {
+                        spawnPacket(fNode.x, fNode.y, tNode.x, tNode.y, link.color, link.protocol, link.speed || 0.02);
+                    }
+                });
+            });
+        }
+    });
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Build spatial map for O(1) rendering lookups
+    const districtMap = {};
+    const typeMap = {};
+    districts.forEach(d => {
+        districtMap[`${d.x},${d.y}`] = d;
+        if (!typeMap[d.type]) typeMap[d.type] = [];
+        typeMap[d.type].push(d);
+    });
+    
+    // --- VISUAL CHARGE LEAKAGE (Row Hammer Shield) ---
+    if (window.chargeLeakage > 0) {
+        ctx.fillStyle = `rgba(0, 255, 255, ${Math.min(0.2, window.chargeLeakage * 0.1)})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
     for (let x = -20; x < MAP_SIZE; x++) {
         for (let y = -20; y < MAP_SIZE; y++) {
-            drawTile(x, y, '#050a05', (x === selectedTile.x && y === selectedTile.y));
+            drawTile(x, y, '#050a05', (x === selectedTile.x && y === selectedTile.y), districtMap);
         }
     }
 
+    drawTraffic(typeMap); // RENDER DATA PIPES
+
     window.agents.forEach(agent => {
         const { isoX, isoY } = toIso(agent.x, agent.y);
+        const margin = 60 * zoom;
+        // Viewport Culling: Skip drawing agents scrolled off-screen
+        if (isoX < -margin || isoX > canvas.width + margin || isoY < -margin || isoY > canvas.height + margin) return;
+
         const color = agent.role === 'DOCTOR' ? '#ff4444' : (agent.role === 'TEACHER' ? '#4facfe' : '#ffcc00');
         
         // --- DRAW SSPRITE (Animated Agent) ---
