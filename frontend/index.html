@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>SimsMerged - Final Boss Automation</title>
@@ -157,6 +157,10 @@
                     <div class="icon-box" style="background:#00ff00; color:#000;">L</div>
                     Ledger
                 </div>
+                <div class="desktop-icon" onclick="openAutomationConsole()">
+                    <div class="icon-box" style="background:#00ffff; color:#000;">A</div>
+                    Automation
+                </div>
             </div>
 
             <div class="modal" id="ledgerModal">
@@ -174,6 +178,79 @@
                     <span class="close-modal" onclick="document.getElementById('flappyModal').style.display='none'">X</span>
                     <h3 style="color:#ffaa00; margin-top:0;">FLAPPY AGENT</h3>
                     <iframe src="flappy.html" width="320" height="480" style="border:2px solid #fff; background:#000;"></iframe>
+                </div>
+            </div>
+
+            <div class="modal" id="automationModal">
+                <div class="modal-content" style="width: 80%; max-width: 850px; font-family: 'Courier New', monospace; background: rgba(2, 5, 10, 0.95); color: #00ffff; border: 2px solid #00ffff; box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);">
+                    <span class="close-modal" onclick="document.getElementById('automationModal').style.display='none'">X</span>
+                    <h3 style="color:#00ffff; border-bottom: 2px solid #00ffff; padding-bottom: 8px; margin-top:0;">AUTOMATION DAEMON & SCRIPT PYRAMID CONSOLE</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;">
+                        <!-- Left Panel: Fleet & Scripts -->
+                        <div>
+                            <h4 style="color:#0f0; margin-top:0; border-bottom: 1px solid #0f0; padding-bottom: 3px;">MINI-AGENT FLEET TELEMETRY</h4>
+                            <div id="fleet-container" style="height: 250px; overflow-y: auto; background: rgba(0,26,0,0.4); border: 1px solid #0f0; padding: 8px; font-size: 11px;">
+                                [FETCHING INTERACTIVE AGENT PIPELINES...]
+                            </div>
+                            
+                            <h4 style="color:#ffd700; margin-bottom: 5px;">GENESIS CORE BRIDGE</h4>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button onclick="triggerMemoryFlush()" style="background:#007acc; color:#fff; border:1px solid #00ffff; cursor:pointer; padding: 5px 10px; font-family: monospace; font-size:11px;">FLUSH STORAGE HIVE</button>
+                                <button onclick="triggerClockOptimization()" style="background:#007acc; color:#fff; border:1px solid #00ffff; cursor:pointer; padding: 5px 10px; font-family: monospace; font-size:11px;">OPTIMIZE CLOCK</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Panel: Controls & Spawner -->
+                        <div style="border-left: 1px solid #00ffff44; padding-left: 20px;">
+                            <h4 style="color:#ffaa00; margin-top:0; border-bottom: 1px solid #ffaa00; padding-bottom: 3px;">HARDWARE GATES</h4>
+                            <div style="background: rgba(255,255,255,0.05); border: 1px solid #00ffff44; padding: 10px; margin-bottom: 15px; font-size: 11px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <span>RESOURCE FENCING (25% Limit)</span>
+                                    <input type="checkbox" id="gate-fence" checked onchange="updateCoreGate('resource_fence_active', this.checked)">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <span>ROW HAMMER PROTECT (TRR)</span>
+                                    <input type="checkbox" id="gate-trr" checked onchange="updateCoreGate('row_hammer_protection', this.checked)">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <span>SPECULATIVE EXECUTION</span>
+                                    <input type="checkbox" id="gate-spec" checked onchange="updateCoreGate('speculative_execution_active', this.checked)">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span>PREDICTIVE PREFETCHING</span>
+                                    <input type="checkbox" id="gate-prefetch" checked onchange="updateCoreGate('prefetch_enabled', this.checked)">
+                                </div>
+                            </div>
+                            
+                            <h4 style="color:#00ffff; border-bottom: 1px solid #00ffff44; padding-bottom: 3px; margin-top:0;">DEPLOY MINI-AGENT SWARM</h4>
+                            <div style="background: rgba(255,255,255,0.05); border: 1px solid #00ffff44; padding: 10px; font-size: 11px;">
+                                <div style="margin-bottom: 8px;">
+                                    <label>Agent Name:</label><br>
+                                    <input type="text" id="spawn-name" value="Swarm_Bot" style="width:90%; background:#000; color:#fff; border:1px solid #00ffff; padding:2px; font-family:monospace;">
+                                </div>
+                                <div style="margin-bottom: 8px;">
+                                    <label>Vocational Role:</label><br>
+                                    <select id="spawn-role" style="width:95%; background:#000; color:#fff; border:1px solid #00ffff; padding:2px; font-family:monospace;">
+                                        <option value="DOCTOR">DOCTOR (Heals Stability)</option>
+                                        <option value="TEACHER">TEACHER (Aligns Weights)</option>
+                                        <option value="PROCESS_KERNEL">PROCESS_KERNEL (Routines)</option>
+                                    </select>
+                                </div>
+                                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                                    <div>
+                                        <label>X Grid:</label>
+                                        <input type="number" id="spawn-x" value="2" style="width:50px; background:#000; color:#fff; border:1px solid #00ffff; font-family:monospace;">
+                                    </div>
+                                    <div>
+                                        <label>Y Grid:</label>
+                                        <input type="number" id="spawn-y" value="2" style="width:50px; background:#000; color:#fff; border:1px solid #00ffff; font-family:monospace;">
+                                    </div>
+                                </div>
+                                <button onclick="deployMiniAgent()" style="width:100%; background:#0f0; color:#000; border:1px solid #fff; cursor:pointer; padding:5px; font-weight:bold; font-family:monospace;">DEPLOY MINI-AGENT SWARM</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -398,6 +475,11 @@
         // Define Ledger Opener
         window.openLedgerExplorer = function() {
             document.getElementById('ledgerModal').style.display = 'block';
+        };
+
+        // Define Automation Console Opener
+        window.openAutomationConsole = function() {
+            document.getElementById('automationModal').style.display = 'block';
         };
 
         updateParamSuite('CPU');

@@ -1,3 +1,7 @@
+// TIMESTAMP: 2026-05-25T01:10:00.123Z
+// PROJECT_ID: SimsMerged-v1.3
+// AGENT_ID: Antigravity-Agent
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('hover-tooltip');
@@ -14,6 +18,8 @@ const TILE_WIDTH = 64, TILE_HEIGHT = 32, MAP_SIZE = 40;
 let selectedTile = { x: 0, y: 0 };
 window.agents = window.agents || [];
 let currentBuildType = 'CPU';
+window.setBuildType = (type) => { currentBuildType = type; };
+
 let camX = 0, camY = 0, zoom = 1.0;
 let isDragging = false, lastMouseX = 0, lastMouseY = 0;
 
@@ -27,7 +33,13 @@ canvas.onmousedown = (e) => {
         if (existing) {
             addRenderLog(`SELECT: ${existing.type} at [${tile.x}, ${tile.y}]`);
         } else {
-            addRenderLog(`INTERACT: Empty Tile [${tile.x}, ${tile.y}]`);
+            // Direct click-to-build painting!
+            if (currentBuildType && BUILD_TYPES[currentBuildType]) {
+                districts.push({ x: tile.x, y: tile.y, type: currentBuildType, label: `${currentBuildType}_Node` });
+                addRenderLog(`GENESIS: Deployed ${currentBuildType} at [${tile.x}, ${tile.y}]`);
+            } else {
+                addRenderLog(`INTERACT: Empty Tile [${tile.x}, ${tile.y}]`);
+            }
         }
     } else if (e.button === 2) { // Right Click
         isDragging = true;

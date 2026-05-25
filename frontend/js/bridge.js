@@ -99,6 +99,57 @@ async function SyncLoop() {
                 const recent = window.cityProgression.recent_unlocks;
                 unlockEl.innerText = recent[recent.length - 1];
             }
+
+            // Dynamic Onboard Protocol Checklist
+            const checklistEl = document.getElementById('protocol-checklist');
+            if (checklistEl) {
+                const level = window.cityProgression.level;
+                
+                let html = `<div style="color:#00ffff; font-weight:bold; border-bottom: 1px solid #00ffff; margin-bottom: 5px; padding-bottom: 3px;">100-STEP ONBOARD PROTOCOL</div>`;
+                
+                const steps = [
+                    { id: 1, text: "Genesis Restoration", reqLvl: 1 },
+                    { id: 2, text: "UI Interactivity Fix", reqLvl: 2 },
+                    { id: 3, text: "Resource Fencing", reqLvl: 3 },
+                    { id: 4, text: "Dynamic Swarms Spawning", reqLvl: 4 },
+                    { id: 5, text: "Hashed Chunk Verification", reqLvl: 5 }
+                ];
+                
+                steps.forEach(step => {
+                    let statusChar = "[ ]";
+                    let color = "#888";
+                    if (level >= step.reqLvl) {
+                        statusChar = "[X]";
+                        color = "#0f0";
+                    } else if (level === step.reqLvl - 1) {
+                        statusChar = "[>]";
+                        color = "#ff0";
+                    }
+                    html += `<div style="color:${color};"># ${statusChar} Step ${step.id}: ${step.text}</div>`;
+                });
+                
+                const remaining = Math.max(0, 100 - level);
+                html += `<div style="color:#888; margin-top: 5px;">... ${remaining} Steps Remaining ...</div>`;
+                checklistEl.innerHTML = html;
+            }
+        }
+
+        // Render Automation Modal Fleet when displayed
+        if (document.getElementById('automationModal').style.display === 'block' && state.agents) {
+            const fleetContainer = document.getElementById('fleet-container');
+            if (fleetContainer) {
+                fleetContainer.innerHTML = state.agents.map(a => `
+                    <div style="margin-bottom: 8px; border-bottom: 1px dashed #00ffff33; padding-bottom: 4px;">
+                        <span style="color:#ffd700; font-weight:bold;">${a.name}</span> 
+                        <span style="color:#888;">(${a.role})</span><br>
+                        <span>LEVEL: ${a.level} [${a.title}]</span> | 
+                        <span>STATE: <span style="color:${a.state === 'STABLE' ? '#0f0' : '#f00'};">${a.state}</span></span><br>
+                        <span>LAST ACTION: <span style="color:#0ff;">${a.last_action}</span></span> | 
+                        <span>CONFIDENCE: ${(a.confidence * 100).toFixed(0)}%</span><br>
+                        <span style="color:#555; font-size:9px;">HASH: ${a.last_hash ? a.last_hash.substring(0,24) : '00000000'}...</span>
+                    </div>
+                `).join('');
+            }
         }
 
         // 5. MSN Chat Processing
@@ -155,3 +206,70 @@ async function SyncLoop() {
 // Start the loop
 setInterval(SyncLoop, 1000);
 SyncLoop();
+
+// --- AUTOMATION DAEMON CONSOLE INTERFACES ---
+
+async function triggerMemoryFlush() {
+    try {
+        const res = await fetch('http://localhost:8000/api/flush-memory', { method: 'POST' });
+        if (res.ok) {
+            const data = await res.json();
+            alert(`[FLUSH_SUCCESS] Successfully wrote back ${data.pages} dirty bits to Storage Hive.`);
+        }
+    } catch(err) {
+        console.error("Flush memory error:", err);
+    }
+}
+
+async function triggerClockOptimization() {
+    try {
+        const res = await fetch('http://localhost:8000/api/configure-core', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cpu_throttle_limit: 1.0, resource_fence_active: false })
+        });
+        if (res.ok) {
+            alert(`[OPTIMIZE_SUCCESS] Hardware constraints unlocked. Central Clock optimized to 5.20 GHz.`);
+            const fenceChk = document.getElementById('gate-fence');
+            if (fenceChk) fenceChk.checked = false;
+        }
+    } catch(err) {
+        console.error("Clock optimization error:", err);
+    }
+}
+
+async function updateCoreGate(gateName, value) {
+    try {
+        const payload = {};
+        payload[gateName] = value;
+        
+        await fetch('http://localhost:8000/api/configure-core', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } catch(err) {
+        console.error("Core gate error:", err);
+    }
+}
+
+async function deployMiniAgent() {
+    const name = document.getElementById('spawn-name').value || "Swarm_Bot";
+    const role = document.getElementById('spawn-role').value || "PROCESS_KERNEL";
+    const x = parseInt(document.getElementById('spawn-x').value) || 2;
+    const y = parseInt(document.getElementById('spawn-y').value) || 2;
+    
+    try {
+        const res = await fetch('http://localhost:8000/api/spawn-agent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, role, x, y })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            alert(`[AGENT_SPAWNED] Mapped mini-agent ${data.agent.name} (${data.agent.role}) onto coordinate [${data.agent.x}, ${data.agent.y}].`);
+        }
+    } catch(err) {
+        console.error("Spawn agent error:", err);
+    }
+}

@@ -1,3 +1,7 @@
+# TIMESTAMP: 2026-05-25T01:10:00.123Z
+# PROJECT_ID: SimsMerged-v1.3
+# AGENT_ID: Antigravity-Agent
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -13,6 +17,8 @@ from backend.core.real_machine_bridge import RealMachineBridge
 from backend.core.economy import CyberEconomy
 from backend.core.progression import ProgressionEngine
 
+project_root = os.path.dirname(os.path.abspath(__file__))
+
 app = FastAPI()
 
 # Initialize Metropolis Core Components
@@ -26,6 +32,7 @@ progression_engine = ProgressionEngine()
 # Global System Logs & MSN Messages
 SYSTEM_LOGS = []
 GLOBAL_MESSAGES = []
+SIMULATED_AGENTS = []
 
 def add_log(message, level="info"):
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
@@ -73,7 +80,7 @@ async def machine_telemetry_loop():
     """
     while True:
         try:
-            stats = machine_bridge.get_actual_metrics()
+            stats = await asyncio.to_thread(machine_bridge.get_actual_metrics)
             if "error" not in stats:
                 # Inject real data into simulation
                 quantum_core.heat = 30.0 + (stats["real_cpu_load"] * 70.0)
@@ -119,7 +126,7 @@ async def auto_growth_loop():
 
 @app.get("/api/machine-heartbeat")
 async def get_heartbeat():
-    return machine_bridge.get_actual_metrics()
+    return await asyncio.to_thread(machine_bridge.get_actual_metrics)
 
 @app.get("/api/chat")
 async def get_chat():
@@ -220,7 +227,9 @@ async def get_agents():
     if "error" in host_stats:
         return [{"name": "HOST_SYNC_ERROR", "stability": 0.1, "x": 0, "y": 0, "role": "KERNEL"}]
         
-    agents = []
+    agents_to_process = []
+    
+    # 1. Load host processes
     procs = host_stats.get("processes", [])
     if isinstance(procs, dict): procs = [procs] 
     
@@ -249,7 +258,19 @@ async def get_agents():
             "role": role,
             "working_set_kb": proc.get("WorkingSet", 0) / 1024
         }
+        agents_to_process.append(agent)
         
+    # 2. Merge Custom Simulated Swarm Agents
+    for sim_agent in SIMULATED_AGENTS:
+        # Mini-Agent procedural life step
+        sim_agent["age"] += 1
+        # Slowly walk randomly to trigger pathing automation scripts
+        sim_agent["x"] = max(-20, min(40, sim_agent["x"] + random.choice([-1, 0, 1])))
+        sim_agent["y"] = max(-20, min(40, sim_agent["y"] + random.choice([-1, 0, 1])))
+        agents_to_process.append(sim_agent)
+        
+    processed_agents = []
+    for agent in agents_to_process:
         # Sandbox Stability Processing
         raw_stability = agent.get('stability', 1.0)
         isolated_stability = quantum_core.process_agent_stability(agent.get('name'), raw_stability)
@@ -347,13 +368,63 @@ async def get_agents():
             msg_pool = messages.get(agent['last_action'], ["Status: STABLE. Metropolis is online."])
             add_message(agent['name'], random.choice(msg_pool), agent['last_hash'])
         
-        agents.append(agent)
+        processed_agents.append(agent)
             
-    quantum_core.update_core_assignment(agents)
+    quantum_core.update_core_assignment(processed_agents)
     # Update RAM Pressure state
     quantum_core.memory_pressure_active = quantum_core.ram_load > 0.7
     
-    return agents
+    return processed_agents
+
+class SpawnAgentRequest(BaseModel):
+    name: str
+    role: str
+    x: int
+    y: int
+
+@app.post("/api/spawn-agent")
+async def spawn_agent(req: SpawnAgentRequest):
+    agent_id = f"SIM_{random.randint(1000, 9999)}"
+    new_agent = {
+        "id": agent_id,
+        "name": req.name,
+        "age": 0,
+        "energy": 100,
+        "stability": 1.0,
+        "x": req.x,
+        "y": req.y,
+        "role": req.role,
+        "working_set_kb": random.randint(1024, 8192)
+    }
+    SIMULATED_AGENTS.append(new_agent)
+    add_log(f"AGENT_GENESIS: Spawned custom mini-agent {req.name} ({req.role}) at [{req.x}, {req.y}] to run script pyramids.", "info")
+    return {"status": "spawned", "agent": new_agent}
+
+class ConfigureCoreRequest(BaseModel):
+    resource_fence_active: Optional[bool] = None
+    cpu_throttle_limit: Optional[float] = None
+    row_hammer_protection: Optional[bool] = None
+    speculative_execution_active: Optional[bool] = None
+    zero_copy_active: Optional[bool] = None
+    prefetch_enabled: Optional[bool] = None
+
+@app.post("/api/configure-core")
+async def configure_core(req: ConfigureCoreRequest):
+    if req.resource_fence_active is not None:
+        quantum_core.resource_fence_active = req.resource_fence_active
+    if req.cpu_throttle_limit is not None:
+        quantum_core.cpu_throttle_limit = req.cpu_throttle_limit
+    if req.row_hammer_protection is not None:
+        quantum_core.row_hammer_protection = req.row_hammer_protection
+    if req.speculative_execution_active is not None:
+        quantum_core.speculative_execution_active = req.speculative_execution_active
+    if req.zero_copy_active is not None:
+        quantum_core.zero_copy_active = req.zero_copy_active
+    if req.prefetch_enabled is not None:
+        quantum_core.prefetch_enabled = req.prefetch_enabled
+    
+    add_log(f"CORE_CONFIG: Updated Quantum Core parameters. Fence: {quantum_core.resource_fence_active} | TRR: {quantum_core.row_hammer_protection}", "info")
+    return {"status": "configured"}
 
 @app.post("/api/flush-memory")
 async def flush_memory():
