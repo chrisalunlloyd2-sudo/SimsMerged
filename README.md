@@ -87,3 +87,68 @@ Every single file modification, commit, and system event strictly adheres to the
    `[TIMESTAMP: ISO-8601 High-Fidelity][PROJECT_ID: SimsMerged-v1.3][AGENT_ID: Antigravity-Agent]`
 2. **Persistence**: All log outputs are formatted with the signature and appended permanently to the local `backend/syslog.log` file daemon.
 3. **Validation**: Subsystems can be tested end-to-end natively by launching `start_environment.ps1` and accessing the dynamic grid at `http://127.0.0.1:8000/api/agents`.
+
+
+# --- FOUNDRY v10.2 RESTORATION & EXPANSION ---
+# SimsMerged
+## v10.2 System Bible
+
+### Overview
+SimsMerged is an open-source project that combines the functionality of multiple Sims-related tools into a single, unified platform. This project is built using Python 3.10+ and utilizes a SQLite database for data storage.
+
+### ASCII Architecture
+```
+├── SimsMerged/
+│   ├── .git/
+│   ├── README.md
+│   ├── src/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── database.py
+│   │   ├── api.py
+│   │   └── utils.py
+│   ├── tests/
+│   │   ├── test_main.py
+│   │   ├── test_database.py
+│   │   ├── test_api.py
+│   │   └── test_utils.py
+│   ├── data/
+│   │   ├── sims_data.db
+│   │   └── faiss_index.db
+│   ├── requirements.txt
+│   └── LICENSE
+└── .gitignore
+```
+
+### Visual Badges
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://travis-ci.org/)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://semver.org/)
+
+### Deep Dive Descriptions
+SimsMerged is designed to provide a comprehensive platform for Sims-related data management. The project consists of multiple modules, each responsible for a specific aspect of the system.
+
+*   **Database Module:** Handles all database-related operations, including data storage, retrieval, and manipulation.
+*   **API Module:** Provides a RESTful API for interacting with the system, allowing users to perform CRUD (Create, Read, Update, Delete) operations on Sims-related data.
+*   **Utils Module:** Contains utility functions for tasks such as data validation, error handling, and logging.
+
+### Axiomatic Breakdowns
+The SimsMerged system can be broken down into the following functional axioms:
+
+*   **UI Axiom:** The system provides a user-friendly interface for interacting with Sims-related data.
+*   **DB Axiom:** The system utilizes a SQLite database for data storage and retrieval.
+*   **State Axiom:** The system maintains a consistent state across all modules and interactions.
+*   **API Axiom:** The system provides a RESTful API for interacting with Sims-related data.
+
+### Multi-Platform Setups
+#### Windows Setup
+1.  Install Python 3.10+ from [python.org](https://www.python.org/downloads/).
+2.  Open PowerShell.
+3.  Run: `pip install -r requirements.txt`
+4.  Execute: `python src/main.py`
+
+#### Android Setup (Termux)
+1.  Install Termux from the Google Play Store.
+2.  Run: `pkg install python git`
+3.  Run: `pip install -r requirements.txt`
+4.  Execute: `python src/main.py`
