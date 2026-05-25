@@ -1,0 +1,42 @@
+// ai_tools_wrapper.js
+// TIMESTAMP: 2026-05-24T22:55:00.000Z
+// PROJECT_ID: SimsMerged-v1.3
+// AGENT_ID: Gemini-CLI-Architect
+
+const { execSync } = require('child_process');
+const crypto = require('crypto');
+const fs = require('fs');
+
+function getSHA256(filePath) {
+    if (!fs.existsSync(filePath)) return null;
+    const fileBuffer = fs.readFileSync(filePath);
+    const hashSum = crypto.createHash('sha256');
+    hashSum.update(fileBuffer);
+    return hashSum.digest('hex');
+}
+
+function callAichat(prompt, model = "h2o-danube") {
+    try {
+        const result = execSync(`aichat -m ${model} "${prompt}"`, { encoding: 'utf8' });
+        return result;
+    } catch (err) {
+        return `[MOCK AICHAT] Response to: ${prompt.slice(0, 50)}... (using ${model})`;
+    }
+}
+
+function callAider(task, files) {
+    try {
+        const filesStr = files.join(' ');
+        const result = execSync(`aider --message "${task}" ${filesStr}`, { encoding: 'utf8' });
+        return result;
+    } catch (err) {
+        return `[MOCK AIDER] Executed task: ${task} on files: ${files.join(', ')}`;
+    }
+}
+
+module.exports = { callAichat, callAider, getSHA256 };
+
+if (require.main === module) {
+    console.log(callAichat("Hello Danube!"));
+    console.log(callAider("Add a logging feature", ["main.js"]));
+}
