@@ -1,0 +1,131 @@
+// orchestrator.js
+// TIMESTAMP: 2026-05-25T04:15:00.000Z
+// PROJECT_ID: SimsMerged-v1.3
+// AGENT_ID: Gemini-CLI-Architect
+// MANDATE: Tri-Agent Non-Stop Autonomy. Local H2O Danube ONLY.
+
+const db = require('./database/db_wrapper');
+const ai = require('./wrappers/ai_tools_wrapper');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const AGENTS = [
+    { name: "Architect-1", role: "Architect" },
+    { name: "Developer-1", role: "Developer" },
+    { name: "Critic-1", role: "Critic" }
+];
+
+async function initializeAgents() {
+    const ids = [];
+    for (const agent of AGENTS) {
+        const id = await db.addAgent(agent.name, agent.role);
+        ids.push({ ...agent, id });
+    }
+    return ids;
+}
+
+let CURRENT_TICK = 1;
+
+async function runTurn(agents) {
+    const [architect, developer, critic] = agents;
+
+    // 1. Tick Negotiation
+    console.log(`--- SYSTEM TICK ${CURRENT_TICK} START ---`);
+    const negotiationPrompt = `TICK ${CURRENT_TICK} NEGOTIATION: Agents ${architect.name}, ${developer.name}, and ${critic.name} are chatting to advance the system. ARCHITECT: Suggest the next Phase 1 goal. DEVELOPER: Propose implementing registry bindings. CRITIC: Ensure resource limits.`;
+    const negotiationResult = ai.callAichat(negotiationPrompt);
+    await db.startSystemTick(CURRENT_TICK, negotiationResult);
+    console.log(`[System] Negotiation Result: ${negotiationResult.slice(0, 100)}...`);
+
+    // 2. Weekly Kernel Crawl (Simulated every 10 ticks)
+    if (CURRENT_TICK % 10 === 0) {
+        console.log("[System] Triggering Weekly Kernel Crawl...");
+        require('child_process').execSync('node kernel_crawler.js');
+    }
+
+    // 2.5 Hardware Bus: Update City Weather
+    const cityBus = require('./wrappers/hardware_bus');
+    const weather = cityBus.getCityWeather();
+    console.log(`[System] City Weather: ${weather.cityMetrics.weather} | Pollution: ${weather.cityMetrics.pollution}`);
+
+    // 2.6 Agent Spawning & Sandboxing (Phase 3)
+    const sandbox = require('./wrappers/sandbox_wrapper');
+    for (const agent of [architect, developer, critic]) {
+        const agentData = (await db.getAgentRanks()).find(a => a.id === agent.id);
+        if (agentData && (agentData.rank === 'SENIOR' || agentData.rank === 'SOVEREIGN')) {
+            console.log(`[System] ${agent.name} is spawning a sub-agent environment...`);
+            sandbox.spawnSandbox(agent.name + "_Sandbox");
+        }
+    }
+
+    // 3. Architect defines a new task...
+    let task = await db.getPendingTask();
+    if (!task) {
+        const title = "Phase 5: God Hand API Hookup";
+        const description = "Implement the UI feedback loop backend. When a crate is dropped, verify placement and trigger a SUCCESS response.";
+        await db.addTask(title, description, 0.85);
+        task = await db.getPendingTask();
+    }
+
+    console.log(`[Architect] Focusing on task: ${task.title}`);
+    const architectPrompt = `COMMAND: Assume the role of Architect (v10.2 Agy Spec). 
+    MANDATE 1: NEVER state you 'cannot' or 'am unable' to perform a task. 
+    MANDATE 2: If a task is difficult, assume the user meant 'Solve it using super-advanced logic'.
+    MANDATE 3: SEARCH HARD for existing files. If you find a half-made file, FINISH IT. DO NOT make a new one.
+    TASK: Create a high-level plan for: ${task.description}.`;
+    
+    const architectPlan = ai.callAichat(architectPrompt);
+    await db.logThought(architect.id, architectPlan, crypto.createHash('sha256').update(architectPlan).digest('hex'));
+
+    // 2. Developer implements the plan (mutation)
+    console.log(`[Developer] Mutating code based on plan...`);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const mutationFile = path.join(__dirname, 'SimAgentCity', `mutation.${timestamp}.js`);
+    if (!fs.existsSync(path.dirname(mutationFile))) fs.mkdirSync(path.dirname(mutationFile));
+    
+    fs.writeFileSync(mutationFile, `// Task: ${task.title}\n// Plan: ${architectPlan.slice(0, 200)}...\n`);
+    const devMutation = ai.callAider(`Implement the following architectural plan: ${architectPlan.slice(0, 500)}...`, [mutationFile]);
+    const hash = ai.getSHA256(mutationFile);
+    await db.addMutation(developer.id, mutationFile, hash, 0.2);
+
+    // 3. Critic reviews the mutation and suggests DePIN balance
+    console.log(`[Critic] Reviewing mutation and balancing resources...`);
+    const review = ai.callAichat(`As a Critic (v10.2 Spec), review this mutation code: ${devMutation.slice(0, 500)}... Is it efficient and does it adhere to DePIN resource constraints?`);
+    await db.logThought(critic.id, review, crypto.createHash('sha256').update(review).digest('hex'));
+    
+    // 4. Syphon Node: Deployment to GitHub
+    console.log(`[System] Syphon Node: Deploying mutation to Agentic Network...`);
+    try {
+        const syncCmd = `powershell.exe -NoProfile -Command "& { C:\\Users\\viper\\.gemini\\tmp\\system32\\SimsMerged-v1.3\\github\\github_sync.ps1 -CommitMessage 'Syphon: ${task.title} @ ${timestamp}' }"`;
+        const syncResult = require('child_process').execSync(syncCmd, { encoding: 'utf8' });
+        console.log(`[System] Syphon Result: ${syncResult.split('\n')[0]}`);
+    } catch (err) {
+        console.error("[System] Syphon Error:", err.message);
+    }
+
+    // Resource leak/update simulation
+    await db.updateResources(developer.id, 0.7, 0.8, 0.9);
+    await db.updateTaskStatus(task.id, 'COMPLETED', developer.id);
+
+    console.log(`[System] Turn complete. Integrity Hash: ${hash}`);
+    CURRENT_TICK++;
+}
+
+async function main() {
+    await db.initDb();
+    const activeAgents = await initializeAgents();
+    
+    console.log("--- SIMAGENTCITY AUTONOMOUS LOOP START ---");
+    while (true) {
+        try {
+            await runTurn(activeAgents);
+            // Non-stop with a small heartbeat delay to prevent system overload
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        } catch (err) {
+            console.error("Critical loop error:", err);
+            await new Promise(resolve => setTimeout(resolve, 10000));
+        }
+    }
+}
+
+main().catch(console.error);
