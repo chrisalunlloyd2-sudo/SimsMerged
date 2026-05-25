@@ -1,0 +1,34 @@
+// task_importer.js
+// TIMESTAMP: 2026-05-25T04:30:00.000Z
+// PROJECT_ID: SimsMerged-v1.3
+// AGENT_ID: Gemini-CLI-Architect
+// PURPOSE: Import the Grand Master Plan tasks into the orchestrator.
+
+const db = require('./database/db_wrapper');
+
+async function importPhase5() {
+    await db.initDb();
+    const tasks = [
+        { 
+            title: "Phase 5.2: UI Feedback Loop", 
+            description: "When a file (crate) is dropped, freeze it, trigger the backend API, wait for SUCCESS response, and play retro placement sound. (Steps 451-500)" 
+        },
+        {
+            title: "Phase 6.1: Zoning Tool",
+            description: "Implement a Zoning Tool. Let the user paint grid squares as Processing Zones or Mining Zones. (Steps 501-550)"
+        },
+        {
+            title: "Phase 6.2: Zone-Backend Sync",
+            description: "Sync zones to backend logic. If a file is dropped in a Processing Zone, automatically queue it for the nearest Idle Agent. (Steps 551-600)"
+        }
+    ];
+
+    for (const task of tasks) {
+        await db.addTask(task.title, task.description, 0.8);
+        console.log(`Imported: ${task.title}`);
+    }
+}
+
+if (require.main === module) {
+    importPhase5().catch(console.error);
+}
