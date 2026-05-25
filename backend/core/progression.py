@@ -1,3 +1,7 @@
+# TIMESTAMP: 2026-05-25T03:00:00.123Z
+# PROJECT_ID: SimsMerged-v1.3
+# AGENT_ID: Antigravity-Agent
+
 import os
 import re
 
@@ -8,11 +12,15 @@ class ProgressionEngine:
         self.xp_to_next_level = 500
         self.unlocked_features = []
         self.agent_levels = {}
+        
+        # System Buffs & Genetic Multipliers (Step 45 Genetic civilization Upgrade)
         self.system_buffs = {
             "packet_speed": 1.0,
             "stability_recovery": 1.0,
             "mint_yield": 1.0,
-            "render_efficiency": 1.0
+            "render_efficiency": 1.0,
+            "danube_accuracy_mult": 1.0, # Genetic upgrade that improves AI decisions
+            "ecc_recovery_rate": 1.0
         }
         
         self.roadmap_tasks = self.load_roadmap()
@@ -20,7 +28,6 @@ class ProgressionEngine:
         
     def load_roadmap(self):
         tasks = []
-        # Relative to backend/core/progression.py -> docs is up two levels then into docs
         roadmap_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "docs", "MASTER_ROADMAP.md"))
         if os.path.exists(roadmap_path):
             with open(roadmap_path, "r", encoding="utf-8") as f:
@@ -33,9 +40,27 @@ class ProgressionEngine:
             tasks = [f"Phase {i}: Procedural Evolution Step {i}" for i in range(1, 2201)]
         return tasks
 
+    def evaluate_promotion(self, agent_name, level):
+        """
+        Determines the agent's vocational title based on their performance level.
+        Now supports standard "Aider Danube" promotions.
+        """
+        if level >= 12:
+            return "Quantum DePIN Oracle"
+        elif level >= 8:
+            return "Danube Systems Architect"
+        elif level >= 5:
+            return "Aider Senior Architect"
+        elif level >= 3:
+            return "Aider Junior Developer"
+        return "Novice Aider Bot"
+
     def add_agent_xp(self, agent_name, amount):
+        """
+        Awards XP to agents and triggers global genetic updates upon level transitions.
+        """
         if agent_name not in self.agent_levels:
-            self.agent_levels[agent_name] = {"level": 1, "xp": 0, "title": "Novice Node"}
+            self.agent_levels[agent_name] = {"level": 1, "xp": 0, "title": "Novice Aider Bot"}
             
         agent = self.agent_levels[agent_name]
         agent["xp"] += amount
@@ -43,25 +68,40 @@ class ProgressionEngine:
         
         leveled_up_city = False
         
-        # Agent Level Up
+        # Agent Level Up & Promotion
         if agent["xp"] >= agent["level"] * 100:
             agent["level"] += 1
             agent["xp"] = 0
-            agent["title"] = self.get_agent_title(agent["level"])
+            agent["title"] = self.evaluate_promotion(agent["name"] if "name" in agent else agent_name, agent["level"])
             
-        # Global City Level Up -> Unlock next roadmap feature
+        # Global City Level Up -> Triggers Genetic Upgrade!
         if self.total_xp >= self.xp_to_next_level:
             self.global_level += 1
             self.total_xp -= self.xp_to_next_level
             self.xp_to_next_level = int(self.xp_to_next_level * 1.15) # Scaled growth
+            
+            # Trigger procedural upgrades
             self.unlock_next_feature()
+            self.apply_genetic_upgrade()
             leveled_up_city = True
             
         return leveled_up_city
+
+    def apply_genetic_upgrade(self):
+        """
+        Procedurally evolves system parameters upon civilization milestones.
+        Mutates weights and improves environmental and AI decision bounds automatically.
+        """
+        # Multipliers mutate genetically based on the active level
+        self.system_buffs["packet_speed"] *= 1.05
+        self.system_buffs["stability_recovery"] *= 1.08
+        self.system_buffs["mint_yield"] *= 1.03
+        self.system_buffs["danube_accuracy_mult"] *= 1.05
+        self.system_buffs["ecc_recovery_rate"] *= 1.06
         
     def get_agent_title(self, level):
-        titles = ["Novice Node", "Adept Router", "Expert Kernel", "Master Architect", "Ascendant Sentience", "Quantum Being"]
-        return titles[min(level // 3, len(titles) - 1)]
+        # Kept for backward compatibility
+        return self.evaluate_promotion("", level)
         
     def unlock_next_feature(self):
         if self.current_task_idx < len(self.roadmap_tasks):
@@ -73,9 +113,6 @@ class ProgressionEngine:
             self.apply_feature_logic(feature)
 
     def apply_feature_logic(self, feature_desc):
-        """
-        Translates procedural roadmap descriptions into real-world system changes.
-        """
         f_lower = feature_desc.lower()
         if "packet" in f_lower or "bus" in f_lower:
             self.system_buffs["packet_speed"] += 0.002

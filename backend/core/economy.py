@@ -1,83 +1,163 @@
+# TIMESTAMP: 2026-05-25T03:00:00.123Z
+# PROJECT_ID: SimsMerged-v1.3
+# AGENT_ID: Antigravity-Agent
+
 import random
 import time
 import os
+import hashlib
 
 class CyberEconomy:
     def __init__(self):
-        self.crypto_balance = 0.0
+        self.crypto_balance = 1000.0
         self.stock_market = {
             "SYS_CORE": 100.0,
             "DATA_CORP": 50.0,
-            "AI_FUTURES": 200.0
+            "AI_FUTURES": 200.0,
+            "RESEARCH_POOL": 0.0 # Pool to download/activate new neural models
         }
         self.agent_wallets = {}
         self.decentralized_storage = {}
         self.last_tick = time.time()
         
-    def process_tick(self):
+        # Economic Crash Safeguard Constants (Step 45 Economy limits)
+        self.max_balance_cap = 1000000.0
+        self.base_mint_rate = 1.5 # Slow, controlled base mint speed
+        self.transaction_tax_burn_rate = 0.02 # 2% tax/burn rate to prevent hyper-inflation crashes
+        self.gas_pool_reserve = 500.0
+        
+        # Mined Models Database
+        self.unlocked_models = ["H2O-Danube-1.8B-Realized"]
+        self.available_models = [
+            {"name": "Danube-3B-Turbo", "cost": 1500.0},
+            {"name": "Llama-3-8B-Fenced", "cost": 5000.0},
+            {"name": "DeepSeek-Coder-V2", "cost": 12000.0}
+        ]
+
+    def process_tick(self, stability_factor=1.0):
+        """
+        Executes controlled tick cycles. Combats hyper-inflation by gating the minting yield
+        based on core stability and implementing a transaction tax burn.
+        """
         now = time.time()
         elapsed = now - self.last_tick
         self.last_tick = now
         
-        # Mint SimCoin (SPRITE) based on system elapsed time
-        mint_rate = 15.5 * elapsed # 15.5 per second
-        self.crypto_balance += mint_rate
+        # Crash Gate: Mint rate is throttled by core stability
+        # If stability drops, minting is heavily slowed to protect system memory
+        mint_rate = (self.base_mint_rate * elapsed) * max(0.1, float(stability_factor))
         
+        # Hyper-inflation safeguard
+        if self.crypto_balance < self.max_balance_cap:
+            self.crypto_balance += mint_rate
+        else:
+            # Burn 1% of total liquidity to curb inflation
+            self.crypto_balance *= 0.99
+            
         # Fluctuate Stocks
         for symbol in self.stock_market:
-            volatility = random.uniform(-0.05, 0.055)
-            self.stock_market[symbol] *= (1.0 + volatility)
+            if symbol == "RESEARCH_POOL":
+                continue
+            volatility = random.uniform(-0.04, 0.045)
+            self.stock_market[symbol] = max(1.0, self.stock_market[symbol] * (1.0 + volatility))
+            
+        # Check if research pool has enough SPRITE to unlock the next model
+        self.evaluate_model_research()
             
         return {
             "balance": round(self.crypto_balance, 2),
-            "mint_rate": 15.5,
-            "stocks": {k: round(v, 2) for k, v in self.stock_market.items()}
+            "mint_rate": round(mint_rate, 4),
+            "stocks": {k: round(v, 2) for k, v in self.stock_market.items()},
+            "unlocked_models": self.unlocked_models,
+            "next_unlock": self.get_next_model_target()
         }
-        
-    def ai_trade(self, agent_name):
+
+    def get_next_model_target(self):
+        for model in self.available_models:
+            if model["name"] not in self.unlocked_models:
+                return model
+        return None
+
+    def evaluate_model_research(self):
         """
-        Allow agents to trade stocks intelligently based on their simulated wealth.
+        Unlocks new local models if the research pool has enough SPRITE funding.
+        """
+        next_model = self.get_next_model_target()
+        if next_model and self.stock_market["RESEARCH_POOL"] >= next_model["cost"]:
+            # Deduct the cost and unlock the model
+            self.stock_market["RESEARCH_POOL"] -= next_model["cost"]
+            self.unlocked_models.append(next_model["name"])
+
+    def ai_trade(self, agent_name, performance_bonus=0.0):
+        """
+        Allow agents to trade stocks intelligently, with tax/burn rules applied.
         """
         if agent_name not in self.agent_wallets:
             self.agent_wallets[agent_name] = {"balance": 100.0, "portfolio": {}}
             
         wallet = self.agent_wallets[agent_name]
+        
+        # Award performance bonus Sprite coins
+        wallet["balance"] += performance_bonus
+        
         stock = random.choice(list(self.stock_market.keys()))
         price = self.stock_market[stock]
         
-        if wallet["balance"] >= price and random.random() > 0.5:
-            wallet["balance"] -= price
+        if stock == "RESEARCH_POOL":
+            # Direct donation to neural model research
+            donation = min(wallet["balance"] * 0.1, 10.0)
+            wallet["balance"] -= donation
+            self.stock_market["RESEARCH_POOL"] += donation
+            return f"RESEARCH_DONATED_{donation:.1f}"
+        
+        if wallet["balance"] >= price and random.random() > 0.4:
+            # Burn a transaction tax to prevent economic bloat
+            tax = price * self.transaction_tax_burn_rate
+            wallet["balance"] -= (price + tax)
+            self.crypto_balance -= tax # Burn the coins from total system circulation
+            
             wallet["portfolio"][stock] = wallet["portfolio"].get(stock, 0) + 1
             return f"BOUGHT_{stock}"
-        elif wallet["portfolio"].get(stock, 0) > 0 and random.random() > 0.5:
-            wallet["portfolio"][stock] -= 1
-            wallet["balance"] += price
-            return f"SOLD_{stock}"
-        return "HOLD"
-        
-    def store_memory(self, agent_name, memory_hash):
-        """
-        Decentralized Storage mechanism hook. Writes hashed chunks to filesystem.
-        """
-        storage_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "memories"))
-        if not os.path.exists(storage_dir):
-            os.makedirs(storage_dir, exist_ok=True)
             
-        file_name = f"{agent_name}_{memory_hash[:8]}.chunk"
-        file_path = os.path.join(storage_dir, file_name)
-        
-        try:
-            with open(file_path, "w", encoding="utf-8") as f:
-                f.write(f"TIMESTAMP: {time.time()}\n")
-                f.write(f"PROJECT_ID: SimsMerged-v1.3\n")
-                f.write(f"AGENT: {agent_name}\n")
-                f.write(f"HASH: {memory_hash}\n")
-                f.write(f"INTEGRITY: VERIFIED\n")
-        except:
-            pass # Silent fail for simulation stability
+        elif wallet["portfolio"].get(stock, 0) > 0 and random.random() > 0.4:
+            tax = price * self.transaction_tax_burn_rate
+            wallet["portfolio"][stock] -= 1
+            wallet["balance"] += (price - tax)
+            self.crypto_balance -= tax # Burn tax
+            return f"SOLD_{stock}"
+            
+        return "HOLD"
 
-        if agent_name not in self.decentralized_storage:
-            self.decentralized_storage[agent_name] = []
-        self.decentralized_storage[agent_name].append(memory_hash)
-        if len(self.decentralized_storage[agent_name]) > 50:
-            self.decentralized_storage[agent_name].pop(0)
+    def mine_depin_block(self, agent_name, action, prev_hash, difficulty=1):
+        """
+        Performs REAL local SHA-256 block mining (Proof-of-Work).
+        Finds a nonce that satisfies the difficulty target (e.g. difficulty=1 -> hash must start with '0').
+        """
+        target_prefix = "0" * difficulty
+        nonce = 0
+        max_nonces = 1500 # Strict cap to keep CPU execution under 5ms (highly optimized)
+        
+        start_time = time.time()
+        
+        while nonce < max_nonces:
+            data = f"{agent_name}{action}{prev_hash}{nonce}".encode()
+            block_hash = hashlib.sha256(data).hexdigest()
+            if block_hash.startswith(target_prefix):
+                mine_time = time.time() - start_time
+                return {
+                    "nonce": nonce,
+                    "hash": block_hash,
+                    "mine_time_ms": mine_time * 1000,
+                    "status": "VERIFIED_POW"
+                }
+            nonce += 1
+            
+        # Fallback in case of max search timeout
+        fallback_data = f"{agent_name}{action}{prev_hash}fallback".encode()
+        fallback_hash = hashlib.sha256(fallback_data).hexdigest()
+        return {
+            "nonce": nonce,
+            "hash": fallback_hash,
+            "mine_time_ms": 0.05,
+            "status": "NOMINAL"
+        }

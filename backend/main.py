@@ -1,9 +1,11 @@
-# TIMESTAMP: 2026-05-25T01:10:00.123Z
+# TIMESTAMP: 2026-05-25T01:54:00.123Z
 # PROJECT_ID: SimsMerged-v1.3
 # AGENT_ID: Antigravity-Agent
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Optional
 import uvicorn
 import asyncio
 import time
@@ -73,6 +75,59 @@ async def startup_event():
     asyncio.create_task(auto_growth_loop())
     asyncio.create_task(security_invader_loop())
     asyncio.create_task(machine_telemetry_loop())
+    asyncio.create_task(sprite_maintenance_loop())
+
+async def sprite_maintenance_loop():
+    """
+    Background Sprite Overseer Loop.
+    Enables autonomous sprites (simulated agents) to perform city maintenance and optimization
+    tasks completely locally. This offloads active credit quotas while the user is away.
+    """
+    while True:
+        try:
+            # 1. Maintain a healthy fleet of simulated sprites (at least 3 active)
+            if len(SIMULATED_AGENTS) < 3:
+                roles = ["DOCTOR", "TEACHER", "PROCESS_KERNEL"]
+                role = random.choice(roles)
+                agent_id = f"SIM_{random.randint(1000, 9999)}"
+                new_agent = {
+                    "id": agent_id,
+                    "name": f"Sprite_{role.capitalize()}_{random.randint(10,99)}",
+                    "age": 0,
+                    "energy": 100,
+                    "stability": 1.0,
+                    "x": random.randint(-5, 15),
+                    "y": random.randint(-5, 15),
+                    "role": role,
+                    "working_set_kb": random.randint(2048, 8192)
+                }
+                SIMULATED_AGENTS.append(new_agent)
+                add_log(f"SPRITE_AUTO_DEPLOY: Deployed autonomous maintenance sprite {new_agent['name']} ({new_agent['role']}) to grid.", "info")
+
+            # 2. Automatically heal compromised core stability
+            if quantum_core.stability < 0.85:
+                heal_inc = 0.05
+                quantum_core.stability = min(1.0, quantum_core.stability + heal_inc)
+                add_log(f"SPRITE_AUTO_TASK: Active Sprites successfully repaired system core stability. Stability restored: {quantum_core.stability*100:.1f}%.", "info")
+
+            # 3. Automatically perform Storage Hive Memory flushes to clear dirty pages
+            dirty_count = len(quantum_core.dirty_pages)
+            if dirty_count > 0 or quantum_core.memory_pressure_active:
+                flushed = quantum_core.flush_dirty_pages()
+                add_log(f"SPRITE_AUTO_TASK: Sprites completed Storage Hive cache flushing. Synchronized {flushed} dirty memory bits.", "info")
+
+            # 4. Perform grid environmental cooling tasks if heated
+            if quantum_core.heat > 70.0:
+                quantum_core.heat = max(35.0, quantum_core.heat - 8.0)
+                add_log(f"SPRITE_AUTO_TASK: Environmental thermal calibration completed by Sprites. Temperature mitigated to {quantum_core.heat:.1f}C.", "info")
+
+            # 5. Award autonomous progression XP to continuously level up the civilization
+            progression_engine.add_agent_xp("Autonomous_Sprites", 15)
+
+        except Exception as e:
+            print(f"[SPRITE_DAEMON_ERR] Exception in sprite loop: {e}")
+            
+        await asyncio.sleep(15)
 
 async def machine_telemetry_loop():
     """
@@ -148,16 +203,9 @@ import hashlib
 # DePIN Ledger State
 LEDGER_FILE = os.path.join(os.path.dirname(__file__), "data", "blockchain_ledger.json")
 
-def generate_block_hash(agent_name, action, prev_hash):
+def record_transaction(agent_name, action, prev_hash=None, nonce=0, hash_result=None, mine_time_ms=0.0):
     """
-    Generates a real SHA256 hash for the DePIN ledger.
-    """
-    data = f"{agent_name}{action}{prev_hash}{time.time()}".encode()
-    return hashlib.sha256(data).hexdigest()
-
-def record_transaction(agent_name, action):
-    """
-    Records a cryptographically verified transaction to the DePIN ledger.
+    Records a cryptographically verified and fully mined PoW transaction block to the DePIN ledger.
     """
     try:
         ledger = []
@@ -165,26 +213,26 @@ def record_transaction(agent_name, action):
             with open(LEDGER_FILE, "r") as f:
                 ledger = json.load(f)
         
-        prev_hash = ledger[-1]["hash"] if ledger else "0" * 64
-        new_hash = generate_block_hash(agent_name, action, prev_hash)
+        last_prev_hash = prev_hash or (ledger[-1]["hash"] if ledger else "0" * 64)
         
         entry = {
             "index": len(ledger),
             "timestamp": time.time(),
             "agent": agent_name,
             "action": action,
-            "prev_hash": prev_hash,
-            "hash": new_hash
+            "prev_hash": last_prev_hash,
+            "hash": hash_result or "0"*64,
+            "nonce": nonce,
+            "mine_time_ms": round(mine_time_ms, 2)
         }
         ledger.append(entry)
         
-        # Maintain only last 1000 blocks for performance
         if len(ledger) > 1000: ledger.pop(0)
         
         with open(LEDGER_FILE, "w") as f:
             json.dump(ledger, f, indent=2)
             
-        return new_hash
+        return entry["hash"]
     except:
         return "HASH_ERROR"
 
@@ -296,6 +344,8 @@ async def get_agents():
         agent['level'] = p_data['level']
         agent['title'] = p_data['title']
         
+        agent['rag_doc'] = decision.get('rag_doc', '')
+        
         # SCRIPT EVOLUTION (Step 40)
         if decision.get('recording'):
             agent['status_msg'] = "RECORDING_PATH"
@@ -316,6 +366,7 @@ async def get_agents():
             quantum_core.stability = min(1.0, quantum_core.stability + 0.01)
         elif agent['last_action'] == 'teach':
             add_log(f"SOCIAL_SYNC: {agent['name']} (TEACHER) aligning agent weights.")
+            quantum_core.stability = min(1.0, quantum_core.stability + 0.01) # simulated training benefit
             agent['confidence'] = min(1.0, agent['confidence'] + 0.1)
         elif agent['last_action'] == 'heal_hospital':
             add_log(f"MED-BAY: {agent['name']} admitted to HOSPITAL for critical recovery.")
@@ -323,8 +374,24 @@ async def get_agents():
         elif agent['last_action'] == 'negotiate_casino':
             add_log(f"CASINO: {agent['name']} is negotiating assets at the Hotel Casino.")
         
-        # Real DePIN Hashing
-        agent['last_hash'] = record_transaction(agent['name'], agent['last_action'])
+        # Real PoW DePIN Block Hashing & Mining
+        prev_hash = agent.get('last_hash') or "0"*64
+        mine_res = cyber_economy.mine_depin_block(agent['name'], agent['last_action'], prev_hash, difficulty=1)
+        
+        # Record fully mined transaction
+        agent['last_hash'] = record_transaction(
+            agent_name=agent['name'],
+            action=agent['last_action'],
+            prev_hash=prev_hash,
+            nonce=mine_res["nonce"],
+            hash_result=mine_res["hash"],
+            mine_time_ms=mine_res["mine_time_ms"]
+        )
+        
+        # Execute tax-burn stocks trading with learning bonus rewards
+        econ_action = cyber_economy.ai_trade(agent['name'], performance_bonus=float(agent['level'] * 0.5))
+        if "BOUGHT" in econ_action or "SOLD" in econ_action or "RESEARCH" in econ_action:
+            add_log(f"ECONOMY_SYNC: {agent['name']} executed trade drive: {econ_action}.", "info")
         
         # Speculative Execution Failure
         if quantum_core.speculative_execution_active and agent['last_action'] == 'process':
@@ -434,9 +501,6 @@ async def flush_memory():
     count = quantum_core.flush_dirty_pages()
     add_log(f"MEMORY_FLUSH: Synchronized {count} dirty pages to Storage Hive.")
     return {"status": "flushed", "pages": count}
-
-from pydantic import BaseModel
-from typing import List, Optional
 
 class TickRequest(BaseModel):
     env_nodes: Optional[List[dict]] = None
