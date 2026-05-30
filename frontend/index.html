@@ -141,6 +141,11 @@
             <div id="msn-chat-container">
                 <div class="msn-header">MSN Metropolis (Live)</div>
                 <div id="msn-log"></div>
+                <div id="evolution-project-status" style="background: #fff; border-top: 1px solid #808080; padding: 5px; color: #000;"></div>
+                <div style="display: flex; border-top: 1px solid #808080; padding: 2px; background: #dfdfdf;">
+                    <input type="text" id="msn-input" placeholder="Ask AI: 'make a school resume'" style="flex-grow: 1; border: 1px solid #808080; padding: 3px 5px; font-family: 'Tahoma', sans-serif; font-size: 11px; background:#fff; color:#000;">
+                    <button id="msn-send-btn" onclick="sendUserMsnMessage()" style="background: #c0c0c0; border: 1px solid #fff; border-right: 1px solid #808080; border-bottom: 1px solid #808080; font-family: 'Tahoma', sans-serif; font-size: 11px; cursor: pointer; padding: 2px 6px; margin-left: 2px; color:#000;">Send</button>
+                </div>
             </div>
         </div>
         
@@ -161,6 +166,14 @@
                     <div class="icon-box" style="background:#00ffff; color:#000;">A</div>
                     Automation
                 </div>
+                <div class="desktop-icon" onclick="openResumeBuilder()">
+                    <div class="icon-box" style="background:#ff00ff; color:#000;">R</div>
+                    Resume
+                </div>
+                <div class="desktop-icon" onclick="openResourceMonitor()">
+                    <div class="icon-box" style="background:#00ff88; color:#000;">PM</div>
+                    Perf
+                </div>
             </div>
 
             <div class="modal" id="ledgerModal">
@@ -178,6 +191,41 @@
                     <span class="close-modal" onclick="document.getElementById('flappyModal').style.display='none'">X</span>
                     <h3 style="color:#ffaa00; margin-top:0;">FLAPPY AGENT</h3>
                     <iframe src="flappy.html" width="320" height="480" style="border:2px solid #fff; background:#000;"></iframe>
+                </div>
+            </div>
+
+            <div class="modal" id="resumeModal">
+                <div class="modal-content" style="width: 85%; max-width: 800px; font-family: 'Courier New', monospace; background: rgba(10, 2, 15, 0.95); color: #ff00ff; border: 2px solid #ff00ff; box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);">
+                    <span class="close-modal" onclick="document.getElementById('resumeModal').style.display='none'">X</span>
+                    <h3 style="color:#ff00ff; border-bottom: 2px solid #ff00ff; padding-bottom: 8px; margin-top:0;">MSN METROPOLIS - DECENTRALIZED AI ACADEMIC RESUME TERMINAL</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 20px;">
+                        <!-- Left Panel: Agent Selection and Live Telemetry -->
+                        <div>
+                            <h4 style="color:#0f0; margin-top:0; border-bottom: 1px solid #0f0; padding-bottom: 3px;">SELECT AI AGENT DEPLOYED</h4>
+                            <select id="resume-agent-select" style="width:100%; background:#000; color:#0f0; border:1px solid #0f0; padding:5px; font-family:monospace; margin-bottom: 15px;" onchange="syncSelectedAgentNeeds()">
+                                <option value="">[SCANNING CORES...]</option>
+                            </select>
+                            
+                            <h4 style="color:#ffaa00; border-bottom: 1px solid #ffaa00; padding-bottom: 3px;">LIVE WANTS & NEEDS INDEX</h4>
+                            <div id="resume-needs-container" style="background:rgba(255,255,255,0.05); padding:10px; border:1px solid #ffaa00; font-size:11px;">
+                                <div style="color:#888;">Select an agent to probe needs.</div>
+                            </div>
+                            
+                            <button onclick="synthesizeAgentResume()" style="width:100%; margin-top:15px; background:#ff00ff; color:#000; border:1px solid #fff; cursor:pointer; padding:8px; font-weight:bold; font-family:monospace;">SYNTHESIZE SCHOOL RESUME</button>
+                        </div>
+                        
+                        <!-- Right Panel: Resume Document Showcase -->
+                        <div style="border-left: 1px solid #ff00ff44; padding-left: 20px;">
+                            <h4 style="color:#00ffff; margin-top:0; border-bottom: 1px solid #00ffff; padding-bottom: 3px;">SYNTHESIZED ACADEMIC RESUME</h4>
+                            <div id="resume-document-display" style="height: 380px; overflow-y: auto; background: rgba(0,0,0,0.8); border: 1px solid #00ffff; padding: 15px; font-size: 11px; color:#fff; line-height:1.4;">
+                                <div style="color:#888; text-align:center; margin-top:100px;">
+                                    [READY FOR NEURAL SYNTHESIS]<br>
+                                    Select an agent and click "SYNTHESIZE SCHOOL RESUME" to build their professional DePIN credentials.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -260,33 +308,38 @@
                 CITY_LEVEL: <span id="city-level" style="color:#ff00ff; font-weight:bold;">1</span> (<span id="city-xp">0</span>%)<br>
                 LATEST_UNLOCK: <span id="city-unlock" style="color:#ffff00; font-size:10px;">Initializing Core...</span><br>
                 WEATHER: <span id="env-weather" style="color:#00ffff; font-weight:bold;">CLEAR</span><br>
-                CPU_CLOCK: <span id="cpu-clock" style="color:#0f0;">-- GHz</span> <span style="color:#888; font-size:9px;">[FENCED]</span><br>
+                CPU_CLOCK: <span id="cpu-clock" style="color:#0f0;">-- GHz</span> <span id="cpu-fence-tag" style="color:#888; font-size:9px;">[FENCED]</span><br>
                 CRYPTO_MINT: <span id="mint-rate">0.00 SPRITE/s</span><br>
                 BALANCE: <span id="crypto-balance" style="color:#ffd700; font-weight:bold;">0.00</span><br>
+                <div style="font-size: 10px; color:#ffd700; margin-top: 4px; border-top:1px dashed #00ffff44; padding-top:4px;">
+                    GENETIC UPGRADES:<br>
+                    <span style="color:#888;">&bull; PACKETS:</span> <span id="buff-packet" style="color:#0f0;">1.00x</span><br>
+                    <span style="color:#888;">&bull; DANUBE:</span> <span id="buff-danube" style="color:#0f0;">1.00x</span><br>
+                    <span style="color:#888;">&bull; ECC_MEM:</span> <span id="buff-ecc" style="color:#0f0;">1.00x</span>
+                </div>
                 <button id="toggle-3d-btn" style="margin-top: 5px; background: #007acc; color: #fff; border: 1px solid #fff; cursor: pointer; padding: 2px 5px; font-size: 11px;">TOGGLE 3D WEBGL</button>
             </div>
 
             <!-- MANDATORY ONBOARD PROTOCOL CHECKLIST -->
-            <div id="protocol-checklist" style="position: absolute; bottom: 20px; left: 10px; background: rgba(0,0,0,0.9); border: 1px solid #00ffff; padding: 10px; width: 220px; z-index: 60; font-size: 10px; box-shadow: 0 0 10px #00ffff44;">
-                <div style="color:#00ffff; font-weight:bold; border-bottom: 1px solid #00ffff; margin-bottom: 5px; padding-bottom: 3px;">100-STEP ONBOARD PROTOCOL</div>
-                <div id="step-0" style="color:#0f0;">[X] Step 1: Genesis Restoration</div>
-                <div id="step-1" style="color:#0f0;">[X] Step 2: UI Interactivity Fix</div>
-                <div id="step-2" style="color:#0f0;">[X] Step 3: Resource Fencing</div>
-                <div id="step-3" style="color:#ff0;">[ ] Step 4: Ssprite Optimization</div>
-                <div id="step-4" style="color:#888;">[ ] Step 5: Hashed Chunk Storage</div>
-                <div style="color:#888; margin-top: 5px;">... 95 Steps Remaining ...</div>
+            <!-- TIMESTAMP: 2026-05-27T01:13:00.000Z | PROJECT_ID: SimsMerged-v1.3 | AGENT_ID: Antigravity-Agent -->
+            <div id="protocol-checklist" style="position: absolute; bottom: 20px; left: 10px; background: rgba(0, 5, 10, 0.95); border: 2px solid #00ffff; padding: 12px; width: 260px; height: 180px; z-index: 60; font-size: 10px; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2); display: flex; flex-direction: column; clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 92% 100%, 0% 100%);">
+                <div style="color:#00ffff; font-weight:bold; border-bottom: 1px solid #00ffff; margin-bottom: 5px; padding-bottom: 3px; text-shadow: 0 0 5px #00ffff; font-size:11px;">100-STEP ONBOARD TERMINAL</div>
+                <div id="checklist-steps-container" style="flex-grow: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 5px; scrollbar-width: thin; scrollbar-color: #00ffff #02050a;">
+                    <div style="color:#888;">[SCANNING BACKEND PROGRESSION...]</div>
+                </div>
             </div>
+            <div id="cyber-console" style="display: none;"></div>
             <div id="hover-tooltip"></div>
             <canvas id="gameCanvas"></canvas>
             <div id="webgl-container" style="display: none; width: 100%; height: 100%; position: absolute; top:0; left:0; z-index:9;"></div>
         </div>
     </div>
     
-    <script src="js/telemetry_data.js"></script>
-    <script src="js/console.js"></script>
-    <script src="js/engine.js"></script>
-    <script src="js/resource_monitor.js"></script>
-    <script src="js/bridge.js"></script>
+    <script src="js/telemetry_data.js?v=1.3.3"></script>
+    <script src="js/console.js?v=1.3.3"></script>
+    <script src="js/engine.js?v=1.3.3"></script>
+    <script src="js/resource_monitor.js?v=1.3.3"></script>
+    <script src="js/bridge.js?v=1.3.3"></script>
     
     <script>
         const toolDisplay = document.getElementById('active-tool-display');
@@ -364,8 +417,8 @@
                 { id: 'rope_s', label: 'RoPE Scaling', type: 'text', val: 'linear' },
                 { id: 'rope_t', label: 'RoPE Theta', type: 'number', val: 10000 },
                 { id: 'soft_p', label: 'Soft Prompt Tuning', type: 'checkbox', val: false },
-                { id: 'sys_w', label: 'System Weight', type: 'range', min: 0, max: 1, step: 0.1, val: 0.5 }
-            ],
+            ]
+        };
         window.currentSettings = {};
 
         function renderSetting(v, container) {
@@ -380,7 +433,7 @@
             row.appendChild(labelContainer);
             
             let input;
-                        } else if (v.type === 'select') {
+            if (v.type === 'select') {
                 input = document.createElement('select');
                 input.style.width = '100%'; input.style.fontSize = '10px';
                 v.options.forEach(opt => {
@@ -483,9 +536,64 @@
         };
 
         updateParamSuite('CPU');
+
+        // Custom High-Fidelity Retro Notification Toast System
+        window.showNotification = function(title, message, isError = false) {
+            const toast = document.getElementById('notification-toast');
+            const titleEl = document.getElementById('toast-title');
+            const msgEl = document.getElementById('toast-message');
+            if (!toast || !titleEl || !msgEl) return;
+            
+            titleEl.innerText = title;
+            titleEl.style.color = isError ? '#ff4444' : '#00ffff';
+            toast.style.borderColor = isError ? '#ff4444' : '#00ffff';
+            toast.style.boxShadow = isError ? '0 0 25px rgba(255, 68, 68, 0.5)' : '0 0 25px rgba(0, 255, 255, 0.5)';
+            
+            msgEl.innerText = message;
+            msgEl.style.color = isError ? '#ff4444' : '#0f0';
+            msgEl.style.textShadow = isError ? '0 0 5px #ff4444' : '0 0 5px #0f0';
+            
+            toast.style.display = 'block';
+            
+            // Synthesize short retro audio terminal alert bleep via Web Audio API
+            // [TIMESTAMP: 2026-05-30T01:05:00.452Z] [PROJECT_ID: SimsMerged-v1.3-Metropolis] [AGENT_ID: Gemini-CLI-Architect]
+            try {
+                if (!window.globalAudioCtx) {
+                    window.globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const audioCtx = window.globalAudioCtx;
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(isError ? 120 : 750, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.18);
+                oscillator.stop(audioCtx.currentTime + 0.22);
+            } catch (err) {
+                // Audio Context might be locked by browser autoplay security policies
+            }
+            
+            if (window.toastTimeout) clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        };
     </script>
+    
+    <!-- Custom Glassmorphic Toast DOM Element -->
+    <div id="notification-toast" style="display: none; position: fixed; bottom: 20px; right: 20px; background: rgba(2, 5, 10, 0.95); border: 2px solid #00ffff; box-shadow: 0 0 25px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(0, 255, 255, 0.3); padding: 15px; width: 280px; z-index: 2000; font-family: 'Courier New', monospace; font-size: 11px; clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 90% 100%, 0% 100%);">
+        <div id="toast-title" style="color: #00ffff; font-weight: bold; border-bottom: 1px solid rgba(0, 255, 255, 0.3); padding-bottom: 5px; margin-bottom: 8px;">SYSTEM SIGNAL</div>
+        <div id="toast-message" style="color: #0f0; text-shadow: 0 0 5px #0f0; line-height: 1.4;">[STATUS_OK]</div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="js/webgl_engine.js"></script>
+    <script src="js/webgl_engine.js?v=1.3.3"></script>
 </body>
 </html>
 

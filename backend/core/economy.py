@@ -14,16 +14,17 @@ class CyberEconomy:
             "SYS_CORE": 100.0,
             "DATA_CORP": 50.0,
             "AI_FUTURES": 200.0,
-            "RESEARCH_POOL": 0.0 # Pool to download/activate new neural models
+            "RESEARCH_POOL": 0.0,
+            "DANUBE_COIN": 1.0 # New Tokenomics anchor
         }
         self.agent_wallets = {}
         self.decentralized_storage = {}
         self.last_tick = time.time()
         
-        # Economic Crash Safeguard Constants (Step 45 Economy limits)
+        # Economic Crash Safeguard Constants
         self.max_balance_cap = 1000000.0
-        self.base_mint_rate = 1.5 # Slow, controlled base mint speed
-        self.transaction_tax_burn_rate = 0.02 # 2% tax/burn rate to prevent hyper-inflation crashes
+        self.base_mint_rate = 1.5 
+        self.transaction_tax_burn_rate = 0.02 
         self.gas_pool_reserve = 500.0
         
         # Mined Models Database
@@ -36,38 +37,39 @@ class CyberEconomy:
 
     def process_tick(self, stability_factor=1.0):
         """
-        Executes controlled tick cycles. Combats hyper-inflation by gating the minting yield
-        based on core stability and implementing a transaction tax burn.
+        Executes controlled tick cycles with Danube Coin integration.
         """
         now = time.time()
         elapsed = now - self.last_tick
         self.last_tick = now
         
-        # Crash Gate: Mint rate is throttled by core stability
-        # If stability drops, minting is heavily slowed to protect system memory
+        # Throttled minting
         mint_rate = (self.base_mint_rate * elapsed) * max(0.1, float(stability_factor))
         
-        # Hyper-inflation safeguard
         if self.crypto_balance < self.max_balance_cap:
             self.crypto_balance += mint_rate
         else:
-            # Burn 1% of total liquidity to curb inflation
             self.crypto_balance *= 0.99
             
         # Fluctuate Stocks
         for symbol in self.stock_market:
             if symbol == "RESEARCH_POOL":
                 continue
-            volatility = random.uniform(-0.04, 0.045)
-            self.stock_market[symbol] = max(1.0, self.stock_market[symbol] * (1.0 + volatility))
             
-        # Check if research pool has enough SPRITE to unlock the next model
+            # Danube Coin has slightly different volatility based on global stability
+            if symbol == "DANUBE_COIN":
+                volatility = random.uniform(-0.02, 0.03) + (stability_factor - 1.0) * 0.05
+            else:
+                volatility = random.uniform(-0.04, 0.045)
+                
+            self.stock_market[symbol] = max(0.01, self.stock_market[symbol] * (1.0 + volatility))
+            
         self.evaluate_model_research()
             
         return {
             "balance": round(self.crypto_balance, 2),
             "mint_rate": round(mint_rate, 4),
-            "stocks": {k: round(v, 2) for k, v in self.stock_market.items()},
+            "stocks": {k: round(v, 4) if k == "DANUBE_COIN" else round(v, 2) for k, v in self.stock_market.items()},
             "unlocked_models": self.unlocked_models,
             "next_unlock": self.get_next_model_target()
         }

@@ -9,8 +9,8 @@ class ResourceMonitor {
     initUI() {
         const win = document.createElement('div');
         win.id = 'resource-monitor';
-        win.style = `
-            position: absolute; bottom: 20px; right: 20px; width: 300px; height: 400px;
+        win.style.cssText = `
+            position: absolute; top: 220px; right: 20px; width: 300px; height: 500px;
             background: #c0c0c0; border: 2px solid #fff; border-right: 2px solid #808080;
             border-bottom: 2px solid #808080; box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
             display: flex; flex-direction: column; z-index: 1000; font-family: 'Tahoma', sans-serif;
@@ -21,12 +21,18 @@ class ResourceMonitor {
                 <span>Resource Monitor</span>
                 <span style="cursor:pointer;" onclick="this.parentElement.parentElement.style.display='none'">X</span>
             </div>
-            <div style="padding: 10px; flex-grow: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto;">
+            <div style="padding: 10px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; overflow-y: auto;">
                 <div style="font-size: 11px; font-weight: bold;">CPU Usage History</div>
-                <canvas id="cpu-chart" width="280" height="100" style="background: #000; border: 1px solid #808080;"></canvas>
+                <canvas id="cpu-chart" width="280" height="80" style="background: #000; border: 1px solid #808080;"></canvas>
                 <div style="font-size: 11px; font-weight: bold;">Memory Usage History</div>
-                <canvas id="mem-chart" width="280" height="100" style="background: #000; border: 1px solid #808080;"></canvas>
-                <div id="machine-details" style="font-size: 10px; background: #fff; border: 1px inset #808080; padding: 5px; height: 100px; overflow-y: auto;">
+                <canvas id="mem-chart" width="280" height="80" style="background: #000; border: 1px solid #808080;"></canvas>
+                
+                <div style="font-size: 10px; font-weight: bold;">16-Core Virtual CPU Affinity Matrix</div>
+                <div id="core-grid-matrix" style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; background: #000; border: 1px inset #808080; padding: 5px; margin-bottom: 2px;">
+                    <!-- 16 affinity cores loaded dynamically -->
+                </div>
+                
+                <div id="machine-details" style="font-size: 10px; background: #fff; border: 1px inset #808080; padding: 5px; height: 80px; overflow-y: auto;">
                     Linking to host machine...
                 </div>
             </div>
@@ -37,7 +43,7 @@ class ResourceMonitor {
     }
 
     drawChart(ctx, history, label) {
-        const w = 280, h = 100;
+        const w = 280, h = 80;
         ctx.clearRect(0, 0, w, h);
         
         // Grid
@@ -73,6 +79,21 @@ class ResourceMonitor {
                     this.drawChart(this.cpuCtx, this.cpuHistory, 'CPU');
                     this.drawChart(this.memCtx, this.memHistory, 'MEM');
 
+                    // Sync simulated 16-Core virtual load matrix dynamically
+                    const coreGrid = document.getElementById('core-grid-matrix');
+                    if (coreGrid) {
+                        let html = '';
+                        const coreLoad = window.coreLoad || {};
+                        for (let i = 0; i < 16; i++) {
+                            const load = parseFloat(coreLoad[i] || 0.0);
+                            const r = Math.min(255, Math.floor(load * 255));
+                            const g = Math.max(0, Math.min(255, Math.floor((1.0 - load) * 255)));
+                            const color = `rgb(${r}, ${g}, 0)`;
+                            html += `<div style="height: 10px; background: ${color}; border: 1px solid #333;" title="Core ${i}: ${(load * 100).toFixed(0)}%"></div>`;
+                        }
+                        coreGrid.innerHTML = html;
+                    }
+
                     document.getElementById('machine-details').innerHTML = `
                         <b>HOST:</b> LOCAL_WIN32<br>
                         <b>CLOCK:</b> ${data.real_cpu_mhz} MHz<br>
@@ -88,3 +109,10 @@ class ResourceMonitor {
 }
 
 window.resourceMonitor = new ResourceMonitor();
+
+window.openResourceMonitor = function() {
+    const win = document.getElementById('resource-monitor');
+    if (win) {
+        win.style.display = 'flex';
+    }
+};

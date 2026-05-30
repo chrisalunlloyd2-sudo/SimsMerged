@@ -23,12 +23,10 @@ if (-not ($javaOk -and $pythonOk -and $mvnOk)) {
 } else {
     Write-Host '[+] All dependencies verified.' -ForegroundColor Green
 
-    # 3. Sequence Simulation
+    # 3. Sequence Simulation (Optimized)
     Write-Host '--- Phase 2: Quantum Harmonization ---' -ForegroundColor Yellow
-    0..10 | ForEach-Object {
-        Write-Host "Syncing System Matrix: $(($_ * 10))%..." -ForegroundColor Green
-        Start-Sleep -Milliseconds 100
-    }
+    Write-Host "Syncing System Matrix: 100%..." -ForegroundColor Green
+
 
     # 4. Launching Backend
     Write-Host '--- Phase 3: Deploying Metropolis Authority ---' -ForegroundColor Yellow

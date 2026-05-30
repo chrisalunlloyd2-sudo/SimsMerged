@@ -16,7 +16,7 @@
         const logEntry = document.createElement('div');
         logEntry.style.borderBottom = '1px solid rgba(0, 255, 0, 0.1)';
         logEntry.style.padding = '2px 0';
-        logEntry.innerHTML = `<span style="color: #888;">[\${timestamp}]</span> \${msg}`;
+        logEntry.innerHTML = `<span style="color: #888;">[${timestamp}]</span> ${msg}`;
 
         consoleDiv.appendChild(logEntry);
         consoleDiv.scrollTop = consoleDiv.scrollHeight;

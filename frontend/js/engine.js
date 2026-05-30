@@ -1,6 +1,6 @@
-// TIMESTAMP: 2026-05-25T01:10:00.123Z
-// PROJECT_ID: SimsMerged-v1.3
-// AGENT_ID: Antigravity-Agent
+// TIMESTAMP: 2026-05-30T01:05:00.452Z
+// PROJECT_ID: SimsMerged-v1.3-Metropolis
+// AGENT_ID: Gemini-CLI-Architect
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -97,6 +97,83 @@ const SYSTEM_INFO_MAP = {
 };
 
 const BUILD_TYPES = {
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
+    'A*_PATHFIN': { 
+        color: '#dfd4f8', 
+        label: 'A* Pathfinding for Swarm Agents', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced A* Pathfinding for Swarm Agents node.' 
+    },
+    'LOW-LATENC': { 
+        color: '#eef3ce', 
+        label: 'Low-latency Packet Interconnects', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Low-latency Packet Interconnects node.' 
+    },
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
+    'PROCEDURAL': { 
+        color: '#71de20', 
+        label: 'Procedural Building Asset Generation', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Procedural Building Asset Generation node.' 
+    },
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
+    'HEADLESS_U': { 
+        color: '#40a842', 
+        label: 'Headless UI Vision & Automated Grading', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Headless UI Vision & Automated Grading node.' 
+    },
+    'DEPIN_CRYP': { 
+        color: '#c1e945', 
+        label: 'DePIN Crypto Tokenomics via Smart Contracts', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced DePIN Crypto Tokenomics via Smart Contracts node.' 
+    },
+    'RUST-BASED': { 
+        color: '#2101e5', 
+        label: 'Rust-based Node Auto-Scaling', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Rust-based Node Auto-Scaling node.' 
+    },
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
     'CPU': { color: '#ff4d4d', label: 'Silicon Central', locked: false, category: 'Hardware', desc: 'Central compute core.' },
     'RAM': { color: '#4dff88', label: 'Memory Matrix', locked: false, category: 'Hardware', desc: 'Volatile data pool.' },
     'GPU': { color: '#4d94ff', label: 'Graphics Grid', locked: false, category: 'Hardware', desc: 'Parallel math array.' },
@@ -171,7 +248,14 @@ function drawStructure(isoX, isoY, color, type, locked) {
 }
 
 function drawTile(x, y, color = '#050a05', isHovered = false, districtMap) {
-    const { isoX, isoY } = toIso(x, y);
+    // PERFORMANCE OPTIMIZATION: Inline isometric calculations to avoid object allocation (saves 3,600 allocations/frame!)
+    const halfW = 32 * zoom; // TILE_WIDTH / 2
+    const halfH = 16 * zoom; // TILE_HEIGHT / 2
+    const centerX = canvas.width / 2 + camX;
+    const centerY = canvas.height / 2 + camY;
+    const isoX = (x - y) * halfW + centerX;
+    const isoY = (x + y) * halfH + centerY;
+
     const tw = TILE_WIDTH * zoom, th = TILE_HEIGHT * zoom;
     if (isoX < -tw || isoX > canvas.width + tw || isoY < -th || isoY > canvas.height + th) return;
     
@@ -197,6 +281,54 @@ function drawTile(x, y, color = '#050a05', isHovered = false, districtMap) {
     }
 }
 
+const packets = [];
+
+function spawnPacket(fx, fy, tx, ty, color, protocol, speed) {
+    packets.push({
+        fx: fx, fy: fy,
+        tx: tx, ty: ty,
+        progress: 0.0,
+        color: color,
+        protocol: protocol,
+        speed: speed || 0.02
+    });
+}
+
+function drawPackets() {
+    for (let i = packets.length - 1; i >= 0; i--) {
+        const p = packets[i];
+        p.progress += p.speed;
+        if (p.progress >= 1.0) {
+            packets.splice(i, 1);
+            continue;
+        }
+        
+        const fromScreen = toIso(p.fx, p.fy);
+        const toScreen = toIso(p.tx, p.ty);
+        
+        // Lerp positions
+        const x = fromScreen.isoX + (toScreen.isoX - fromScreen.isoX) * p.progress;
+        const y = fromScreen.isoY + (toScreen.isoY - fromScreen.isoY) * p.progress;
+        
+        // Render packet particle core
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(x, y, 4 * zoom, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Render glowing veil
+        ctx.fillStyle = p.color + "22";
+        ctx.beginPath();
+        ctx.arc(x, y, 8 * zoom, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Render floating text of the active protocols
+        ctx.fillStyle = '#00ffff';
+        ctx.font = `${Math.max(6, 7 * zoom)}px monospace`;
+        ctx.fillText(p.protocol, x + 6 * zoom, y - 2 * zoom);
+    }
+}
+
 function drawTraffic(typeMap) {
     if (!window.activeLinks) return;
     
@@ -219,7 +351,7 @@ function drawTraffic(typeMap) {
                     ctx.stroke();
                     
                     // Animate Packets
-                    if (Math.random() < 0.05) {
+                    if (Math.random() < 0.03) {
                         spawnPacket(fNode.x, fNode.y, tNode.x, tNode.y, link.color, link.protocol, link.speed || 0.02);
                     }
                 });
@@ -228,17 +360,108 @@ function drawTraffic(typeMap) {
     });
 }
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+const weatherParticles = [];
+
+function drawWeather() {
+    const weather = window.systemWeather || "CLEAR";
+    if (weather === "CLEAR") return;
     
-    // Build spatial map for O(1) rendering lookups
-    const districtMap = {};
-    const typeMap = {};
-    districts.forEach(d => {
-        districtMap[`${d.x},${d.y}`] = d;
-        if (!typeMap[d.type]) typeMap[d.type] = [];
-        typeMap[d.type].push(d);
-    });
+    // Seed new rain particles
+    if (weatherParticles.length < 150) {
+        weatherParticles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -100,
+            speed: 5 + Math.random() * 8,
+            length: 10 + Math.random() * 15,
+            color: weather === "DATA_RAIN" ? "#00ffff" : (weather === "CYBER_STORM" ? "#ffd700" : "#ff4444")
+        });
+    }
+    
+    // Draw and update falling particles
+    for (let i = weatherParticles.length - 1; i >= 0; i--) {
+        const p = weatherParticles[i];
+        p.y += p.speed;
+        
+        ctx.strokeStyle = p.color + "66";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x - 2, p.y + p.length);
+        ctx.stroke();
+        
+        if (p.y > canvas.height) {
+            weatherParticles.splice(i, 1);
+        }
+    }
+    
+    // Draw stormy lightning flash
+    if ((weather === "CYBER_STORM" || weather === "ACID_CORRUPTION") && Math.random() < 0.02) {
+        ctx.fillStyle = weather === "CYBER_STORM" ? "rgba(255, 215, 0, 0.15)" : "rgba(255, 68, 68, 0.12)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Short retro sound bleep for atmospheric thunder
+        // PERFORMANCE OPTIMIZATION: Reuse global AudioContext to avoid system device limits and warning alerts
+        try {
+            if (!window.globalAudioCtx) {
+                window.globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const audioCtx = window.globalAudioCtx;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(45 + Math.random() * 30, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.35);
+            osc.stop(audioCtx.currentTime + 0.4);
+        } catch(e) {}
+    }
+}
+
+// PERFORMANCE OPTIMIZATION: Cache spatial map for O(1) rendering lookups to avoid rebuilding maps 60 times a second
+let cachedDistrictMap = {};
+let cachedTypeMap = {};
+let cachedDistrictsLength = -1;
+
+function updateDistrictMapsIfNeeded() {
+    if (districts.length !== cachedDistrictsLength) {
+        cachedDistrictMap = {};
+        cachedTypeMap = {};
+        districts.forEach(d => {
+            cachedDistrictMap[`${d.x},${d.y}`] = d;
+            if (!cachedTypeMap[d.type]) cachedTypeMap[d.type] = [];
+            cachedTypeMap[d.type].push(d);
+        });
+        cachedDistrictsLength = districts.length;
+    }
+}
+
+function draw() {
+    // PERFORMANCE OPTIMIZATION: If canvas is hidden (e.g. active 3D WebGL mode), skip entire draw loop to conserve CPU/GPU!
+    if (canvas.style.display === 'none') {
+        requestAnimationFrame(draw);
+        return;
+    }
+
+    let shakeX = 0, shakeY = 0;
+    const weather = window.systemWeather || "CLEAR";
+    if (weather === "CYBER_STORM" || weather === "ACID_CORRUPTION") {
+        shakeX = (Math.random() - 0.5) * 3;
+        shakeY = (Math.random() - 0.5) * 3;
+    }
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+    
+    updateDistrictMapsIfNeeded();
+    const districtMap = cachedDistrictMap;
+    const typeMap = cachedTypeMap;
     
     // --- VISUAL CHARGE LEAKAGE (Row Hammer Shield) ---
     if (window.chargeLeakage > 0) {
@@ -253,9 +476,21 @@ function draw() {
     }
 
     drawTraffic(typeMap); // RENDER DATA PIPES
+    drawPackets();        // ANIMATE DYNAMIC GLOWING PACKETS
 
     window.agents.forEach(agent => {
-        const { isoX, isoY } = toIso(agent.x, agent.y);
+        // TIMESTAMP: 2026-05-29T02:54:00.000Z
+        // PROJECT_ID: SimsMerged-v1.3-Metropolis
+        // AGENT_ID: Antigravity-Agent
+        // Asynchronous Frame Interpolation (Task 2: Asynchronous Frame Bridge protocol)
+        // Lerp agent positions smoothly at 60fps instead of snapping on 1s polling intervals
+        if (agent.ix === undefined) agent.ix = agent.x;
+        if (agent.iy === undefined) agent.iy = agent.y;
+        
+        agent.ix += (agent.x - agent.ix) * 0.08;
+        agent.iy += (agent.y - agent.iy) * 0.08;
+        
+        const { isoX, isoY } = toIso(agent.ix, agent.iy);
         const margin = 60 * zoom;
         // Viewport Culling: Skip drawing agents scrolled off-screen
         if (isoX < -margin || isoX > canvas.width + margin || isoY < -margin || isoY > canvas.height + margin) return;
@@ -265,6 +500,13 @@ function draw() {
         // --- DRAW SSPRITE (Animated Agent) ---
         const bob = Math.sin(Date.now() * 0.005) * 5 * zoom;
         const baseSize = 8 * zoom;
+
+        // Ground shadow (Premium depth mapping)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.beginPath();
+        const shadowScale = Math.max(0.6, 1.0 - (bob / 25.0)); // scale based on bob height
+        ctx.ellipse(isoX, isoY + 6 * zoom, 12 * zoom * shadowScale, 5 * zoom * shadowScale, 0, 0, Math.PI * 2);
+        ctx.fill();
         
         // Body (MS Paint Style)
         ctx.fillStyle = color;
@@ -288,9 +530,25 @@ function draw() {
         ctx.fillStyle = 'white'; ctx.font = `${Math.max(8, 10*zoom)}px Arial`;
         ctx.fillText(`[Lvl ${agent.level}] ${agent.title || 'Agent'}`, isoX - 30*zoom, isoY - 55*zoom + bob);
         ctx.fillText(agent.name, isoX - 15*zoom, isoY - 45*zoom + bob);
+
+        // Draw Pedagogy/Training visual glow ring
+        if (agent.last_action === 'teach') {
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.6)';
+            ctx.lineWidth = 2 * zoom;
+            ctx.beginPath();
+            ctx.ellipse(isoX, isoY + bob, 15 * zoom, 7 * zoom, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Floating tag
+            ctx.fillStyle = '#00ffff';
+            ctx.font = `bold ${Math.max(7, 8 * zoom)}px monospace`;
+            ctx.fillText("ALIGNING_WEIGHTS...", isoX - 35 * zoom, isoY - 67 * zoom + bob);
+        }
     });
 
     apply_interaction_logic();
+    ctx.restore();
+    drawWeather();
     requestAnimationFrame(draw);
 }
 
@@ -298,9 +556,57 @@ function apply_interaction_logic() {
     const hoveredNode = districts.find(d => d.x === selectedTile.x && d.y === selectedTile.y);
     const hoveredAgent = window.agents.find(a => a.x === selectedTile.x && a.y === selectedTile.y);
 
-    if (hoveredNode || hoveredAgent) {
-        const info = hoveredNode ? BUILD_TYPES[hoveredNode.type] : { label: hoveredAgent.name, desc: `Role: ${hoveredAgent.role}` };
-        const sysPart = hoveredNode ? (SYSTEM_INFO_MAP[hoveredNode.type] || 'Standard Infrastructure Component') : SYSTEM_INFO_MAP['AGENT'];
+    if (hoveredAgent) {
+        tooltip.style.display = 'block'; 
+        tooltip.style.left = (lastMouseX + 20) + 'px'; 
+        tooltip.style.top = (lastMouseY + 20) + 'px';
+        
+        const n = hoveredAgent.sims_needs || { energy: 100, comfort: 100, social: 100, hygiene: 100, hunger: 100 };
+        
+        tooltip.innerHTML = `
+            <div class="tooltip-header" style="color: #ff00ff; border-bottom: 1px solid #ff00ff; margin-bottom:5px; padding-bottom:5px;">${hoveredAgent.name} <span class="sys-info-tag" style="border-color:#ff00ff; color:#ff00ff; float:right;">AI_AGENT</span></div>
+            <div class="tooltip-row"><span class="tooltip-label">VOCATION:</span><span class="tooltip-value" style="color:#0f0;">${hoveredAgent.role} [Lvl ${hoveredAgent.level}]</span></div>
+            <div class="tooltip-row"><span class="tooltip-label">EMOTION:</span><span class="tooltip-value" style="color:#0ff;">${hoveredAgent.state}</span></div>
+            <div class="tooltip-row"><span class="tooltip-label">CONFIDENCE:</span><span class="tooltip-value" style="color:#ffd700;">${(hoveredAgent.confidence * 100).toFixed(0)}%</span></div>
+            
+            <div class="tooltip-desc" style="border-top: 1px dashed rgba(255, 0, 255, 0.4); padding-top: 5px; margin-top: 5px;">
+                <div style="font-weight:bold; color:#ffaa00; font-size:10px; margin-bottom:5px; text-transform:uppercase;">Live Wants & Needs:</div>
+                
+                <div style="margin-bottom: 4px;">
+                    <div style="display:flex; justify-content:space-between; font-size:9px;">
+                        <span>ENERGY RECHARGE:</span><span>${n.energy}%</span>
+                    </div>
+                    <div style="height:4px; background:rgba(255,255,255,0.1);"><div style="height:100%; width:${n.energy}%; background:#ff4d4d;"></div></div>
+                </div>
+                <div style="margin-bottom: 4px;">
+                    <div style="display:flex; justify-content:space-between; font-size:9px;">
+                        <span>COMFORT (ALIGNMENT):</span><span>${n.comfort}%</span>
+                    </div>
+                    <div style="height:4px; background:rgba(255,255,255,0.1);"><div style="height:100%; width:${n.comfort}%; background:#4facfe;"></div></div>
+                </div>
+                <div style="margin-bottom: 4px;">
+                    <div style="display:flex; justify-content:space-between; font-size:9px;">
+                        <span>SOCIAL EXCHANGE:</span><span>${n.social}%</span>
+                    </div>
+                    <div style="height:4px; background:rgba(255,255,255,0.1);"><div style="height:100%; width:${n.social}%; background:#ffd700;"></div></div>
+                </div>
+                <div style="margin-bottom: 4px;">
+                    <div style="display:flex; justify-content:space-between; font-size:9px;">
+                        <span>HYGIENE CACHE:</span><span>${n.hygiene}%</span>
+                    </div>
+                    <div style="height:4px; background:rgba(255,255,255,0.1);"><div style="height:100%; width:${n.hygiene}%; background:#ff00ff;"></div></div>
+                </div>
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size:9px;">
+                        <span>HUNGER STARVATION:</span><span>${n.hunger}%</span>
+                    </div>
+                    <div style="height:4px; background:rgba(255,255,255,0.1);"><div style="height:100%; width:${n.hunger}%; background:#00ff00;"></div></div>
+                </div>
+            </div>
+        `;
+    } else if (hoveredNode) {
+        const info = BUILD_TYPES[hoveredNode.type] || { label: hoveredNode.type, desc: 'Infrastructure component.' };
+        const sysPart = SYSTEM_INFO_MAP[hoveredNode.type] || 'Standard Infrastructure Component';
         
         tooltip.style.display = 'block'; 
         tooltip.style.left = (lastMouseX + 20) + 'px'; 

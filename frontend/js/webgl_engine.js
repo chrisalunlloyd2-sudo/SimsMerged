@@ -1,9 +1,19 @@
+// TIMESTAMP: 2026-05-30T01:05:00.452Z
+// PROJECT_ID: SimsMerged-v1.3-Metropolis
+// AGENT_ID: Gemini-CLI-Architect
+
 (function() {
     let is3DMode = false;
     const btn = document.getElementById('toggle-3d-btn');
     const container2D = document.getElementById('gameCanvas');
     const container3D = document.getElementById('webgl-container');
     const overlays = [document.getElementById('scanner-overlay'), document.getElementById('vignette')];
+
+    if (typeof THREE === 'undefined') {
+        console.warn("[WebGL] Three.js not loaded. 3D WebGL mode disabled.");
+        if (btn) btn.style.display = 'none';
+        return;
+    }
 
     // Three.js setup
     const scene = new THREE.Scene();
@@ -42,11 +52,14 @@
         return { x: x * 2, z: y * 2 };
     }
 
+    let lastDistrictsLength = -1;
+    let lastAgentsString = "";
+
     function syncScene() {
         if (!is3DMode) return;
 
-        // Sync Districts
-        if (window.districts) {
+        // Sync Districts (Only run if list changes to save iterations)
+        if (window.districts && window.districts.length !== lastDistrictsLength) {
             window.districts.forEach((d, i) => {
                 const id = `dist_${d.x}_${d.y}_${d.type}`;
                 if (!meshes.districts.has(id)) {
@@ -59,33 +72,46 @@
                     meshes.districts.set(id, mesh);
                 }
             });
+            lastDistrictsLength = window.districts.length;
         }
 
-        // Sync Agents
+        // Sync Agents (Only process changes when list content/positions shift)
         if (window.agents) {
-            const currentAgentIds = new Set(window.agents.map(a => a.id));
-            // Remove old
-            for (let [id, mesh] of meshes.agents) {
-                if (!currentAgentIds.has(id)) {
-                    scene.remove(mesh);
-                    meshes.agents.delete(id);
+            const agentsJSON = JSON.stringify(window.agents.map(a => ({ id: a.id, x: a.x, y: a.y, role: a.role })));
+            if (agentsJSON !== lastAgentsString) {
+                const currentAgentIds = new Set(window.agents.map(a => a.id));
+                // Remove old
+                for (let [id, mesh] of meshes.agents) {
+                    if (!currentAgentIds.has(id)) {
+                        scene.remove(mesh);
+                        meshes.agents.delete(id);
+                    }
                 }
+                // Update/Add new
+                window.agents.forEach(a => {
+                    let mesh = meshes.agents.get(a.id);
+                    if (!mesh) {
+                        const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+                        const color = a.role === 'DOCTOR' ? 0xff4444 : (a.role === 'TEACHER' ? 0x4facfe : 0xffcc00);
+                        const material = new THREE.MeshLambertMaterial({ color: color });
+                        mesh = new THREE.Mesh(geometry, material);
+                        scene.add(mesh);
+                        meshes.agents.set(a.id, mesh);
+                    }
+                    const pos = getGridPos(a.x, a.y);
+                    mesh.position.lerp(new THREE.Vector3(pos.x, 3, pos.z), 0.1);
+                });
+                lastAgentsString = agentsJSON;
+            } else {
+                // If structure is stable, still perform frame-to-frame smooth physics lerp
+                window.agents.forEach(a => {
+                    const mesh = meshes.agents.get(a.id);
+                    if (mesh) {
+                        const pos = getGridPos(a.x, a.y);
+                        mesh.position.lerp(new THREE.Vector3(pos.x, 3, pos.z), 0.1);
+                    }
+                });
             }
-            // Update/Add new
-            window.agents.forEach(a => {
-                let mesh = meshes.agents.get(a.id);
-                if (!mesh) {
-                    const geometry = new THREE.SphereGeometry(0.5, 16, 16);
-                    const color = a.role === 'DOCTOR' ? 0xff4444 : (a.role === 'TEACHER' ? 0x4facfe : 0xffcc00);
-                    const material = new THREE.MeshLambertMaterial({ color: color });
-                    mesh = new THREE.Mesh(geometry, material);
-                    scene.add(mesh);
-                    meshes.agents.set(a.id, mesh);
-                }
-                const pos = getGridPos(a.x, a.y);
-                // Move towards target smoothly
-                mesh.position.lerp(new THREE.Vector3(pos.x, 3, pos.z), 0.1);
-            });
         }
     }
 
