@@ -1,4 +1,4 @@
-# TIMESTAMP: 2026-05-28T02:04:15.123Z
+# TIMESTAMP: 2026-05-30T12:35:00.123Z
 # PROJECT_ID: SimsMerged-v1.3-Metropolis
 # AGENT_ID: Antigravity-Agent
 
@@ -23,7 +23,7 @@
 ## 🧭 Table of Contents
 1. [Architectural Subsystems](#-1-architectural-subsystems)
 2. [Subsystems Integration Map](#-2-subsystems-integration-map)
-3. [Genetic Upgrades & Autonomous Overseers](#-3-genetic-upgrades--autonomous-overseers)
+3. [Genetic Upgradess & Autonomous Overseers](#-3-genetic-upgrades--autonomous-overseers)
 4. [Visual Showcases](#-4-visual-showcases)
 5. [Frictionless Copy-Paste Installation](#-5-frictionless-copy-paste-installation)
 6. [Clear Usage Examples](#-6-clear-usage-examples)
