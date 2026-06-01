@@ -32,7 +32,8 @@
 2. [Subsystems Integration Map](#-2-subsystems-integration-map)
 3. [Genetic Upgradess & Autonomous Overseers](#-3-genetic-upgrades--autonomous-overseers)
 4. [Visual Showcases](#-4-visual-showcases)
-5. [Frictionless Copy-Paste Installation](#-5-frictionless-copy-paste-installation)
+5. [Japanafied Visuals & Picasso Jelly](#-7-the-japanafied-metropolis-super-hd)
+6. [Frictionless Copy-Paste Installation](#-5-frictionless-copy-paste-installation)
 6. [Clear Usage Examples](#-6-clear-usage-examples)
 7. [Advanced Deep-Dives](#-7-advanced-deep-dives)
 8. [VIPER Global SOP & Verification Protocols](#-8-viper-global-sop--verification-protocols)
@@ -145,6 +146,31 @@ To make your GitHub look stunning and simplify capturing gorgeous showcase pictu
   <br />
   *Visualization of the Lexical BM25 Orchestrator retrieving pedagogical nodes in milliseconds.*
 </p>
+
+
+<p align="center">
+  <img src="assets/METROPOLIS_BM25_BRAIN.png" alt="BM25 Brain Visualization" width="100%" style="border-radius: 8px; border: 2px solid #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);" />
+  <br />
+  *Visualization of the Lexical BM25 Orchestrator retrieving pedagogical nodes in milliseconds.*
+</p>
+
+### 🌸 7. THE JAPANAFIED METROPOLIS (SUPER HD)
+<p align="center">
+  <img src="assets/sim_agent_city_glow.png" alt="Japanafied Metropolis" width="100%" style="border-radius: 8px; border: 2px solid #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);" />
+  <br />
+  *The high-fidelity 'Japanafied' neon aesthetic reflecting off the decentralized grid.*
+</p>
+
+### 🍮 8. THE PICASSO JELLY ALGORITHM
+<p align="center">
+  <img src="assets/genesis_prime_core.png" alt="Picasso Jelly Core" width="48%" style="border-radius: 8px; border: 2px solid #00ffff;" />
+  <img src="assets/robot_nurse_doctor.png" alt="Cyber-Manga Doctor" width="48%" style="border-radius: 8px; border: 2px solid #00ff00;" />
+  <br />
+  *Left: The 'Picasso Jelly' core logic visualization. Right: The Japanafied Cyber-Nurse autonomous agent.*
+</p>
+
+### 🏮 9. AKIHABARA MARKETING ANCHOR
+The SimsMerged physical presence is planned for Akihabara, Tokyo. See the [AKIHABARA_BLUEPRINT.md](docs/AKIHABARA_BLUEPRINT.md) for details on the high-density glass monolith and transparent OLED isometric projection.
 
 ### 🖼️ 5. SYSTEM PROMOTION BANNER
 <p align="center">
