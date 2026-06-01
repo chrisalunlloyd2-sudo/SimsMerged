@@ -1,6 +1,6 @@
-# TIMESTAMP: 2026-05-30T12:35:00.123Z
+# TIMESTAMP: 2026-06-01T05:58:00.000Z
 # PROJECT_ID: SimsMerged-v1.3-Metropolis
-# AGENT_ID: Antigravity-Agent
+# AGENT_ID: Antigravity-CLI-Architect
 
 <p align="center">
   <img src="assets/simsmerged_banner.png" alt="SimsMerged Banner" width="100%" style="border-radius: 8px; border: 2px solid #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);" />
@@ -20,7 +20,14 @@
 
 ---
 
+## 🗺️ Master Roadmap Activation
+> [!IMPORTANT]
+> The **[900-Step Master Metropolis Evolution Roadmap](ROADMAP_900_STEPS.md)** is now live in the repository root directory! It lays out exact protocols to evolve the 3D rendering pipeline, local reflog safety nets, pre-commit pull-rebase hooks, stock economy loops, and automated image collection decks to populate GitHub with gorgeous pictures.
+
+---
+
 ## 🧭 Table of Contents
+0. [Master Roadmap Activation](#-master-roadmap-activation)
 1. [Architectural Subsystems](#-1-architectural-subsystems)
 2. [Subsystems Integration Map](#-2-subsystems-integration-map)
 3. [Genetic Upgradess & Autonomous Overseers](#-3-genetic-upgrades--autonomous-overseers)
@@ -108,6 +115,14 @@ graph TD
 ## 🎨 4. Visual Showcases & System Dashboards
 
 Experience the premium aesthetics and high-fidelity real-time telemetry of the **SimsMerged Metropolis Engine**:
+
+### 📸 Premium Aesthetic Deck & Photo Mode (Newly Integrated!)
+To make your GitHub look stunning and simplify capturing gorgeous showcase pictures of your running digital metropolis, we have built a **Visual Control Deck** right inside the sidebar of the `index.html` GUI:
+- **Aesthetic Theme Switcher**: Instantly morph the visual style of your metropolis dashboard with three frosted high-fidelity themes:
+  - **`NEON` (Cyberpunk)**: Frozen translucent panels with neon cyan text and vibrant magenta glowing highlights.
+  - **`WIN95` (Classic Retro)**: Authentic 90s gray layout widgets with clean retro fonts.
+  - **`MATRIX` (Digital Rain)**: Pure dark terminal background with glowing matrix green alerts.
+- **Built-in Photo Mode**: Click the **📸 Photo Mode: Capture City** button to instantly serialize your running isometric canvas and download a full high-fidelity, uncompressed PNG screenshot, perfect for sharing on GitHub!
 
 ### 🎮 The Isometric Grid & 3D WebGL Sandbox
 

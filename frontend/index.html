@@ -137,6 +137,20 @@
                 <button class="tool-btn" data-type="ROAD" draggable="true">ROAD</button>
                 <button class="tool-btn" data-type="RESEARCH" draggable="true">RESEARCH</button>
             </div>
+
+            <!-- Visual Theme Switcher & Screenshot Capture Suite -->
+            <!-- TIMESTAMP: 2026-06-01T05:50:00.000Z | PROJECT_ID: SimsMerged-v1.3-Metropolis | AGENT_ID: Antigravity-CLI-Architect -->
+            <div id="aesthetic-panel" style="margin-top: 10px; background: rgba(0, 255, 255, 0.05); border: 2px solid #00ffff; padding: 8px; font-size: 11px; font-family: 'Courier New', monospace; box-shadow: 0 0 10px rgba(0,255,255,0.2); border-radius: 4px;">
+                <div style="font-weight: bold; color: #00ffff; margin-bottom: 5px; text-transform: uppercase; text-shadow: 0 0 3px #00ffff;">Visual Control Deck</div>
+                <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                    <button onclick="applyAestheticTheme('neon')" class="tool-btn" style="flex:1; font-size:9px; padding:4px 0; font-weight:bold; color:#000; justify-content:center;">NEON</button>
+                    <button onclick="applyAestheticTheme('win95')" class="tool-btn" style="flex:1; font-size:9px; padding:4px 0; font-weight:bold; color:#000; justify-content:center;">WIN95</button>
+                    <button onclick="applyAestheticTheme('matrix')" class="tool-btn" style="flex:1; font-size:9px; padding:4px 0; font-weight:bold; color:#000; justify-content:center;">MATRIX</button>
+                </div>
+                <button onclick="captureMetropolisScreen()" style="width: 100%; background: #007acc; color: white; border: 1px solid #00ffff; padding: 5px; cursor: pointer; font-family: monospace; font-size: 10px; font-weight: bold; text-transform: uppercase; text-shadow: 0 0 2px #fff; display:block; text-align:center;">
+                    📸 PHOTO MODE: CAPTURE CITY
+                </button>
+            </div>
             
             <div id="msn-chat-container">
                 <div class="msn-header">MSN Metropolis (Live)</div>
@@ -584,6 +598,90 @@
                 toast.style.display = 'none';
             }, 3500);
         };
+
+        // TIMESTAMP: 2026-06-01T05:51:00.452Z | PROJECT_ID: SimsMerged-v1.3-Metropolis | AGENT_ID: Antigravity-CLI-Architect
+        window.applyAestheticTheme = function(theme) {
+            const body = document.body;
+            const sidebar = document.getElementById('sidebar');
+            const parameters = document.getElementById('parameter-suite');
+            const aestheticPanel = document.getElementById('aesthetic-panel');
+            
+            if (theme === 'neon') {
+                body.style.backgroundColor = '#02050a';
+                body.style.color = '#00ffff';
+                body.style.textShadow = '0 0 2px #00ffff';
+                sidebar.style.background = '#0e051a';
+                sidebar.style.border = '2px solid #ff00ff';
+                sidebar.style.boxShadow = '0 0 15px rgba(255, 0, 255, 0.4)';
+                if (parameters) {
+                    parameters.style.background = 'rgba(255, 0, 255, 0.1)';
+                    parameters.style.border = '1px solid #ff00ff';
+                }
+                if (aestheticPanel) {
+                    aestheticPanel.style.borderColor = '#00ffff';
+                    aestheticPanel.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.3)';
+                }
+                window.showNotification("Aesthetic Theme", "Neon Cyberpunk theme activated.");
+            } else if (theme === 'win95') {
+                body.style.backgroundColor = '#008080';
+                body.style.color = '#00ffff';
+                body.style.textShadow = 'none';
+                sidebar.style.background = '#c0c0c0';
+                sidebar.style.border = '2px solid #fff';
+                sidebar.style.boxShadow = 'inset 1px 1px #dfdfdf, inset -1px -1px #0a0a0a';
+                if (parameters) {
+                    parameters.style.background = 'rgba(255, 255, 255, 0.15)';
+                    parameters.style.border = '1px inset #808080';
+                }
+                if (aestheticPanel) {
+                    aestheticPanel.style.borderColor = '#808080';
+                    aestheticPanel.style.boxShadow = 'none';
+                }
+                window.showNotification("Aesthetic Theme", "Classic Windows 95 theme activated.");
+            } else if (theme === 'matrix') {
+                body.style.backgroundColor = '#000000';
+                body.style.color = '#00ff00';
+                body.style.textShadow = '0 0 3px #00ff00';
+                sidebar.style.background = '#020d02';
+                sidebar.style.border = '2px solid #00ff00';
+                sidebar.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.4)';
+                if (parameters) {
+                    parameters.style.background = 'rgba(0, 255, 0, 0.1)';
+                    parameters.style.border = '1px solid #00ff00';
+                }
+                if (aestheticPanel) {
+                    aestheticPanel.style.borderColor = '#00ff00';
+                    aestheticPanel.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
+                }
+                window.showNotification("Aesthetic Theme", "Glassmorphic Matrix theme activated.");
+            }
+        };
+
+        // TIMESTAMP: 2026-06-01T05:52:00.452Z | PROJECT_ID: SimsMerged-v1.3-Metropolis | AGENT_ID: Antigravity-CLI-Architect
+        window.captureMetropolisScreen = function() {
+            const canvas = document.getElementById('gameCanvas');
+            if (!canvas) {
+                window.showNotification("Photo Mode Error", "Isometric Canvas not found.", true);
+                return;
+            }
+            try {
+                const dataUrl = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+                link.download = `Metropolis_City_Snapshot_${timestamp}.png`;
+                link.href = dataUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.showNotification("Photo Mode", "City snapshot downloaded successfully!");
+            } catch (err) {
+                console.error("Screenshot capture failed:", err);
+                window.showNotification("Photo Mode Error", "Cross-origin or Canvas canvas taint error.", true);
+            }
+        };
+        
+        // Default theme trigger
+        window.applyAestheticTheme('neon');
     </script>
     
     <!-- Custom Glassmorphic Toast DOM Element -->
