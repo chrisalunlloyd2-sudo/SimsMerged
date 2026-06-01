@@ -1,5 +1,5 @@
 # GITHUB PROTECTION & ASSET INTEGRITY PLAN
-**TIMESTAMP:** 2026-06-01T02:18:00.000Z
+**TIMESTAMP:** 2026-06-01T06:05:00.000Z
 **PROJECT_ID:** SimsMerged-v1.3
 **AGENT_ID:** Antigravity-CLI-Architect
 
@@ -7,6 +7,11 @@
 
 ## 🛡️ THE GOLDEN RULE OF SAFE SHIPPING
 To prevent any future data loss, history wipes, or picture deletions on GitHub, all agents working in the VIPER ecosystem MUST strictly adhere to this protection plan.
+
+### 🛑 THE UNBREAKABLE LAW: ZERO DELETIONS (ADDITIONS ONLY)
+* **MANDATE:** Under absolutely NO circumstances is any agent, background process, evolution loop, maintenance queue, or script allowed to execute file deletion (`rm`, `Remove-Item`, `git rm`), folder purging, or destructive file-wiping operations anywhere inside the codebase.
+* **ADDITIVE PROTOCOL:** All development, refactoring, and progression changes MUST be purely additive. You may only create, append, or safely update files — never delete or destroy them.
+* **IDENTITY VALIDATION ("THINK & VERIFY WHO IS ADDING"):** Before executing any staging, committing, or remote operations, the performing agent MUST explicitly verify and write in the heartbeats exactly **who is performing the additions** (their AGENT_ID, high-fidelity TIMESTAMP, and PROJECT_ID), and carefully trace the visual integrity of all assets to confirm no deletions or history rewrites are being introduced.
 
 ### 1. Absolute Ban on Force Pushing (`--force`)
 * **MANDATE:** Under no circumstances shall any agent execute `git push --force`, `git push -f`, or `git push -u origin main --force`.
