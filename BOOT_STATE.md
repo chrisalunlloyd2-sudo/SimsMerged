@@ -1,5 +1,5 @@
 # VIPER BOOT RESUME STATE & ACTIVE TELEMETRY
-**TIMESTAMP:** 2026-06-01T02:22:00.000Z
+**TIMESTAMP:** 2026-06-01T02:50:00.000Z
 **PROJECT_ID:** SimsMerged-v1.3
 **AGENT_ID:** Antigravity-CLI-Architect
 
@@ -23,6 +23,7 @@ Whenever an AI agent boots up in this workspace, it MUST immediately read this f
   * Locked the `assets/` directories (e.g. `ACTUAL_METROPOLIS_CITY.png`) from any file deletion scripts.
 
 ### 3. Next Actions for Performing Agents
+* **NEVER CLOSE OR TERMINATE Microsoft Edge, the WebUI, or browser processes.** The user is actively using the WebUI to play, optimize models, and locate bottlenecks. Throttling and CPU priority adjustments should be done without killing the WebUI.
 * **Do NOT force push** to `https://github.com/chrisalunlloyd2-sudo/SimsMerged.git`.
 * Always run `resource_fence.ps1` on startup if process priorities return to Normal.
 * Keep checking `PULSE_HEARTBEAT.txt` and updating it with your Atom logs under strict triple signatures.

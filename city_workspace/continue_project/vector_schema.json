@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "timestamp": "2026-05-30T13:26:03.000Z",
-    "author": "Sprite_Process_kernel_11",
+    "timestamp": "2026-06-01T00:08:17.000Z",
+    "author": "Sprite_Geek",
     "project": "SimsMerged-v1.3-Continue",
-    "model_cache": "triton"
+    "model_cache": "trweek"
   },
   "schema": {
     "collection_name": "RAG_Vector_Cache",

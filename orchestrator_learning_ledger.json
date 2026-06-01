@@ -1,10 +1,10 @@
 {
-  "generation": 13,
+  "generation": 14,
   "weights": {
     "agent_sync_speed": 2.0,
     "healing_factor": 0.05,
     "error_count": 0,
-    "last_save": 1780147382.8786957
+    "last_save": 1780272460.7105906
   },
-  "last_updated": 1780147382.8954513
+  "last_updated": 1780272460.7125814
 }

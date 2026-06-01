@@ -25,9 +25,9 @@ class QuantumCore:
         self.is_swapping = False
         self.multi_channel_mode = True
         
-        # Row Hammer States
+        # Row Hammer States (NO ECC MANDATE: Vulnerable by default)
         self.charge_leakage = 0.0
-        self.row_hammer_protection = True
+        self.row_hammer_protection = False
         
         # Memory Isolation
         self.isolation_enabled = True
@@ -197,12 +197,11 @@ class QuantumCore:
             if load > 1.0:
                 congestion_penalty += (load - 1.0) * 0.05
         
-        # ECC MEMORY CORRECTION
+        # NO ECC REALISM (User Mandate: "we do not have ecc memory")
         base_penalty = (lr_impact + temp_impact + congestion_penalty + self.charge_leakage) * random.uniform(0, 0.1)
-        mitigated_penalty = base_penalty * 0.5 
-        
-        self.stability -= mitigated_penalty
-        self.heat += (lr_impact * 10) + (temp_impact * 5) + (congestion_penalty * 20) + (self.charge_leakage * 50)
+        # 100% Raw hardware vulnerability, NO mitigation
+        self.stability -= base_penalty 
+        self.heat += (lr_impact * 10) + (temp_impact * 5) + (congestion_penalty * 20) + (self.charge_leakage * 80) # Higher heat from leakage
         
         # SWAP SLOWDOWN
         swap_penalty = 0.5 if self.is_swapping else 1.0

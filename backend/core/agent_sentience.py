@@ -22,15 +22,17 @@ class EmotionalState(Enum):
 
 class DiskInferenceCore:
     """
-    Simulates Triton hard-drive mapped inference to avoid RAM bloat.
-    Forces Models (danube, smoll, triton, qwen, trweek) to swap weights from disk (SD Fenced).
+    STRICT LOCAL SLM HARDENING (Danube, Smol, Triton, Qwen).
+    Reflects raw hardware dynamics with 0KB external leakage.
     """
     def __init__(self):
-        self.supported_models = ["danube", "smoll", "triton", "qwen", "trweek"]
+        # User Mandated Local SLMs
+        self.supported_models = ["danube", "smoll", "triton", "qwen"]
         self.disk_cache_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "triton_cache"))
         os.makedirs(self.disk_cache_dir, exist_ok=True)
         self.active_weights_in_ram = False
         self.latest_vote = ""
+        self.non_ecc_realism_active = True # Mandate: "we do not have ecc memory"
         
     def _swap_weights_to_ram(self, model):
         """Simulates loading weights from disk to a tiny, fenced RAM buffer."""

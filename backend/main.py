@@ -56,23 +56,36 @@ CACHED_LEDGER = []
 LAST_LEDGER_SAVE_TIME = 0.0
 
 # Persistent Syslog Daemon file logging
-SYSLOG_FILE = open(os.path.join(project_root, "syslog.log"), "a", encoding="utf-8", buffering=1)
+SYSLOG_FILE_PATH = os.path.join(project_root, "syslog.log")
+LOG_BUFFER = []
+LAST_LOG_FLUSH = time.time()
 
 def add_log(message, level="info"):
+    global LAST_LOG_FLUSH
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
-    # MANDATORY ATOMIC SIGNATURE: [TIMESTAMP] [PROJECT_ID] [AGENT_ID]
     signature = f"[{timestamp}] [SimsMerged-v1.3] [Antigravity-Agent]"
     log_entry = f"{signature} {message}"
     SYSTEM_LOGS.append(log_entry)
     if len(SYSTEM_LOGS) > 100:
         SYSTEM_LOGS.pop(0)
-    # Disabled console printing for performance (Step 44 Mandate)
-    # print(log_entry)
     
+    LOG_BUFFER.append(log_entry)
+    
+    # Efficient Buffering: Flush every 10 seconds or 20 entries
+    if time.time() - LAST_LOG_FLUSH > 10 or len(LOG_BUFFER) >= 20:
+        flush_logs()
+
+def flush_logs():
+    global LAST_LOG_FLUSH, LOG_BUFFER
+    if not LOG_BUFFER:
+        return
     try:
-        SYSLOG_FILE.write(log_entry + "\n")
+        with open(SYSLOG_FILE_PATH, "a", encoding="utf-8") as f:
+            f.write("\n".join(LOG_BUFFER) + "\n")
+        LOG_BUFFER = []
+        LAST_LOG_FLUSH = time.time()
     except Exception as e:
-        print(f"[SYSLOG_ERR] Failed to write log: {e}")
+        print(f"[SYSLOG_ERR] Failed to flush logs: {e}")
 
 def add_message(name, text, hash=None):
     GLOBAL_MESSAGES.append({"name": name, "text": text, "hash": hash, "time": time.time()})
@@ -124,6 +137,22 @@ async def startup_event():
                 "personality": "Avid Writer",
                 "age": 0, "energy": 100, "stability": 1.0,
                 "x": -5, "y": -5, "working_set_kb": 0 # DISK FENCED
+            },
+            {
+                "id": "SIM_DISK_03",
+                "name": "Sprite_Socrates",
+                "role": "PHILOSOPHER",
+                "personality": "Philosopher",
+                "age": 0, "energy": 100, "stability": 1.0,
+                "x": 10, "y": -10, "working_set_kb": 0 # DISK FENCED
+            },
+             {
+                "id": "SIM_DISK_04",
+                "name": "Sprite_Newton",
+                "role": "SCIENTIST",
+                "personality": "Scientist",
+                "age": 0, "energy": 100, "stability": 1.0,
+                "x": -10, "y": 10, "working_set_kb": 0 # DISK FENCED
             }
         ]
         for da in disk_agents:
@@ -491,6 +520,15 @@ async def trigger_vote():
     add_log("MANUAL_VOTE_TRIGGER: Admin initiated an immediate Evolution Council session.", "info")
     asyncio.create_task(evolution_council.trigger_manual_vote())
     return {"status": "vote_initiated"}
+
+@app.post("/api/stress-test-doctor")
+async def stress_test_doctor():
+    """Induces a massive stability drop to test the Doctor agent's restoration logic."""
+    add_log("STRESS_TEST: Admin induced a 50% stability drop to verify DOCTOR interdiction.", "warn")
+    quantum_core.stability = max(0.1, quantum_core.stability - 0.5)
+    quantum_core.heat += 30.0
+    add_message("System", "⚠️ [CRITICAL] Stability drop detected! System heat rising! Calling all DOCTOR agents.")
+    return {"status": "stability_dropped", "new_stability": quantum_core.stability}
 
 @app.post("/api/ship-to-agy")
 async def ship_to_agy():

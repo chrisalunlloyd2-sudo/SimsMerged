@@ -97,6 +97,230 @@ const SYSTEM_INFO_MAP = {
 };
 
 const BUILD_TYPES = {
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
+    'ZERO-COPY_': { 
+        color: '#1abf88', 
+        label: 'Zero-copy InfiniBand Networking', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Zero-copy InfiniBand Networking node.' 
+    },
+    'HEADLESS_U': { 
+        color: '#40a842', 
+        label: 'Headless UI Vision & Automated Grading', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Headless UI Vision & Automated Grading node.' 
+    },
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
+    'DEPIN_STOC': { 
+        color: '#f178a3', 
+        label: 'DePIN Stock Market Volatility Heuristics', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced DePIN Stock Market Volatility Heuristics node.' 
+    },
+    'RUST-BASED': { 
+        color: '#2101e5', 
+        label: 'Rust-based Node Auto-Scaling', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Rust-based Node Auto-Scaling node.' 
+    },
+    'ZERO-COPY_': { 
+        color: '#1abf88', 
+        label: 'Zero-copy InfiniBand Networking', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Zero-copy InfiniBand Networking node.' 
+    },
+    'ADVANCED_G': { 
+        color: '#1fb154', 
+        label: 'Advanced Graph RAG Schemas', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Graph RAG Schemas node.' 
+    },
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
+    'AES-256_GE': { 
+        color: '#f6dc2e', 
+        label: 'AES-256 Genetic Data Encryption', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced AES-256 Genetic Data Encryption node.' 
+    },
+    'ADVANCED_G': { 
+        color: '#1fb154', 
+        label: 'Advanced Graph RAG Schemas', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Graph RAG Schemas node.' 
+    },
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
+    'DEPIN_CRYP': { 
+        color: '#c1e945', 
+        label: 'DePIN Crypto Tokenomics via Smart Contracts', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced DePIN Crypto Tokenomics via Smart Contracts node.' 
+    },
+    'ZERO-COPY_': { 
+        color: '#1abf88', 
+        label: 'Zero-copy InfiniBand Networking', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Zero-copy InfiniBand Networking node.' 
+    },
+    'RUST-BASED': { 
+        color: '#2101e5', 
+        label: 'Rust-based Node Auto-Scaling', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Rust-based Node Auto-Scaling node.' 
+    },
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
+    'ISOMETRIC_': { 
+        color: '#9ef5c6', 
+        label: 'Isometric WebGL rendering optimization', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Isometric WebGL rendering optimization node.' 
+    },
+    'GENERATIVE': { 
+        color: '#1beaf8', 
+        label: 'Generative AI Agent Chat prompt engineering', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Generative AI Agent Chat prompt engineering node.' 
+    },
+    'A*_PATHFIN': { 
+        color: '#dfd4f8', 
+        label: 'A* Pathfinding for Swarm Agents', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced A* Pathfinding for Swarm Agents node.' 
+    },
+    'RUST-BASED': { 
+        color: '#2101e5', 
+        label: 'Rust-based Node Auto-Scaling', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Rust-based Node Auto-Scaling node.' 
+    },
+    'LOW-LATENC': { 
+        color: '#eef3ce', 
+        label: 'Low-latency Packet Interconnects', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Low-latency Packet Interconnects node.' 
+    },
+    'DEPIN_STOC': { 
+        color: '#f178a3', 
+        label: 'DePIN Stock Market Volatility Heuristics', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced DePIN Stock Market Volatility Heuristics node.' 
+    },
+    'AES-256_GE': { 
+        color: '#f6dc2e', 
+        label: 'AES-256 Genetic Data Encryption', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced AES-256 Genetic Data Encryption node.' 
+    },
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
+    'LOW-LATENC': { 
+        color: '#eef3ce', 
+        label: 'Low-latency Packet Interconnects', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Low-latency Packet Interconnects node.' 
+    },
+    'HEADLESS_U': { 
+        color: '#40a842', 
+        label: 'Headless UI Vision & Automated Grading', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Headless UI Vision & Automated Grading node.' 
+    },
+    'DEPIN_STOC': { 
+        color: '#f178a3', 
+        label: 'DePIN Stock Market Volatility Heuristics', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced DePIN Stock Market Volatility Heuristics node.' 
+    },
+    'ZERO-COPY_': { 
+        color: '#1abf88', 
+        label: 'Zero-copy InfiniBand Networking', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Zero-copy InfiniBand Networking node.' 
+    },
+    'LOW-LATENC': { 
+        color: '#eef3ce', 
+        label: 'Low-latency Packet Interconnects', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Low-latency Packet Interconnects node.' 
+    },
+    'PROCEDURAL': { 
+        color: '#71de20', 
+        label: 'Procedural Building Asset Generation', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Procedural Building Asset Generation node.' 
+    },
+    'DYNAMIC_UR': { 
+        color: '#0c7e4f', 
+        label: 'Dynamic Urban Zoning Algorithms', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Dynamic Urban Zoning Algorithms node.' 
+    },
     'GENERATIVE': { 
         color: '#1beaf8', 
         label: 'Generative AI Agent Chat prompt engineering', 
