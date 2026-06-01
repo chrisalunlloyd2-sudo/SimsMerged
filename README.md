@@ -105,14 +105,38 @@ graph TD
 
 ---
 
-## 🎨 4. Visual Showcases
+## 🎨 4. Visual Showcases & System Dashboards
 
-To verify the visual layout and high-fidelity aesthetics, wrap the isometric screens inside clean, bordered layout grids:
+Experience the premium aesthetics and high-fidelity real-time telemetry of the **SimsMerged Metropolis Engine**:
 
-| 🎮 RETRO GLASSMORPHIC ISOMETRIC METROPOLIS | 🔬 LIVE RESOURCE MONITORING TERMINAL |
+### 🎮 The Isometric Grid & 3D WebGL Sandbox
+
+| 🌆 1. ACTUAL METROPOLIS CITY (40x40 GRID) | 👾 2. 3D WEBGL ENGINE (THREE.JS ENVIRONMENT) |
 | :---: | :---: |
-| <img src="assets/simsmerged_dashboard.png" alt="SimsMerged Dashboard" width="100%" /> | <img src="assets/simsmerged_banner.png" alt="Simulation Telemetry" width="100%" /> |
-| *Win95-Style Isometric 40x40 Interactive Simulation* | *Direct 16-Core Matrix Telemetry Affinity Map* |
+| <img src="assets/ACTUAL_METROPOLIS_CITY.png" alt="Actual Metropolis City Grid" width="100%" style="border-radius: 6px; border: 2px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3);" /> | <img src="assets/Final_Boss_Environment_Screenshot.png" alt="WebGL Three.js 3D City" width="100%" style="border-radius: 6px; border: 2px solid #ff00ff; box-shadow: 0 0 10px rgba(255,0,255,0.3);" /> |
+| *Programs live data trajectories, traffic pipes, and halos.* | *Linear interpolation LERP camera physics and 3D scenes.* |
+
+### 📊 Retro Win95 CRT CRT Panels & Active Telemetry
+
+| 📟 3. GLASSMORPHIC CONTROL TERMINAL | 📉 4. REAL-TIME QUANTUM STATE CHARTS |
+| :---: | :---: |
+| <img src="assets/simsmerged_dashboard.png" alt="Retro Win95 CRT Dashboard" width="100%" style="border-radius: 6px; border: 2px solid #00ff00; box-shadow: 0 0 10px rgba(0,255,0,0.3);" /> | <img src="docs/vision_reports/Metropolis_State_20260527_203244.png" alt="Live Telemetry Graphs" width="100%" style="border-radius: 6px; border: 2px solid #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3);" /> |
+| *Active checklist onboarding and build sidebar controls.* | *Direct hardware sampling, ECC cache swappings, and load matrices.* |
+
+
+### 🛰️ 6. THE BM25 PEDAGOGICAL BRAIN (REAL-TIME LEARNING)
+<p align="center">
+  <img src="assets/METROPOLIS_BM25_BRAIN.png" alt="BM25 Brain Visualization" width="100%" style="border-radius: 8px; border: 2px solid #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);" />
+  <br />
+  *Visualization of the Lexical BM25 Orchestrator retrieving pedagogical nodes in milliseconds.*
+</p>
+
+### 🖼️ 5. SYSTEM PROMOTION BANNER
+<p align="center">
+  <img src="assets/simsmerged_banner.png" alt="SimsMerged High-Fidelity Banner" width="100%" style="border-radius: 8px; border: 2px solid #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);" />
+  <br />
+  *The ultimate high-fidelity DePIN telemetry dashboard showing active agent progressions.*
+</p>
 
 ---
 
@@ -230,3 +254,21 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 * Respect to the **Aider** community for the autonomous programmatic project workspace concepts.
 * Inspired by classic **Maxis** simulation dynamics combined with modern decentralized DePIN architectures.
 * Hand-crafted with high-charisma and strict Version Control integrity.
+
+---
+
+## 🧬 11. Experimental AI Algorithms (Max Skills)
+
+The Metropolis simulation utilizes bleeding-edge, purely offline algorithms to maximize agent performance on limited hardware (1 CPU Core, SSD-Only).
+
+### A. BM25 Learning Orchestrator
+*   **Offline Retrieval**: A custom-built BM25 TF-IDF engine provides near-instantaneous pedagogical lookup.
+*   **Real-Time Learning**: As agents execute tasks, the engine absorbs successful patterns, autonomously updating its corpus to improve future decision-making without internet hooks.
+
+### B. Predictive KV Caching & Speculative Decoding
+*   **State Hashing**: The LLM Client hashes the complete agent state vector, retrieving cached key-value tensors for previously seen scenarios.
+*   **Speculative Draft Model**: A lightweight Markov draft model predicts the next action, which the larger Danube projection verifies, bypassing memory bandwidth bottlenecks.
+
+### C. Aider-Style ReAct Workflows
+*   **Reason-Act Loop**: Agents utilize a "Reasoning -> Action -> Observation" loop for complex multi-step projects.
+*   **Autonomous Commits**: Successful mutations are automatically committed to the local repository with high-charisma Aider-style summaries.

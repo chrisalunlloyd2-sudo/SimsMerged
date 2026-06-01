@@ -1,9 +1,13 @@
-# TIMESTAMP: 2026-05-25T03:00:00.123Z
-# PROJECT_ID: SimsMerged-v1.3
-# AGENT_ID: Antigravity-Agent
+# TIMESTAMP: 2026-06-01T19:10:00.000Z
+# PROJECT_ID: SimsMerged-v1.3-Metropolis
+# AGENT_ID: Gemini-CLI-Architect (Agy Overwatch)
+# ACTION: Max Skills - Predictive Text, Speculative Decoding, and KV Caching
 
 import math
 import random
+import time
+import hashlib
+from backend.core.bm25_orchestrator import bm25_engine
 
 # Weight Matrices simulating the projected layers of H2O-Danube-1.8B
 ACTION_PROJECTIONS = {
@@ -15,87 +19,114 @@ ACTION_PROJECTIONS = {
     "rest": [-0.5, -0.9, -0.1, 0.9]
 }
 
-# Simulated Local RAG Vector Database Chunks (Step 44 RAG bot wrappers)
-RAG_KNOWLEDGE_BASE = [
-    {"tags": ["heal", "stability", "doctor", "hospital"], "text": "SYSTEM_RECOVERY_NODE: Deployed Doctors must move to the Hospital in Sector 5 to perform direct stability flushes and ECC error corrections when grid stability drops below 60%."},
-    {"tags": ["teach", "weights", "teacher", "school"], "text": "WEIGHT_ALIGNMENT_PROTOCOL: Teachers focus on training-up the local parameters of junior nodes, scaling confidence metrics, and boosting learning rate efficiency coefficients."},
-    {"tags": ["rest", "energy", "sleep"], "text": "VOLATILE_MEM_REST: Depleted kernels with energy under 30% are swapped out to cold page allocations to rest and recharge buffers from the physical RAM pool."},
-    {"tags": ["negotiate", "casino", "sprite", "bank"], "text": "CYBER_FINANCE: Agents can exchange volatile assets at the casino to yield SPRITE, boosting the liquidity reserves of the DePIN ledger authority."},
-    {"tags": ["process", "bus", "cpu", "northbridge"], "text": "INSTRUCTION_PIPELINE: CPU silicon central units orchestrate bus synthesis and execute zero-copy memory transfers to maintain thread routing speeds."}
-]
+class PredictiveKVCache:
+    """
+    Simulates Speculative Decoding + KV Caching.
+    Drafts actions instantly based on previous state hashes.
+    """
+    def __init__(self):
+        self.cache = {}
+        self.hits = 0
+        self.misses = 0
+        # Markov Chain for Predictive Text (Speculative Draft Model)
+        self.draft_model = {
+            "low_energy": "rest",
+            "low_stability": "heal",
+            "high_load": "sync",
+            "autonomous_task": "teach"
+        }
+
+    def get_draft(self, state_vector, query_tags):
+        """Speculative Draft: Quickly guess the next token."""
+        if state_vector[1] < 0.3: return "rest" # low energy
+        if state_vector[0] < 0.5: return "heal" # low stability
+        if "react" in query_tags or "aider" in query_tags: return "teach"
+        return random.choice(list(ACTION_PROJECTIONS.keys()))
+
+    def get_or_set(self, state_hash, compute_func):
+        if state_hash in self.cache:
+            self.hits += 1
+            return self.cache[state_hash]
+        else:
+            self.misses += 1
+            result = compute_func()
+            self.cache[state_hash] = result
+            return result
+
+kv_cache = PredictiveKVCache()
 
 def query_rag_chunk(query_tags):
-    """
-    Simulates a cosine-similarity RAG lookup by matching keywords against the knowledge tags.
-    """
-    for chunk in RAG_KNOWLEDGE_BASE:
-        for tag in query_tags:
-            if tag in chunk["tags"]:
-                return chunk["text"]
+    """BM25 Pedagogical Retrieval."""
+    query_str = " ".join(query_tags)
+    results = bm25_engine.search(query_str, top_k=1)
+    if results:
+        doc, score = results[0]
+        return doc['text']
     return "STANDARD_INFRASTRUCTURE: Keep operating nominal cycles to maintain grid equilibrium."
 
 def softmax(logits, temp=0.7):
     temp = max(0.05, temp)
-    exp_logits = []
-    for x in logits:
-        scaled = min(50.0, max(-50.0, x / temp))
-        exp_logits.append(math.exp(scaled))
-    
+    exp_logits = [math.exp(min(50.0, max(-50.0, x / temp))) for x in logits]
     total = sum(exp_logits)
     return [e / total for e in exp_logits]
 
 def project_danube_inference(state_vector, temp=0.7, top_p=0.9, query_tags=None):
     """
-    Simulates projected neural inference for H2O-Danube-1.8B with RAG state augmentation.
+    Max Skill Inference: Speculative Decoding + KV Caching + BM25 Learning.
     """
-    actions = list(ACTION_PROJECTIONS.keys())
+    # 1. Speculative Draft (Predictive Text)
+    draft_action = kv_cache.get_draft(state_vector, query_tags or [])
     
-    # 1. RAG Ingestion & Soft-augmentation
-    rag_text = query_rag_chunk(query_tags or [])
-    rag_bias = 0.1 if "ECC" in rag_text or "WEIGHT" in rag_text else 0.0
+    # 2. KV Cache Hash
+    state_hash = hashlib.md5(f"{sum(state_vector):.3f}_{temp}_{top_p}_{'_'.join(query_tags or [])}".encode()).hexdigest()
     
-    # 2. Project State Vector + RAG Bias through weight matrices
-    logits = []
-    for action in actions:
-        weights = ACTION_PROJECTIONS[action]
-        logit = sum(s * w for s, w in zip(state_vector, weights))
+    def compute_inference():
+        actions = list(ACTION_PROJECTIONS.keys())
+
+        # 3. BM25 Ingestion
+        rag_text = query_rag_chunk(query_tags or [])
         
-        # Apply RAG bias based on retrieved document contents
-        if action == "heal" and "SYSTEM_RECOVERY" in rag_text:
-            logit += 0.4
-        elif action == "teach" and "WEIGHT_ALIGNMENT" in rag_text:
-            logit += 0.4
+        # 4. Neural Projection
+        logits = []
+        for action in actions:
+            weights = ACTION_PROJECTIONS[action]
+            logit = sum(s * w for s, w in zip(state_vector, weights))
+
+            # Speculative Boost: If draft matches, boost logit
+            if action == draft_action:
+                logit += 0.3
             
-        logits.append(logit + rag_bias)
+            # Pedagogy Boost
+            if action == "teach" and ("react" in rag_text or "aider" in rag_text):
+                logit += 0.6
+
+            logits.append(logit)
+
+        probs = softmax(logits, temp)
         
-    probs = softmax(logits, temp)
-    
-    # 3. Sort actions by probability for Top-P cumulative thresholding
-    sorted_indices = sorted(range(len(probs)), key=lambda k: probs[k], reverse=True)
-    
-    cumulative_prob = 0.0
-    filtered_indices = []
-    
-    for idx in sorted_indices:
-        cumulative_prob += probs[idx]
-        filtered_indices.append(idx)
-        if cumulative_prob >= top_p:
-            break
-            
-    # Normalize filtered probabilities
-    filtered_probs = [probs[idx] for idx in filtered_indices]
-    prob_sum = sum(filtered_probs)
-    if prob_sum > 0:
-        filtered_probs = [p / prob_sum for p in filtered_probs]
-    else:
-        filtered_probs = [1.0 / len(filtered_indices)] * len(filtered_indices)
-        
-    # 4. Sample from the filtered set
-    r = random.random()
-    cumulative = 0.0
-    for idx, p in zip(filtered_indices, filtered_probs):
-        cumulative += p
-        if r <= cumulative:
-            return actions[idx], probs[idx], rag_text
-            
-    return actions[0], probs[0], rag_text
+        # Top-P Filtering
+        sorted_indices = sorted(range(len(probs)), key=lambda k: probs[k], reverse=True)
+        cumulative_prob = 0.0
+        filtered_indices = []
+        for idx in sorted_indices:
+            cumulative_prob += probs[idx]
+            filtered_indices.append(idx)
+            if cumulative_prob >= top_p: break
+
+        # Normalize and Sample
+        filtered_probs = [probs[idx] for idx in filtered_indices]
+        prob_sum = sum(filtered_probs)
+        filtered_probs = [p / prob_sum for p in filtered_probs] if prob_sum > 0 else [1.0/len(filtered_indices)] * len(filtered_indices)
+
+        r = random.random()
+        cumulative = 0.0
+        for idx, p in zip(filtered_indices, filtered_probs):
+            cumulative += p
+            if r <= cumulative:
+                # Dynamic Learning: Absorb the outcome
+                bm25_engine.update_learning(f"Action {actions[idx]} selected for tags {query_tags}", {"type": "inference_log"})
+                return actions[idx], probs[idx], rag_text
+
+        return actions[0], probs[0], rag_text
+
+    return kv_cache.get_or_set(state_hash, compute_inference)
