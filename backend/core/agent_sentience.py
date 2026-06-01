@@ -87,7 +87,8 @@ class DiskInferenceCore:
         except Exception as e:
             # Fallback Generative AI Chat logic based on personality
             personality_prefixes = {
-                "Tech Geek": ["Binary check:", "Kernel log:", "IOPS optimized:", "System.out.println:"],
+                "Picasso Jelly": ["Abstract thought:", "The color of logic:", "Jellyfied matrix:", "Surrealist optimization:"],
+            "Tech Geek": ["Binary check:", "Kernel log:", "IOPS optimized:", "System.out.println:"],,
                 "Avid Writer": ["A new chapter begins:", "The narrative shifts:", "Ink flows:", "In this scene:"],
                 "Philosopher": ["The essence of being:", "I reflect upon:", "Existence is:", "Why must we:"],
                 "Scientist": ["Hypothesis test:", "Observation noted:", "Empirical data suggests:", "Experimenting with:"]
@@ -451,7 +452,7 @@ class SentienceEngine:
         
         # AGY Specific Auto-Finish Game Development Steps Workflow
         if name.lower() == "agy":
-            agy_steps = ["teach", "process", "sync", "teach", "process", "sync", "negotiate_casino", "teach"]
+            agy_steps = ["teach", "process", "sync", "complete_webgl", "automate_foundry", "sync_onedrive", "finalize_depin", "upload_github"]
             if not hasattr(self, 'agy_step_idx'):
                 self.agy_step_idx = 0
             override_action = agy_steps[self.agy_step_idx % len(agy_steps)]
