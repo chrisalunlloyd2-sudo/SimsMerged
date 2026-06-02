@@ -892,7 +892,23 @@ async def receive_user_message(req: UserMessageRequest):
     response_msg = None
     
     msg_lower = req.message.lower()
-    if "resume" in msg_lower or "school" in msg_lower:
+    if msg_lower.startswith("search ") or msg_lower.startswith("query "):
+        # [TIMESTAMP: 2026-06-02T04:03:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect]
+        # Lexical BM25 search trigger!
+        query_term = req.message[7:].strip() if msg_lower.startswith("search ") else req.message[6:].strip()
+        if query_term:
+            from backend.core.bm25_orchestrator import bm25_engine
+            search_results = bm25_engine.search(query_term, top_k=3)
+            if search_results:
+                reply_parts = []
+                for doc, score in search_results:
+                    reply_parts.append(f"&bull; [Score: {score:.2f}] (ID: {doc.get('id')}) &quot;{doc.get('text')}&quot;")
+                response_msg = f"BM25 search results for '{query_term}':<br>" + "<br>".join(reply_parts)
+            else:
+                response_msg = f"BM25 Search: No relevant lexical documents found for '{query_term}'."
+        else:
+            response_msg = "Please specify a query term for BM25 search. Example: 'search kv caching'"
+    elif "resume" in msg_lower or "school" in msg_lower:
         # Try to find which agent the user wants a resume for
         agents_list = await get_agents()
         matched_agent = None

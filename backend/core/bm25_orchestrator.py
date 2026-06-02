@@ -1,6 +1,4 @@
-# TIMESTAMP: 2026-06-01T19:00:00.000Z
-# PROJECT_ID: SimsMerged-v1.3-Metropolis
-# AGENT_ID: Gemini-CLI-Architect (Agy Overwatch)
+# [TIMESTAMP: 2026-06-02T04:03:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect]
 # ACTION: Dynamic BM25 Orchestrator with Real-Time Learning
 
 import math
@@ -97,6 +95,9 @@ INITIAL_KNOWLEDGE = [
     {"id": "K1", "text": "ReAct workflow reasons about a problem, acts using tools, and observes the result before continuing."},
     {"id": "K2", "text": "Speculative decoding uses a smaller draft model to predict tokens, which a larger model verifies in parallel."},
     {"id": "K3", "text": "KV Caching saves key and value tensors from self-attention layers to prevent recomputation."},
-    {"id": "K4", "text": "Aider style commits involve making surgical AST changes and immediately executing a git commit."}
+    {"id": "K4", "text": "Aider style commits involve making surgical AST changes and immediately executing a git commit."},
+    {"id": "K5", "text": "SimAgentCity deterministic database layout maps genetic SOPs, task XP, and SLM weights across decentralized hubs."},
+    {"id": "K6", "text": "Metropolis Authority FastAPI backend utilizes multi-threaded background loops to process PoW block validations safely."},
+    {"id": "K7", "text": "Danube Coin (DANUBE_COIN) serves as a stable local tokenomic anchor, fluctuates based on global environment stability indexes."}
 ]
 bm25_engine.ingest_corpus(INITIAL_KNOWLEDGE)
