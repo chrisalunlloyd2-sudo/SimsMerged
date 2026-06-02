@@ -190,12 +190,34 @@
                 </div>
             </div>
 
+            <!-- [TIMESTAMP: 2026-06-02T01:58:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect] -->
             <div class="modal" id="ledgerModal">
-                <div class="modal-content" style="width: 80%; font-family: monospace; background: #000; color: #0f0; border: 2px solid #0f0;">
+                <div class="modal-content" style="width: 85%; max-width: 900px; font-family: 'Courier New', monospace; background: rgba(2, 5, 10, 0.95); color: #00ff00; border: 2px solid #00ff00; box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);">
                     <span class="close-modal" onclick="document.getElementById('ledgerModal').style.display='none'">X</span>
-                    <h3 style="color:#0f0; border-bottom: 1px solid #0f0; padding-bottom: 5px;">DEPIN LIVE LEDGER EXPLORER</h3>
-                    <div id="ledger-content" style="height: 400px; overflow-y: auto; font-size: 11px;">
-                        [INITIALIZING SECURE LINK...]
+                    <h3 style="color:#00ff00; border-bottom: 2px solid #00ff00; padding-bottom: 8px; margin-top:0; text-shadow: 0 0 5px #00ff00;">MSN METROPOLIS - LIVE DEPIN COIN & TRANSACTIONS LEDGER</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1.3fr 1.7fr; gap: 20px;">
+                        <!-- Left Panel: Live Stock & Currency Exchange -->
+                        <div>
+                            <h4 style="color:#00ffff; margin-top:0; border-bottom: 1px solid #00ffff; padding-bottom: 3px;">METROPOLIS STOCK & MINT DRIVE</h4>
+                            <div style="background:rgba(255,255,255,0.05); padding:10px; border:1px solid #00ffff44; margin-bottom:15px; font-size:11px;">
+                                <div>BALANCE: <span id="ledger-balance" style="color:#ffd700; font-weight:bold;">0.00 SPRITE</span></div>
+                                <div style="margin-top:4px;">MINT_RATE: <span id="ledger-mint-rate" style="color:#0f0;">0.00 SPRITE/s</span></div>
+                            </div>
+                            
+                            <h4 style="color:#ffd700; border-bottom: 1px solid #ffd700; padding-bottom: 3px; margin-top:0;">SECURE EXCHANGE</h4>
+                            <div id="stock-exchange-container" style="background:rgba(0,0,0,0.8); padding:8px; border:1px solid #ffd70044; height: 260px; overflow-y:auto; font-size:11px;">
+                                [LOADING EXCHANGE TICKERS...]
+                            </div>
+                        </div>
+                        
+                        <!-- Right Panel: Transaction Log -->
+                        <div style="border-left: 1px solid #00ff0044; padding-left: 20px;">
+                            <h4 style="color:#ffaa00; margin-top:0; border-bottom: 1px solid #ffaa00; padding-bottom: 3px;">VALIDATED PROOF-OF-WORK BLOCKS</h4>
+                            <div id="ledger-content" style="height: 330px; overflow-y: auto; background: rgba(0,0,0,0.8); border: 1px solid #ffaa0044; padding: 10px; font-size: 11px; color:#0f0; line-height:1.4;">
+                                [INITIALIZING SECURE LINK...]
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -360,7 +382,46 @@
         const buildButtons = document.querySelectorAll('.tool-btn');
         const paramSuite = document.getElementById('parameter-suite');
         
-                const COMPONENT_VARS = {
+             const COMPONENT_VARS = {
+            'CPU': [
+                { id: 'cores', label: 'CPU Cores Active', type: 'number', val: 16 },
+                { id: 'clock_hz', label: 'Frequency Target (GHz)', type: 'range', min: 1, max: 8, step: 0.1, val: 4.8 },
+                { id: 'voltage', label: 'Core Voltage (V)', type: 'range', min: 0.7, max: 1.5, step: 0.05, val: 1.2 },
+                { id: 'hyperthreading', label: 'Hyper-Threading (SMT)', type: 'checkbox', val: true }
+            ],
+            'RAM': [
+                { id: 'ram_mhz', label: 'Frequency (MT/s)', type: 'number', val: 6400 },
+                { id: 'cas_latency', label: 'CAS Latency (tCL)', type: 'range', min: 14, max: 40, val: 32 },
+                { id: 'ecc_enabled', label: 'ECC Self-Correction', type: 'checkbox', val: true },
+                { id: 'voltage_ram', label: 'VDD Voltage (V)', type: 'range', min: 1.1, max: 1.45, step: 0.05, val: 1.35 }
+            ],
+            'SSD': [
+                { id: 'write_cache', label: 'SLC Cache Buffer', type: 'checkbox', val: true },
+                { id: 'wear_level', label: 'Wear Level Protect', type: 'checkbox', val: true },
+                { id: 'read_iops', label: 'Peak Read (IOPS)', type: 'number', val: 9500 },
+                { id: 'encryption', label: 'Hardware AES-256', type: 'checkbox', val: true }
+            ],
+            'GPU': [
+                { id: 'gpu_clock', label: 'Core Frequency (MHz)', type: 'number', val: 2520 },
+                { id: 'cuda_cores', label: 'Compute Units Active', type: 'number', val: 16384 },
+                { id: 'tensor_cores', label: 'Tensor Cores Active', type: 'checkbox', val: true },
+                { id: 'fans_max', label: 'Cooling Target %', type: 'range', min: 0, max: 100, val: 80 }
+            ],
+            'NORTHBRIDGE': [
+                { id: 'nb_frequency', label: 'Bus Clock Speed (MHz)', type: 'number', val: 3200 },
+                { id: 'pcie_gen', label: 'PCI Express Generation', type: 'select', options: ['Gen 3', 'Gen 4', 'Gen 5', 'Gen 6'], val: 'Gen 5' },
+                { id: 'width_nb', label: 'Link Width (bits)', type: 'number', val: 256 }
+            ],
+            'SOUTHBRIDGE': [
+                { id: 'dma_channels', label: 'DMA Protocol Channels', type: 'number', val: 16 },
+                { id: 'usb_boost', label: 'USB 4.0 SuperSpeed', type: 'checkbox', val: true },
+                { id: 'sata_link', label: 'SATA controller interface', type: 'text', val: 'AHCI-Mode' }
+            ],
+            'REGISTRY': [
+                { id: 'replication', label: 'Registry Replica Factor', type: 'number', val: 3 },
+                { id: 'hive_limit', label: 'Max Key Space Size (MB)', type: 'number', val: 1024 },
+                { id: 'dirty_flush', label: 'Auto-Flush Daemon', type: 'checkbox', val: true }
+            ],
             'LLM': [
                 { id: 'ctx_len', label: 'Max Pos Embeddings', type: 'number', val: 128000 },
                 { id: 'rope_theta', label: 'RoPE Theta', type: 'number', val: 1000000 },
@@ -430,7 +491,41 @@
                 { id: 'kv_q', label: 'KV Quantization', type: 'text', val: 'Q4_K_M' },
                 { id: 'rope_s', label: 'RoPE Scaling', type: 'text', val: 'linear' },
                 { id: 'rope_t', label: 'RoPE Theta', type: 'number', val: 10000 },
-                { id: 'soft_p', label: 'Soft Prompt Tuning', type: 'checkbox', val: false },
+                { id: 'soft_p', label: 'Soft Prompt Tuning', type: 'checkbox', val: false }
+            ],
+            'VDB': [
+                { id: 'dimensions', label: 'Vector Dimensions', type: 'number', val: 1536 },
+                { id: 'metric', label: 'Distance Metric', type: 'select', options: ['Cosine', 'L2 Euclidean', 'Inner Product'], val: 'Cosine' },
+                { id: 'hnsw_ef', label: 'HNSW Search Ef Target', type: 'range', min: 16, max: 512, val: 64 }
+            ],
+            'PLANT': [
+                { id: 'capacity', label: 'Production Capacity', type: 'number', val: 100 },
+                { id: 'power', label: 'Core Power Draw (kW)', type: 'number', val: 250 },
+                { id: 'auto_repair', label: 'Automated Micro-Repairs', type: 'checkbox', val: true }
+            ],
+            'SCHOOL': [
+                { id: 'learning_rate', label: 'Instruction LR', type: 'range', min: 0.0001, max: 0.01, step: 0.0001, val: 0.001 },
+                { id: 'epochs', label: 'Default Alignment Epochs', type: 'number', val: 10 },
+                { id: 'optimizer', label: 'Kernel Optimizer', type: 'select', options: ['AdamW', 'SGD', 'Adagrad'], val: 'AdamW' }
+            ],
+            'HOSPITAL': [
+                { id: 'recovery_coef', label: 'Stability Heal Ratio', type: 'range', min: 1.0, max: 2.0, step: 0.05, val: 1.25 },
+                { id: 'ecc_scrub', label: 'Active ECC Memory Scrub', type: 'checkbox', val: true }
+            ],
+            'HOUSE': [
+                { id: 'slots', label: 'Virtual Core Slots', type: 'number', val: 8 },
+                { id: 'logic_shield', label: 'Interference Shields', type: 'checkbox', val: true }
+            ],
+            'TREE': [
+                { id: 'damping', label: 'Thermal Damping Factor', type: 'range', min: 0.01, max: 0.2, step: 0.01, val: 0.05 }
+            ],
+            'WATER': [
+                { id: 'flow', label: 'Coolant Flow Rate (L/s)', type: 'number', val: 50 },
+                { id: 'friction', label: 'Viscosity Friction Coef', type: 'range', min: 0.01, max: 0.1, step: 0.01, val: 0.03 }
+            ],
+            'ROAD': [
+                { id: 'bandwidth', label: 'Highway Bandwidth (Gbps)', type: 'number', val: 100 },
+                { id: 'routing', label: 'Optimal Multipath Routing', type: 'checkbox', val: true }
             ]
         };
         window.currentSettings = {};

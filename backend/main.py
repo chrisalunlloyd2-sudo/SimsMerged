@@ -1,6 +1,4 @@
-# TIMESTAMP: 2026-05-30T00:37:00.000Z
-# PROJECT_ID: SimsMerged-v1.3-Metropolis
-# AGENT_ID: Antigravity-Agent
+# [TIMESTAMP: 2026-06-02T01:58:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect]
 
 import sys
 import os
@@ -1017,6 +1015,30 @@ async def get_metropolis_state(req: UnifiedStateRequest):
                 # Dynamically sync economy block search difficulty based on target speed
                 cyber_economy.base_mint_rate = 15.0 / float(req.settings["block_time"])
                 
+            # [TIMESTAMP: 2026-06-02T01:58:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect]
+            # Dynamic secure exchange trades integration
+            if "buy_stock" in req.settings:
+                symbol = req.settings["buy_stock"]
+                price = float(req.settings["stock_price"])
+                if cyber_economy.crypto_balance >= price:
+                    cyber_economy.crypto_balance -= price
+                    if symbol in cyber_economy.stock_market:
+                        cyber_economy.stock_market[symbol] *= 1.02 # Buy pressure increases price
+                    add_log(f"ECONOMY_EXCHANGE: User purchased 1 share of {symbol} for {price} SPRITE.", "info")
+            if "sell_stock" in req.settings:
+                symbol = req.settings["sell_stock"]
+                price = float(req.settings["stock_price"])
+                cyber_economy.crypto_balance += price
+                if symbol in cyber_economy.stock_market:
+                    cyber_economy.stock_market[symbol] = max(0.01, cyber_economy.stock_market[symbol] * 0.98) # Sell pressure decreases price
+                add_log(f"ECONOMY_EXCHANGE: User sold 1 share of {symbol} for {price} SPRITE.", "info")
+            if "donate_research" in req.settings:
+                amount = float(req.settings["donate_research"])
+                if cyber_economy.crypto_balance >= amount:
+                    cyber_economy.crypto_balance -= amount
+                    cyber_economy.stock_market["RESEARCH_POOL"] += amount
+                    add_log(f"ECONOMY_EXCHANGE: User donated {amount} SPRITE to AI Research Pool.", "info")
+
             if mapped_attrs:
                 quantum_core.update_attributes(mapped_attrs)
         except Exception as ex:

@@ -20,6 +20,13 @@ async function SyncLoop() {
             body: JSON.stringify(payload)
         });
 
+        // Clear transaction flags so they only fire once
+        if (window.currentSettings) {
+            delete window.currentSettings["buy_stock"];
+            delete window.currentSettings["sell_stock"];
+            delete window.currentSettings["donate_research"];
+        }
+
         if (!response.ok) {
             throw new Error(`HTTP Error: ${response.status}`);
         }
@@ -290,17 +297,95 @@ async function SyncLoop() {
         }
 
         // 7. Ledger Render
-        if (document.getElementById('ledgerModal').style.display === 'block' && state.ledger) {
-            const content = document.getElementById('ledger-content');
-            content.innerHTML = state.ledger.map(t => `
-                <div style="margin-bottom:5px; border-bottom:1px solid #040;">
-                    <span style="color:#888;">[${new Date(t.timestamp * 1000).toLocaleTimeString()}]</span> 
-                    <span style="color:#fff;">AGENT: ${t.agent}</span> | 
-                    <span style="color:#0f0;">ACTION: ${t.action}</span><br>
-                    <span style="color:#444; font-size:9px;">HASH: ${t.hash}</span>
-                </div>
-            `).join('');
-            content.scrollTop = content.scrollHeight;
+        if (document.getElementById('ledgerModal').style.display === 'block') {
+            // [TIMESTAMP: 2026-06-02T01:58:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect]
+            // Sync balance and mint-rate in ledger panel headers
+            if (window.cyberEconomy) {
+                const ledgerBal = document.getElementById('ledger-balance');
+                const ledgerMint = document.getElementById('ledger-mint-rate');
+                if (ledgerBal) ledgerBal.innerText = window.cyberEconomy.balance.toFixed(2) + " SPRITE";
+                if (ledgerMint) ledgerMint.innerText = window.cyberEconomy.mint_rate.toFixed(4) + " SPRITE/s";
+
+                const exchangeContainer = document.getElementById('stock-exchange-container');
+                if (exchangeContainer && window.cyberEconomy.stocks) {
+                    if (!window.lastStockPrices) {
+                        window.lastStockPrices = {};
+                    }
+                    if (!window.userPortfolio) {
+                        window.userPortfolio = {
+                            "SYS_CORE": 0,
+                            "DATA_CORP": 0,
+                            "AI_FUTURES": 0,
+                            "DANUBE_COIN": 0
+                        };
+                    }
+
+                    let html = '<table style="width:100%; border-collapse:collapse; color:#fff; font-size:10px;">';
+                    html += '<tr style="border-bottom:1px solid #ffd70044; color:#ffd700; text-align:left;"><th>SYMBOL</th><th>PRICE</th><th>HELD</th><th>ACTIONS</th></tr>';
+                    
+                    Object.keys(window.cyberEconomy.stocks).forEach(symbol => {
+                        const price = window.cyberEconomy.stocks[symbol];
+                        const prevPrice = window.lastStockPrices[symbol] || price;
+                        const changeSymbol = price > prevPrice ? '<span style="color:#0f0;">&uarr;</span>' : (price < prevPrice ? '<span style="color:#f00;">&darr;</span>' : '&nbsp;');
+                        window.lastStockPrices[symbol] = price;
+                        
+                        const heldCount = window.userPortfolio[symbol] || 0;
+                        
+                        html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.05); height:30px;">
+                            <td style="font-weight:bold; color:#00ffff;">${symbol}</td>
+                            <td>${price.toFixed(symbol === 'DANUBE_COIN' ? 4 : 2)} ${changeSymbol}</td>
+                            <td style="color:#ffd700; font-weight:bold;">${symbol === 'RESEARCH_POOL' ? 'N/A' : heldCount}</td>
+                            <td>`;
+                        
+                        if (symbol === 'RESEARCH_POOL') {
+                            html += `<button onclick="donateToResearchPool(10)" style="background:#00ffcc; color:#000; border:none; cursor:pointer; padding:2px 4px; font-weight:bold; font-size:9px; font-family:monospace;">DONATE 10 SPRITE</button>`;
+                        } else {
+                            html += `<button onclick="buyStock('${symbol}', ${price})" style="background:#0f0; color:#000; border:none; cursor:pointer; padding:2px 4px; font-weight:bold; font-size:9px; font-family:monospace; margin-right:4px;">BUY</button>
+                                     <button onclick="sellStock('${symbol}', ${price})" style="background:#f00; color:#fff; border:none; cursor:pointer; padding:2px 4px; font-weight:bold; font-size:9px; font-family:monospace;">SELL</button>`;
+                        }
+                        
+                        html += `</td></tr>`;
+                    });
+                    
+                    html += '</table>';
+                    
+                    if (window.cyberEconomy.unlocked_models) {
+                        html += `<div style="margin-top:10px; border-top:1px dashed #ffd70044; padding-top:6px; color:#ffaa00; font-size:10px;">`;
+                        html += `<span style="font-weight:bold;">UNLOCKED LOCAL AI MODELS:</span><br>`;
+                        window.cyberEconomy.unlocked_models.forEach(m => {
+                            html += ` &bull; <span style="color:#0f0;">${m}</span> [ACTIVE]<br>`;
+                        });
+                        if (window.cyberEconomy.next_unlock) {
+                            const next = window.cyberEconomy.next_unlock;
+                            const currentPool = window.cyberEconomy.stocks['RESEARCH_POOL'];
+                            const progressPct = Math.min(100, (currentPool / next.cost) * 100).toFixed(1);
+                            html += ` &bull; <span style="color:#888;">Next: ${next.name} (Cost: ${next.cost} SPRITE)</span><br>`;
+                            html += `<div style="width:100%; height:8px; background:#111; border:1px solid #ffd70022; margin-top:3px; position:relative; overflow:hidden;">
+                                <div style="width:${progressPct}%; height:100%; background:linear-gradient(90deg, #00ffcc, #00ff88);"></div>
+                            </div>`;
+                            html += `<span style="font-size:9px; color:#aaa;">Research Pool Progress: ${progressPct}% (${currentPool.toFixed(1)} / ${next.cost} SPRITE)</span>`;
+                        } else {
+                            html += ` &bull; <span style="color:#0f0; font-weight:bold;">ALL MODELS UNLOCKED! INFINITE SENTIENCE ACHIEVED!</span>`;
+                        }
+                        html += `</div>`;
+                    }
+
+                    exchangeContainer.innerHTML = html;
+                }
+            }
+
+            if (state.ledger) {
+                const content = document.getElementById('ledger-content');
+                content.innerHTML = state.ledger.map(t => `
+                    <div style="margin-bottom:5px; border-bottom:1px solid #040;">
+                        <span style="color:#888;">[${new Date(t.timestamp * 1000).toLocaleTimeString()}]</span> 
+                        <span style="color:#fff;">AGENT: ${t.agent}</span> | 
+                        <span style="color:#0f0;">ACTION: ${t.action}</span><br>
+                        <span style="color:#444; font-size:9px;">HASH: ${t.hash}</span>
+                    </div>
+                `).join('');
+                content.scrollTop = content.scrollHeight;
+            }
         }
 
         // 7. Fetch Hardware Specs (Once)
@@ -638,3 +723,44 @@ async function synthesizeAgentResume() {
         display.innerHTML = `<div style="color:#ff4444; text-align:center; margin-top:100px;">Compilation Error: ${err.message}</div>`;
     }
 }
+
+// [TIMESTAMP: 2026-06-02T01:58:30.452Z] [PROJECT_ID: SimsMerged-v1.4-Metropolis] [AGENT_ID: Antigravity-CLI-Architect]
+// Global action dispatchers for the Stock Exchange
+window.buyStock = function(symbol, price) {
+    if (!window.cyberEconomy) return;
+    if (window.cyberEconomy.balance >= price) {
+        window.userPortfolio = window.userPortfolio || {};
+        window.userPortfolio[symbol] = (window.userPortfolio[symbol] || 0) + 1;
+        window.currentSettings = window.currentSettings || {};
+        window.currentSettings["buy_stock"] = symbol;
+        window.currentSettings["stock_price"] = price;
+        window.showNotification("Stock Exchange", `Successfully bought 1 share of ${symbol}!`);
+    } else {
+        window.showNotification("Exchange Error", "Insufficient SPRITE coins balance!", true);
+    }
+};
+
+window.sellStock = function(symbol, price) {
+    if (!window.cyberEconomy) return;
+    window.userPortfolio = window.userPortfolio || {};
+    if (window.userPortfolio[symbol] > 0) {
+        window.userPortfolio[symbol]--;
+        window.currentSettings = window.currentSettings || {};
+        window.currentSettings["sell_stock"] = symbol;
+        window.currentSettings["stock_price"] = price;
+        window.showNotification("Stock Exchange", `Successfully sold 1 share of ${symbol}!`);
+    } else {
+        window.showNotification("Exchange Error", `You do not hold any shares of ${symbol}!`, true);
+    }
+};
+
+window.donateToResearchPool = function(amount) {
+    if (!window.cyberEconomy) return;
+    if (window.cyberEconomy.balance >= amount) {
+        window.currentSettings = window.currentSettings || {};
+        window.currentSettings["donate_research"] = amount;
+        window.showNotification("Research Contribution", `Donated ${amount} SPRITE to the AI Research Pool!`);
+    } else {
+        window.showNotification("Exchange Error", "Insufficient SPRITE balance for donation!", true);
+    }
+};

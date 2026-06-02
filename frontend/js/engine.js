@@ -97,6 +97,937 @@ const SYSTEM_INFO_MAP = {
 };
 
 const BUILD_TYPES = {
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'H2O-DANUBE': { 
+        color: '#3adde5', 
+        label: 'H2O-Danube-1.8B Post-Training Quantization', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced H2O-Danube-1.8B Post-Training Quantization node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'H2O-DANUBE': { 
+        color: '#3adde5', 
+        label: 'H2O-Danube-1.8B Post-Training Quantization', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced H2O-Danube-1.8B Post-Training Quantization node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'H2O-DANUBE': { 
+        color: '#3adde5', 
+        label: 'H2O-Danube-1.8B Post-Training Quantization', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced H2O-Danube-1.8B Post-Training Quantization node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'H2O-DANUBE': { 
+        color: '#3adde5', 
+        label: 'H2O-Danube-1.8B Post-Training Quantization', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced H2O-Danube-1.8B Post-Training Quantization node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'NON-ECC_BI': { 
+        color: '#9ccb89', 
+        label: 'Non-ECC Bit-Flip Mitigation for SLM Inference', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Non-ECC Bit-Flip Mitigation for SLM Inference node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'PREDICTIVE': { 
+        color: '#c73137', 
+        label: 'Predictive Prefetching Logic Injection', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Predictive Prefetching Logic Injection node.' 
+    },
+    'QWEN-2-1.5': { 
+        color: '#661761', 
+        label: 'Qwen-2-1.5B 4-bit KV-Cache Compression', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Qwen-2-1.5B 4-bit KV-Cache Compression node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'ABSOLUTE-Z': { 
+        color: '#821af2', 
+        label: 'Absolute-Zero Thermal Throttling Bypass', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Absolute-Zero Thermal Throttling Bypass node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'SMOLLM-135': { 
+        color: '#99cbe3', 
+        label: 'SmolLM-135M Distributed Inference Handshake', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced SmolLM-135M Distributed Inference Handshake node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
+    'MULTI-CHAN': { 
+        color: '#063b41', 
+        label: 'Multi-Channel DMA Memory Access', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Multi-Channel DMA Memory Access node.' 
+    },
+    'ADVANCED_B': { 
+        color: '#1a5f1c', 
+        label: 'Advanced Branch Predictor (95% Accuracy)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Advanced Branch Predictor (95% Accuracy) node.' 
+    },
+    'CAS_LATENC': { 
+        color: '#74d7d5', 
+        label: 'CAS Latency Reduction (CL32 -> CL28)', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced CAS Latency Reduction (CL32 -> CL28) node.' 
+    },
+    'TRITON-ENG': { 
+        color: '#4e3095', 
+        label: 'Triton-Engine Zero-Copy Weight Swapping', 
+        locked: false, 
+        category: 'Evolution', 
+        desc: 'Genetically advanced Triton-Engine Zero-Copy Weight Swapping node.' 
+    },
     'DYNAMIC_UR': { 
         color: '#0c7e4f', 
         label: 'Dynamic Urban Zoning Algorithms', 
@@ -416,7 +1347,8 @@ const BUILD_TYPES = {
     'HOUSE': { color: '#888', label: 'Kernel Housing', category: 'Urban', desc: 'Resident agent sub-sectors.' },
     'TREE': { color: '#0a3d0a', label: 'Logic Foliage', category: 'Env', desc: 'Atmospheric entropy sinks.' },
     'WATER': { color: '#0055ff', label: 'Data Cooling', category: 'Env', desc: 'Thermal dissipation reservoirs.' },
-    'ROAD': { color: '#222', label: 'Protocol Path', category: 'Network', desc: 'Static dataflow trajectory.' }
+    'ROAD': { color: '#222', label: 'Protocol Path', category: 'Network', desc: 'Static dataflow trajectory.' },
+    'RESEARCH': { color: '#00ffcc', label: 'Research Nexus', category: 'Logic', desc: 'Advanced hyperparameter tuning and model optimization pipeline.' }
 };
 
 let districts = [
@@ -665,10 +1597,22 @@ function updateDistrictMapsIfNeeded() {
     }
 }
 
-function draw() {
+let lastFrameTime = 0;
+const fpsInterval = 1000 / 24; // Cap at 24 FPS (Cinematic Isometric Speed)
+
+function draw(timestamp) {
+    requestAnimationFrame(draw);
+    
+    if (!timestamp) timestamp = performance.now();
+    const elapsed = timestamp - lastFrameTime;
+    
+    if (elapsed < fpsInterval) {
+        return;
+    }
+    lastFrameTime = timestamp - (elapsed % fpsInterval);
+
     // PERFORMANCE OPTIMIZATION: If canvas is hidden (e.g. active 3D WebGL mode), skip entire draw loop to conserve CPU/GPU!
     if (canvas.style.display === 'none') {
-        requestAnimationFrame(draw);
         return;
     }
 
@@ -773,7 +1717,6 @@ function draw() {
     apply_interaction_logic();
     ctx.restore();
     drawWeather();
-    requestAnimationFrame(draw);
 }
 
 function apply_interaction_logic() {
