@@ -476,29 +476,36 @@ async function updateCoreGate(gateName, value) {
     }
 }
 
-async function deployMiniAgent() {
-    const name = document.getElementById('spawn-name').value || "Swarm_Bot";
-    const role = document.getElementById('spawn-role').value || "PROCESS_KERNEL";
-    const x = parseInt(document.getElementById('spawn-x').value) || 2;
-    const y = parseInt(document.getElementById('spawn-y').value) || 2;
-    
+async function triggerFinalGenesis() {
+    if (window.showNotification) {
+        window.showNotification("FINAL GENESIS", "Initiating Phase 12: UNIVERSAL CONSTANT ALIGNMENT...");
+    }
+
     try {
-        const res = await fetch('http://localhost:8000/api/spawn-agent', {
+        const res = await fetch('http://localhost:8000/api/final-genesis', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, role, x, y })
+            headers: { 'Content-Type': 'application/json' }
         });
+
         if (res.ok) {
             const data = await res.json();
             if (window.showNotification) {
-                window.showNotification("AGENT_SPAWN", `Mapped mini-agent ${data.agent.name} (${data.agent.role}) onto coordinate [${data.agent.x}, ${data.agent.y}].`);
+                window.showNotification("GENESIS_SUCCESS", "The Metropolis has achieved Singularity. All agents upgraded to Oracle status.");
             }
+            // Trigger a visual "glitch" or transition
+            document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+            setTimeout(() => {
+                document.body.style.filter = 'none';
+                applyAestheticTheme('matrix');
+            }, 2000);
         }
     } catch(err) {
-        console.error("Spawn agent error:", err);
+        console.error("Genesis failed:", err);
+        if (window.showNotification) {
+            window.showNotification("GENESIS_ERROR", "Hardware stability too low for singularity.", true);
+        }
     }
 }
-
 // --- MSN METROPOLIS USER CHAT INTERACTION ---
 async function sendUserMsnMessage() {
     const inputEl = document.getElementById('msn-input');
@@ -764,3 +771,84 @@ window.donateToResearchPool = function(amount) {
         window.showNotification("Exchange Error", "Insufficient SPRITE balance for donation!", true);
     }
 };
+
+// --- ADDITIVE METROPOLIS v1.4 DEPIN CONSOLE BINDINGS ---
+// TIMESTAMP: 2026-06-05T00:38:00.000Z | PROJECT_ID: SimsMerged-v1.4-Metropolis | AGENT_ID: Antigravity-CLI-Architect
+
+async function deployMiniAgent() {
+    const nameEl = document.getElementById('spawn-name');
+    const roleEl = document.getElementById('spawn-role');
+    const xEl = document.getElementById('spawn-x');
+    const yEl = document.getElementById('spawn-y');
+    if (!nameEl || !roleEl || !xEl || !yEl) return;
+    
+    const name = nameEl.value.trim();
+    const role = roleEl.value;
+    const x = parseInt(xEl.value) || 0;
+    const y = parseInt(yEl.value) || 0;
+    
+    if (!name) {
+        if (window.showNotification) {
+            window.showNotification("Spawn Error", "Please provide a name for the swarm agent.", true);
+        }
+        return;
+    }
+    
+    try {
+        const res = await fetch('http://localhost:8000/api/deploy-agent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, role, x, y })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (window.showNotification) {
+                window.showNotification("Swarm Deployed", `Agent ${data.agent.name} successfully deployed to the matrix.`);
+            }
+            // Trigger SyncLoop refresh
+            if (typeof SyncLoop === 'function') {
+                setTimeout(SyncLoop, 200);
+            }
+        } else {
+            throw new Error(`HTTP Error: ${res.status}`);
+        }
+    } catch (err) {
+        console.error("Spawn Agent Error:", err);
+        // Offline mock fallback
+        const mockAgent = {
+            id: `swarm_local_${Math.floor(Math.random()*900+100)}`,
+            name: name,
+            x: x,
+            y: y,
+            role: role,
+            age: 0,
+            stability: 1.0,
+            status: "ACTIVE",
+            personality: "Local Swarm Drone",
+            level: 1,
+            sims_needs: {
+                energy: 100,
+                comfort: 100,
+                social: 100,
+                hygiene: 100,
+                hunger: 100
+            }
+        };
+        window.agents = window.agents || [];
+        window.agents.push(mockAgent);
+        if (window.showNotification) {
+            window.showNotification("Swarm Deployed (Local)", `Agent ${name} deployed locally (offline mode).`);
+        }
+    }
+}
+
+// Explicit window bindings to ensure reliability in all browser scoping environments
+window.openResumeBuilder = openResumeBuilder;
+window.syncSelectedAgentNeeds = syncSelectedAgentNeeds;
+window.synthesizeAgentResume = synthesizeAgentResume;
+window.deployMiniAgent = deployMiniAgent;
+window.triggerMemoryFlush = triggerMemoryFlush;
+window.triggerClockOptimization = triggerClockOptimization;
+window.updateCoreGate = updateCoreGate;
+window.triggerFinalGenesis = triggerFinalGenesis;
+window.sendUserMsnMessage = sendUserMsnMessage;

@@ -147,8 +147,11 @@
                     <button onclick="applyAestheticTheme('win95')" class="tool-btn" style="flex:1; font-size:9px; padding:4px 0; font-weight:bold; color:#000; justify-content:center;">WIN95</button>
                     <button onclick="applyAestheticTheme('matrix')" class="tool-btn" style="flex:1; font-size:9px; padding:4px 0; font-weight:bold; color:#000; justify-content:center;">MATRIX</button>
                 </div>
-                <button onclick="captureMetropolisScreen()" style="width: 100%; background: #007acc; color: white; border: 1px solid #00ffff; padding: 5px; cursor: pointer; font-family: monospace; font-size: 10px; font-weight: bold; text-transform: uppercase; text-shadow: 0 0 2px #fff; display:block; text-align:center;">
+                <button onclick="captureMetropolisScreen()" style="width: 100%; background: #007acc; color: white; border: 1px solid #00ffff; padding: 5px; cursor: pointer; font-family: monospace; font-size: 10px; font-weight: bold; text-transform: uppercase; text-shadow: 0 0 2px #fff; display:block; text-align:center; margin-bottom: 5px;">
                     📸 PHOTO MODE: CAPTURE CITY
+                </button>
+                <button onclick="triggerFinalGenesis()" style="width: 100%; background: linear-gradient(90deg, #ff00ff, #00ffff); color: white; border: 1px solid #fff; padding: 5px; cursor: pointer; font-family: monospace; font-size: 10px; font-weight: bold; text-transform: uppercase; text-shadow: 0 0 5px #fff; display:block; text-align:center;">
+                    🌀 PHASE 12: FINAL GENESIS
                 </button>
             </div>
             
@@ -354,6 +357,17 @@
                     <span style="color:#888;">&bull; ECC_MEM:</span> <span id="buff-ecc" style="color:#0f0;">1.00x</span>
                 </div>
                 <button id="toggle-3d-btn" style="margin-top: 5px; background: #007acc; color: #fff; border: 1px solid #fff; cursor: pointer; padding: 2px 5px; font-size: 11px;">TOGGLE 3D WEBGL</button>
+                <!-- ADVANCED DEVELOPER METRICS OVERLAY -->
+                <!-- TIMESTAMP: 2026-06-05T00:39:00.000Z | PROJECT_ID: SimsMerged-v1.4-Metropolis | AGENT_ID: Antigravity-CLI-Architect -->
+                <div id="hud-developer-metrics" style="font-size: 9px; color: #00ff00; border-top: 1px dashed #00ff0055; margin-top: 6px; padding-top: 6px; line-height: 1.3; text-transform: uppercase;">
+                    <span style="color:#00ffff; font-weight:bold;">DEV METRICS & RUNTIME:</span><br>
+                    &bull; Sync Latency: <span id="metric-latency" style="color:#fff;">-- ms</span><br>
+                    &bull; Client FPS: <span id="metric-fps" style="color:#fff;">-- FPS</span><br>
+                    &bull; Swap Swapping: <span id="metric-swapping" style="color:#fff;">INACTIVE</span><br>
+                    &bull; CPU Thermal: <span id="metric-thermal" style="color:#fff;">-- °C</span><br>
+                    &bull; CAS Latency: <span id="metric-cas" style="color:#fff;">-- tCL</span><br>
+                    &bull; RAM Load: <span id="metric-ram" style="color:#fff;">-- %</span>
+                </div>
             </div>
 
             <!-- MANDATORY ONBOARD PROTOCOL CHECKLIST -->
@@ -373,6 +387,7 @@
     
     <script src="js/telemetry_data.js?v=1.3.3"></script>
     <script src="js/console.js?v=1.3.3"></script>
+    <script src="js/metropolis_architect.js"></script>
     <script src="js/engine.js?v=1.3.3"></script>
     <script src="js/resource_monitor.js?v=1.3.3"></script>
     <script src="js/bridge.js?v=1.3.3"></script>
@@ -777,6 +792,76 @@
         
         // Default theme trigger
         window.applyAestheticTheme('neon');
+
+        // Advanced Developer Metrics Engine
+        // TIMESTAMP: 2026-06-05T00:39:00.000Z | PROJECT_ID: SimsMerged-v1.4-Metropolis | AGENT_ID: Antigravity-CLI-Architect
+        (function() {
+            let lastFrameTime = performance.now();
+            let frameCount = 0;
+            let fps = 60;
+            
+            function calculateFPS() {
+                const now = performance.now();
+                frameCount++;
+                if (now >= lastFrameTime + 1000) {
+                    fps = Math.round((frameCount * 1000) / (now - lastFrameTime));
+                    frameCount = 0;
+                    lastFrameTime = now;
+                    const fpsEl = document.getElementById('metric-fps');
+                    if (fpsEl) {
+                        fpsEl.innerText = fps + " FPS";
+                        fpsEl.style.color = fps > 50 ? "#0f0" : (fps > 30 ? "#ff0" : "#f00");
+                    }
+                }
+                requestAnimationFrame(calculateFPS);
+            }
+            requestAnimationFrame(calculateFPS);
+
+            async function updateDevMetrics() {
+                const latencyEl = document.getElementById('metric-latency');
+                const swapEl = document.getElementById('metric-swapping');
+                const thermalEl = document.getElementById('metric-thermal');
+                const casEl = document.getElementById('metric-cas');
+                const ramEl = document.getElementById('metric-ram');
+
+                // Measure Sync latency
+                const startTime = performance.now();
+                try {
+                    const res = await fetch('http://localhost:8000/api/machine-heartbeat');
+                    const endTime = performance.now();
+                    const latency = Math.round(endTime - startTime);
+                    if (latencyEl) {
+                        latencyEl.innerText = latency + " ms";
+                        latencyEl.style.color = latency < 100 ? "#0f0" : (latency < 300 ? "#ff0" : "#f00");
+                    }
+                } catch (e) {
+                    if (latencyEl) {
+                        latencyEl.innerText = "OFFLINE";
+                        latencyEl.style.color = "#f00";
+                    }
+                }
+
+                // Sync states from window variables (updated by bridge.js)
+                if (swapEl) {
+                    swapEl.innerText = window.isSwapping ? "SWAPPING (ACTIVE)" : "INACTIVE";
+                    swapEl.style.color = window.isSwapping ? "#f00" : "#0f0";
+                }
+                if (thermalEl && window.systemHeat) {
+                    thermalEl.innerText = window.systemHeat.toFixed(1) + " °C";
+                    thermalEl.style.color = window.systemHeat > 75 ? "#f00" : (window.systemHeat > 55 ? "#ff0" : "#0f0");
+                }
+                if (casEl && window.casLatency) {
+                    casEl.innerText = window.casLatency + " tCL";
+                }
+                if (ramEl && window.ramLoad) {
+                    ramEl.innerText = (window.ramLoad * 100).toFixed(0) + " %";
+                    ramEl.style.color = window.ramLoad > 0.85 ? "#f00" : (window.ramLoad > 0.60 ? "#ff0" : "#0f0");
+                }
+
+                setTimeout(updateDevMetrics, 1500);
+            }
+            setTimeout(updateDevMetrics, 1000);
+        })();
     </script>
     
     <!-- Custom Glassmorphic Toast DOM Element -->

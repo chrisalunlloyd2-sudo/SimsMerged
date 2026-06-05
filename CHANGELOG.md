@@ -2,6 +2,24 @@
 
 Every time we push an update, the universe changes! Here are the monumental, earth-shattering changes we've made!
 
+## [v1.4.1-METROPOLIS-DEV] - 2026-06-05T00:40:00.000Z
+- **TIMESTAMP:** 2026-06-05T00:40:00.000Z | **PROJECT_ID:** SimsMerged-v1.4-Metropolis | **AGENT_ID:** Antigravity-Orchestrator
+- **DEVELOPMENT:** Resolved multiple unfinished frontend integration stubs in `index.html` and backend `main.py`.
+- **API ROUTING:** Implemented missing backend endpoints for `/api/onboard-steps`, `/api/hardware`, and `/api/generate-resume/{agent_id}`.
+- **SWARM DEPLOYMENT:** Implemented `/api/deploy-agent` route on the backend and added `deployMiniAgent()` on the frontend console to allow real-time manual swarm drone scaling.
+- **DEV METRICS:** Designed and integrated a high-fidelity Advanced Developer Metrics HUD element for monitoring Sync Latency, client FPS, RAM load, swap activity, and core load in real-time.
+- **REACTIONS:** Wired explicit global window bindings for all DePIN control actions to prevent module scoping failures.
+
+## [v1.4.0-GENESIS] - 2026-06-04
+### RESUMED: Phase 12 - Final Genesis
+- **MANDATE:** Strict SSD-Only execution (Slow Fidelity).
+- **HARDWARE_FENCE:** Implemented disk-aware weight swapping for 4 SLMs (Danube, Smoll, Triton, Qwen).
+- **STABILIZATION:** Increased Ollama timeouts to 90s/120s to prevent IO-related voting crashes.
+- **CONSENSUS-TO-CODE:** Implemented the `MetropolisArchitect` module for autonomous game modification.
+- **DYNAMIC_UPGRADES:** Integrated `metropolis_architect.js` for real-time frontend part injection.
+- **LOGGING:** Added high-fidelity hardware fencing events to `syslog.log`.
+- **ARCHITECTURE:** Established granular list of incomplete items in `INCOMPLETE_ITEMS.md`.
+
 ## v1.4.0 - The Global VIPER Traceability Update! [2026-05-24T18:35:00Z]
 - **PERSISTENT SYSLOG telemetry**: Fully realized the `SYSLOG_DAEMON` log persistence requirement under global VIPER SOPs. Hooked all main events to record to a persistent `syslog.log` with strict, high-fidelity atomic signatures (`TIMESTAMP`, `PROJECT_ID`, `AGENT_ID`).
 - **MSN CHAT CORE**: Implemented a dynamic MSN Social chat feed, exposing active thought bubbles for reasoning nodes directly in the Retro UI console.
