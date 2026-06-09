@@ -1,0 +1,294 @@
+// db_wrapper.js
+// TIMESTAMP: 2026-05-25T04:35:00.000Z
+// PROJECT_ID: SimsMerged-v1.3
+// AGENT_ID: Gemini-CLI-Architect
+
+const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
+const path = require('path');
+
+const DB_PATH = path.join(__dirname, 'simagentcity.db');
+const SCHEMA_PATH = path.join(__dirname, 'agent_knowledge.sql');
+
+function initDb() {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        const schema = fs.readFileSync(SCHEMA_PATH, 'utf8');
+        db.exec(schema, (err) => {
+            if (err) reject(err);
+            else {
+                console.log("Database initialized.");
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function addAgent(name, role, model = "h2o-danube") {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO agents (name, role, model) VALUES (?, ?, ?)", [name, role, model], function(err) {
+            if (err) reject(err);
+            else {
+                const id = this.lastID;
+                db.close();
+                resolve(id);
+            }
+        });
+    });
+}
+
+function addTask(title, description, budget = 0.5) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO tasks (title, description, resource_budget) VALUES (?, ?, ?)", 
+               [title, description, budget], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function getPendingTask() {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.get("SELECT * FROM tasks WHERE status = 'PENDING' LIMIT 1", (err, row) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve(row);
+            }
+        });
+    });
+}
+
+function updateTaskStatus(taskId, status, agentId) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("UPDATE tasks SET status = ?, assigned_agent_id = ? WHERE id = ?", 
+               [status, agentId, taskId], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function logThought(agentId, thought, hash) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO thought_log (agent_id, thought, sha256_hash) VALUES (?, ?, ?)", 
+               [agentId, thought, hash], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function addConcept(term, definition, sourceAgentId) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT OR REPLACE INTO concepts (term, definition, source_agent_id) VALUES (?, ?, ?)", [term, definition, sourceAgentId], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function getRandomConcept() {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.get("SELECT term, definition, source_agent_id FROM concepts ORDER BY RANDOM() LIMIT 1", (err, row) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve(row);
+            }
+        });
+    });
+}
+
+function addMutation(agentId, filePath, hash, cost = 0.1) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO mutations (agent_id, file_path, sha256_hash, resource_cost) VALUES (?, ?, ?, ?)", 
+               [agentId, filePath, hash, cost], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function updateResources(agentId, cpu, ram, storage) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("UPDATE agents SET cpu_limit = ?, ram_limit = ?, storage_limit = ? WHERE id = ?", 
+               [cpu, ram, storage, agentId], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function addSemanticMemory(agentId, content, metadata = "") {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO semantic_memory (agent_id, content, metadata) VALUES (?, ?, ?)", 
+               [agentId, content, metadata], function(err) {
+            if (err) reject(err);
+            else {
+                const id = this.lastID;
+                // Update FTS table
+                db.run("INSERT INTO semantic_search (rowid, content, metadata) VALUES (?, ?, ?)", 
+                       [id, content, metadata], (err) => {
+                    if (err) reject(err);
+                    else {
+                        db.close();
+                        resolve(id);
+                    }
+                });
+            }
+        });
+    });
+}
+
+function searchSemanticMemory(query) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.all("SELECT rowid as id, content, metadata FROM semantic_search WHERE semantic_search MATCH ? ORDER BY rank LIMIT 5", 
+               [query], (err, rows) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve(rows);
+            }
+        });
+    });
+}
+
+function addGeneticTrait(agentId, type, value, generation = 1) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO genetic_traits (agent_id, trait_type, trait_value, generation) VALUES (?, ?, ?, ?)", 
+               [agentId, type, value, generation], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function getBestGeneticTraits(type) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.all("SELECT trait_value FROM genetic_traits WHERE trait_type = ? ORDER BY fitness_score DESC LIMIT 3", 
+               [type], (err, rows) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve(rows.map(r => r.trait_value));
+            }
+        });
+    });
+}
+
+function promoteAgent(agentId, rank, beltLevel) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("UPDATE agents SET rank = ?, belt_level = ? WHERE id = ?", 
+               [rank, beltLevel, agentId], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function addDmaicAudit(agentId, phase, score, observation) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO dmaic_audits (agent_id, phase, metric_score, observation) VALUES (?, ?, ?, ?)", 
+               [agentId, phase, score, observation], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function getAgentRanks() {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.all("SELECT id, name, role, rank, belt_level FROM agents", (err, rows) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve(rows);
+            }
+        });
+    });
+}
+
+function addKernel(name, format, url) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT OR IGNORE INTO kernels (name, format, url) VALUES (?, ?, ?)", 
+               [name, format, url], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+function startSystemTick(tickNumber, negotiation) {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database(DB_PATH);
+        db.run("INSERT INTO system_ticks (tick_number, agent_negotiation) VALUES (?, ?)", 
+               [tickNumber, negotiation], (err) => {
+            if (err) reject(err);
+            else {
+                db.close();
+                resolve();
+            }
+        });
+    });
+}
+
+module.exports = { 
+    initDb, addAgent, addConcept, getRandomConcept, addMutation, updateResources,
+    addTask, getPendingTask, updateTaskStatus, logThought,
+    addSemanticMemory, searchSemanticMemory, addGeneticTrait, getBestGeneticTraits,
+    promoteAgent, addDmaicAudit, getAgentRanks,
+    addKernel, startSystemTick
+};
+
+if (require.main === module) {
+    initDb();
+}

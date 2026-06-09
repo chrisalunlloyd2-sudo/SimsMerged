@@ -1,0 +1,36 @@
+# SIMS_MERGED: PROJECT TOPOLOGY MAP (v1.3-METROPOLIS)
+
+SimsMerged/
+├── docs/
+│   ├── SYSTEMS_ARCHITECTURE.md (LOCKED: Metropolis Core)
+│   ├── OPERATIONAL_RUNBOOK.md
+│   ├── JAVAFX_NEO_1700_STEP_PLAN.md (NEW: Genesis Record)
+│   └── DARWINIAN_SPECS.md (UPDATED: Urban Metaphor v1.3)
+├── assets/
+│   ├── Final_Boss_Environment_Screenshot.png
+│   └── ACTUAL_METROPOLIS_CITY.png (UPDATED: High-Fidelity Capture)
+├── backend/
+│   ├── main.py (FastAPI Orchestrator)
+│   └── core/ (Agent/SI Lifecycle Management)
+├── frontend/
+│   ├── index.html (Dashboard with Parameter Suite & Admin Modals)
+│   ├── css/ (Cyber-Metropolis Styles)
+│   └── js/
+│       ├── engine.js (v1.3: 40x40 Grid, Building Structures, Urban Decorations)
+│       ├── bridge.js (Sync Protocol)
+│       └── telemetry_data.js (Real-Machine Parity Link)
+├── GIT_LOG.txt (UPDATED: v1.3 Checkpoint)
+├── MERGE_DOCUMENTATION.md
+├── TEST.bat (Master Launch)
+└── .gitignore (SECURED: v1.3)
+
+## MILESTONES (LOCKED v1.3):
+- [X] Full 3D Isometric Building Structures
+- [X] Urban Decoration System (Trees/Lamps/Roads)
+- [X] Suicide Inhibitor (SI) Special Agent Binding
+- [X] Administrator 'Purge' Logic for Low-Level Processes
+- [X] Protocol-as-Pipe trajectory rendering (TCP/UDP)
+- [X] Exhaustive Hover Telemetry (Information Veil)
+- [X] Cinematic CRT Scanline & Vignette Overlays
+- [X] Hard-Locked BIOS & Environmental Hardware Infrastructure
+- [X] 1700-Step Darwinistic Documentation Suite Completed

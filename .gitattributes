@@ -1,0 +1,21 @@
+﻿# Auto detect text files and perform LF normalization
+* text=auto
+
+# Custom for Delphi / Pascal
+*.pas text
+*.dfm text
+*.dpr text
+
+# Custom for Python
+*.py text eol=lf
+
+# Custom for Java
+*.java text diff=java
+*.xml text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary

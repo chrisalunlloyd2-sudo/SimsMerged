@@ -1,0 +1,20 @@
+# SimsMerged Git Ignore
+_local_chats/
+.env
+.env.*
+secrets.json
+target/
+*.class
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+local_env/
+.DS_Store
+node_modules/
+dist/
+build/
+.gradle/
+*.log
+PULSE_HEARTBEAT.txt
+agents_population.json

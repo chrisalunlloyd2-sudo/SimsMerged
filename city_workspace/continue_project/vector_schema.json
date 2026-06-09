@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "timestamp": "2026-06-01T00:08:17.000Z",
+    "author": "Sprite_Geek",
+    "project": "SimsMerged-v1.3-Continue",
+    "model_cache": "trweek"
+  },
+  "schema": {
+    "collection_name": "RAG_Vector_Cache",
+    "dimension": 1024,
+    "metric": "COSINE",
+    "index_type": "HNSW",
+    "params": {
+      "M": 16,
+      "efConstruction": 200
+    }
+  }
+}
