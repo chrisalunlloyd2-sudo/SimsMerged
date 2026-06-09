@@ -1,40 +1,26 @@
-# Technical Bible
-================
+# TECHNICAL BIBLE: SIMSMERGED METROPOLIS (v1.4.2)
+*Axiomatic Governance & High-Performance Orchestration*
 
-## Introduction
-The SimAgentCity framework is a comprehensive simulation platform for agent-based modeling of urban ecosystems. This technical bible provides a detailed explanation of the framework's architecture, components, and usage.
+## 1. Executive Summary
+This document serves as the absolute, non-negotiable architectural reference for SimAgentCity. It defines the constraints, protocols, and mechanisms that govern the autonomous swarm.
 
-## Architecture
-The SimAgentCity framework consists of three primary components:
+## 2. Axioms
+1. **ADD-ONLY PERSISTENCY:** No destructive operations.
+2. **DETERMINISTIC SERIALIZATION:** Every task state is persisted.
+3. **MATHEMATICAL GOVERNANCE:** Resource allocation via Algebraic harmonic pacing.
 
-1. **Agent**: Represents an entity in the simulation, such as a pedestrian or a vehicle.
-2. **City**: Represents the urban environment, including buildings, roads, and other infrastructure.
-3. **Utils**: Provides utility functions for tasks such as data processing and visualization.
+## 3. Communication Bus (Symphony-Bus)
+The communication backbone is an asynchronous `SymphonyBus` (PubSub pattern).
+- **Backend:** `message_bus.py` broadcasts events to WebSocket clients.
+- **Frontend:** `bridge.js` implements a persistent WebSocket listener and a secondary polling fallback.
 
-## Components
-The framework includes the following components:
+## 4. Agent Anatomy (The Actor-Observer Pattern)
+- **Actor:** Performs task execution within fenced subprocesses.
+- **Observer:** Telemetry agent handling all logging to `briefcase/` and broadcasting via `SymphonyBus`.
 
-1. **Agent.py**: Defines the agent class and its methods.
-2. **City.py**: Defines the city class and its methods.
-3. **Utils.py**: Provides utility functions for tasks such as data processing and visualization.
-4. **Main.py**: The main entry point of the simulation.
+## 5. DePIN Treasury
+- **Sprite Tokenomics:** Mints tokens proportional to system hardware (CPU/IO) load.
+- **Ledger:** Cryptographically audited blockchain ledger stored in `blockchain_ledger.json`.
 
-## Usage
-To use the SimAgentCity framework, follow these steps:
-
-1. Install Python 3.10+ and the required packages.
-2. Clone the repository and navigate to the project directory.
-3. Run the simulation using the command: python src/main.py
-
-## Data Flow
-The data flow of the simulation is as follows:
-
-1. **Agent Data**: The agent data is stored in a CSV file and loaded into the simulation.
-2. **City Data**: The city data is stored in a CSV file and loaded into the simulation.
-3. **Simulation Results**: The simulation results are stored in a CSV file.
-
-## Future Development
-The SimAgentCity framework is designed to be scalable and flexible. Future developments will include the addition of new features, such as:
-
-1. **Multi-Agent Simulation**: The ability to simulate multiple agents in the same environment.
-2. **Dynamic City**: The ability to simulate a dynamic city with changing infrastructure and agents.
+---
+*TIMESTAMP: 2026-06-08T12:05:00Z*

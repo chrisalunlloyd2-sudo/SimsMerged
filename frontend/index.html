@@ -185,5 +185,34 @@
     <script src="static/js/input.js"></script>
     <script src="static/js/bridge.js"></script>
     <script src="static/js/gui.js"></script>
+    <!-- ABSOLUTE CHAT RENDER GUARANTEE (INLINE) -->
+    <script>
+        (function() {
+            console.log("[INLINE_CORE] Absolute Chat Rendering Loop Active.");
+            setInterval(async () => {
+                try {
+                    const res = await fetch('http://127.0.0.1:8000/chat');
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    const chatLog = document.getElementById('msn-log') || document.getElementById('chat-view');
+                    if (chatLog && data.logs) {
+                        chatLog.innerHTML = data.logs.map(log => `
+                            <div class="msn-entry" style="margin-bottom: 4px; border-bottom: 1px solid #dfdfdf;">
+                                <span style="color:#888; font-size:9px;">[${log.timestamp}]</span>
+                                <span class="msn-name" style="color: ${log.agent === 'SYSTEM' ? '#008000' : '#cc0000'}; font-weight:bold;">${log.agent}:</span> 
+                                <span style="color: #333;">${log.message}</span>
+                            </div>
+                        `).join('');
+                        chatLog.scrollTop = chatLog.scrollHeight;
+                        // Mark telemetry online
+                        const tel = document.getElementById('telemetry-status');
+                        if (tel) { tel.innerText = "ONLINE"; tel.style.color = "#0f0"; }
+                    }
+                } catch(e) {
+                    console.error("[INLINE_CORE] Fetch Error:", e);
+                }
+            }, 1000);
+        })();
+    </script>
 </body>
 </html>

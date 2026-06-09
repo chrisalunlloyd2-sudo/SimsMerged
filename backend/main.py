@@ -44,37 +44,37 @@ app.add_middleware(
 )
 
 # --- CHAT ENGINE (POLLING BASED) ---
+CHAT_LOG_PATH = os.path.join(os.getcwd(), "chat_logs.json")
+
 @app.post("/chat")
 async def post_chat(req: dict):
-    log_file = "chat_logs.json"
     entry = {
         "timestamp": datetime.datetime.now().strftime("%H:%M:%S"),
         "agent": req.get("agent", "User"),
         "message": req.get("message", "")
     }
     logs = []
-    if os.path.exists(log_file):
+    if os.path.exists(CHAT_LOG_PATH):
         try:
-            with open(log_file, "r") as f:
+            with open(CHAT_LOG_PATH, "r") as f:
                 logs = json.load(f)
         except: logs = []
     logs.append(entry)
-    with open(log_file, "w") as f:
+    with open(CHAT_LOG_PATH, "w") as f:
         json.dump(logs[-50:], f, indent=2)
     return {"status": "SUCCESS"}
 
 @app.get("/chat")
 async def get_chat():
-    log_file = "chat_logs.json"
     # Auto-heartbeat
     heartbeat = {
         "timestamp": datetime.datetime.now().strftime("%H:%M:%S"),
         "agent": "SYSTEM",
         "message": "CONNECTION_ALIVE"
     }
-    if not os.path.exists(log_file):
+    if not os.path.exists(CHAT_LOG_PATH):
         return {"logs": [heartbeat]}
-    with open(log_file, "r") as f:
+    with open(CHAT_LOG_PATH, "r") as f:
         try: logs = json.load(f)
         except: logs = []
     return {"logs": logs[-50:] + [heartbeat]}
