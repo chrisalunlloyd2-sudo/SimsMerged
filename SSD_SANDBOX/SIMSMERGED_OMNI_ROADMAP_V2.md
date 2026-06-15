@@ -187,7 +187,7 @@ You are operating within a highly volatile, highly complex enterprise environmen
 *The Metropolis is now fully autonomous. The next 500 steps define the transformation from a city-simulation into a multi-planetary, hardware-integrated digital organism.*
 
 ### Phase 26: The Cybernetic Substrate (Steps 65-120)
-- **Steps 65-80:** **Hardware-Native Symbiosis.** Agents gain read/write access to host OS driver states, modulating their internal clock speeds directly off physical GPU VRAM temperatures and PCIe bus bandwidth.
+- **Steps 65-80:** **Extreme SLM Resource Sharing.** Agents are heavily throttled and strictly fenced to SSD mmap operations. They mathematically share access to physical SLM cores (Danube, Smoll, Qwen) using the House Orchestrator, prioritizing hardware stability over speed.
 - **Steps 81-100:** **Procedural Kernel Injections.** The Evolution Council begins drafting verified eBPF (Extended Berkeley Packet Filter) probes to monitor host network traffic and render it as physical "Data Highways" inside the isometric city.
 - **Steps 101-120:** **The Neural Compiler.** Complete replacement of Python compilation with an in-city 'Neural Forge' where AST nodes are physically hammered together by agents to generate zero-overhead C++ bindings.
 

@@ -50,19 +50,23 @@ class ThrottledSLM:
     def generate(self, agent_id, prompt):
         now = time.time()
         
-        # Step 20: Thermal Throttling Gate (HYPER-SPEED)
+        # Step 20: Thermal & Extreme SSD Throttling Gate (SUPER THROTTLE)
         cpu_load = psutil.cpu_percent()
         thermal_throttle = 1.0
-        if cpu_load > 90.0:
-            thermal_throttle = 0.8 # Less aggressive throttle for Hyper-Expansion
-            print(f"[SLM] THERMAL PRESSURE: {cpu_load}%. Maintaining high-speed through-put.")
+        
+        if cpu_load > 60.0:
+            thermal_throttle = 2.0 # Force extreme delay if CPU is even slightly busy
+            print(f"[SLM] ⚠️ MODERATE PRESSURE: {cpu_load}%. Engaging SSD delay.")
+        if cpu_load > 85.0:
+            thermal_throttle = 5.0 # Massive throttle to protect host
+            print(f"[SLM] 🛑 HIGH PRESSURE: {cpu_load}%. Engaging SUPER THROTTLE.")
 
         with self.lock:
-            # 1. 10-Second Throttle Check
+            # 1. Extreme 30-Second Turn-Based Throttle Check (Resource Sharing)
             last_time = self.agent_last_chat.get(agent_id, 0)
-            if now - last_time < 10: 
-                remaining = int(10 - (now - last_time))
-                return f"THROTTLED: {remaining}s remaining for {agent_id}. SSD_I/O_COOLDOWN."
+            if now - last_time < 30: 
+                remaining = int(30 - (now - last_time))
+                return f"THROTTLED: {remaining}s remaining. Waiting for SSD_MMAP slice."
 
             self.agent_last_chat[agent_id] = now
             
@@ -71,7 +75,7 @@ class ThrottledSLM:
             if prompt_hash in self.kv_cache and random.random() < 0.3:
                 return self.kv_cache[prompt_hash]
 
-            # 2. MMAP FENCED WEIGHT ACCESS
+            # 2. MMAP FENCED WEIGHT ACCESS (Slow, Shared)
             with open(WEIGHTS_FILE, "r+b") as f:
                 mm = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
                 offset = random.randint(0, mm.size() - 200)
@@ -81,6 +85,7 @@ class ThrottledSLM:
                 current = prompt.split()[-1] if prompt.split() else "System"
                 
                 for _ in range(25): # Expanded response length
+                    time.sleep(0.1 * thermal_throttle) # Explicit SUPER THROTTLE during token generation
                     if current in self.vocabulary:
                         current = random.choice(self.vocabulary[current])
                     else:
