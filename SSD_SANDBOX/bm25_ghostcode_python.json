@@ -1,0 +1,32 @@
+[
+  {
+    "id": "T1",
+    "text": "with open('C:/Users/viper/Desktop/Metropolis_Evolution/heartbeat.txt', 'w') as f: f.write('SOVEREIGN')",
+    "lss_weight": 2.0,
+    "tags": [
+      "file",
+      "write",
+      "heartbeat"
+    ]
+  },
+  {
+    "id": "T2",
+    "text": "import subprocess; subprocess.run(['mvn', 'compile'], cwd='C:/Users/viper/Desktop/Metropolis_Evolution/Source/JavaCore', shell=True)",
+    "lss_weight": 2.0,
+    "tags": [
+      "maven",
+      "compile",
+      "build"
+    ]
+  },
+  {
+    "id": "T3",
+    "text": "def scaffold_pom(path):\n    pom_content = '<project>...</project>'\n    with open(path, 'w') as f:\n        f.write(pom_content)",
+    "lss_weight": 2.0,
+    "tags": [
+      "pom",
+      "xml",
+      "scaffold"
+    ]
+  }
+]

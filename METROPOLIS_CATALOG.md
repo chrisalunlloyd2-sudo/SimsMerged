@@ -1,6 +1,6 @@
-# EXHAUSTIVE METROPOLITAN CATALOG: SIMSMERGED ARCHITECT EDITION (v1.3)
+# EXHAUSTIVE METROPOLITAN CATALOG: SIMSMERGED ARCHITECT EDITION (v1.4)
 
-This document catalogs every functioning architectural component, behavioral protocol, and data-flow trajectory currently active in the SimsMerged Metropolis.
+This document catalogs every functioning architectural component, behavioral protocol, and data-flow trajectory currently active in the SimsMerged Metropolis. v1.4 introduces Real-Machine Bio-Sync and the Treasury Point Economy.
 
 ---
 
@@ -82,3 +82,21 @@ This document catalogs every functioning architectural component, behavioral pro
 *   **EDIT_FINGER MODE:** High-fidelity selection state allowing real-time injection of parameters into existing nodes.
 *   **INFORMATION VEIL:** Exhaustive hover-tooltip providing technical descriptions and nominal telemetry for every node.
 *   **CYBER-CONSOLE:** Real-time scrolling system log for audit trails and event monitoring.
+
+---
+
+## 💰 SECTION 6: THE BEHAVIORAL ECONOMY (NEW v1.4)
+
+*   **TREASURY_POINTS (TP):** The global currency of the Metropolis. Earned via agent labor and neural processing.
+*   **CYBER_BANK:** The central ledger (`blockchain_ledger.json`) tracking all TP transactions.
+*   **DEPIN_DIVIDEND:** Autonomous distribution of points to agents based on grid uptime.
+*   **RESOURCE_FENCE:** Economic limits on CPU/RAM usage; agents must pay TP to unlock higher-fidelity kernels.
+
+---
+
+## 🛡️ SECTION 7: SECURITY & SAFETY HARD-LOCKS (EXPANDED)
+
+*   **BIOS IMMUTABLE:** All BIOS/UEFI settings are hard-coded and locked at the silicon level.
+*   **PII_SCRUBBER:** Active scanner in `SystemIntegrity.java` preventing local path leaks.
+*   **NOCTURNAL_LOCK:** Hard-coded active hours (8 PM - 8 AM) for SSD-intensive processing.
+

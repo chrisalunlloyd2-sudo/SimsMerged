@@ -76,10 +76,13 @@ public class GameLoop extends AnimationTimer {
         // Step 251-300: Time Orchestration
         clock.update(deltaSeconds);
         
-        // Step 1401: Total Grid Synchronization (Every 5 seconds)
-        if (now - lastGridSync > 5_000_000_000L) {
-            SpriteBridge.GridStatus status = new SpriteBridge().getGridStatus();
-            hud.updateGridStatus(status.nodes, status.agents);
+        // Step 1401: Total Grid Synchronization (Every 2 seconds for high-fidelity telemetry)
+        if (now - lastGridSync > 2_000_000_000L) {
+            SpriteBridge bridge = new SpriteBridge();
+            SpriteBridge.MetropolisState state = bridge.getMetropolisState();
+            if (state != null) {
+                hud.updateMetropolisState(state);
+            }
             lastGridSync = now;
         }
 

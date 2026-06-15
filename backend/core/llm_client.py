@@ -7,7 +7,7 @@ import math
 import random
 import time
 import hashlib
-from backend.core.bm25_orchestrator import bm25_engine
+from backend.core.bm25_orchestrator import bm25_scaffold, bm25_engine
 
 # Weight Matrices simulating the projected layers of H2O-Danube-1.8B
 ACTION_PROJECTIONS = {
@@ -55,10 +55,34 @@ class PredictiveKVCache:
 
 kv_cache = PredictiveKVCache()
 
-def query_rag_chunk(query_tags):
-    """BM25 Pedagogical Retrieval."""
+from .model_orchestrator import model_orchestrator
+
+class LLMClient:
+    """
+    LLM CLIENT WRAPPER:
+    - Provides a simple 'generate' method for agents.
+    - Routes requests to the ModelOrchestrator neural queue.
+    """
+    async def generate(self, prompt: str, agent_id: str = "sprite_geek") -> str:
+        try:
+            return await model_orchestrator.add_task(agent_id, prompt)
+        except Exception as e:
+            return f"ERR_INFERENCE: {e}"
+
+llm_client = LLMClient()
+
+def query_rag_chunk(query_tags, language=None):
+    """Dual BM25 Pedagogical Retrieval."""
     query_str = " ".join(query_tags)
-    results = bm25_engine.search(query_str, top_k=1)
+    
+    if language:
+        # Pillar I: Language-specific Ghost Code Schema retrieval
+        ghost_db = bm25_scaffold.get_ghost_code(language)
+        results = ghost_db.search(query_str, top_k=1)
+    else:
+        # Pillar I: Project Continuity / Overarching Logic retrieval
+        results = bm25_scaffold.continuity.search(query_str, top_k=1)
+        
     if results:
         doc, score = results[0]
         return doc['text']

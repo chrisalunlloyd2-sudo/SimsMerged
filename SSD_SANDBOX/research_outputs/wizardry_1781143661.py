@@ -1,0 +1,1 @@
+Reward 70 97 Danube Coin hash msg_845108 time 01 name Sprite_Socrates text ud83d udde3 ufe0f Reading from physical platter Local

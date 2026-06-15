@@ -1,0 +1,12 @@
+{
+    "message_id": "msg-1781068195526",
+    "timestamp": 1781068195.5282385,
+    "sender": "ATC_TOWER",
+    "recipient": "L3_PIONEER_01",
+    "type": "ASK",
+    "payload": {
+        "task": "verify_physics",
+        "sector": "alpha"
+    },
+    "signature": "4aa48ae932a38a93958ab3879d3ea917851ba63a45b3071520699fb40d05d4bca7f355801f26af85ebebff7f1ea848588b5b22cce7320ab7ed436883f747cb06"
+}

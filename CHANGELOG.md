@@ -97,6 +97,16 @@ Every time we push an update, the universe changes! Here are the monumental, ear
 - **MIND BLOWN:** Totally rewrote the physics for UI particle 18!
 - **SPEED OVERDRIVE:** Boosted the compilation cache by 18000%!!
 
+## [2026-06-07T13:45:00.000Z] - Phase 12 Genesis: AI Pedagogy & Stability
+- **FIXED:** Backend TypeError in `BehavioralScanner.scan_event`.
+- **FIXED:** Backend AttributeError in `CyberEconomy.base_mint_rate`.
+- **RESTORED:** Ollama connectivity and SLM generation path.
+- **INTEGRATED:** RAG wrapper for agent sentience using `VectorEngine` (SSD-fenced).
+- **ADDED:** Scientific Method Pedagogy Loop (Observation -> Hypothesis -> Prediction -> Experiment -> Conclusion).
+- **ADDED:** Scrypt Pyramid Hashing for hierarchical validation and crypto mining.
+- **SYNCED:** Frontend polling loops with missing backend endpoints (`/api/machine-heartbeat`, `/api/evolution-project`).
+- **OPTIMIZED:** Background task orchestration to respect 50% CPU limit and SSD IOPS.
+
 ## v1.3.19 - The Reality-Bending Update!
 - **MIND BLOWN:** Totally rewrote the physics for UI particle 19!
 - **SPEED OVERDRIVE:** Boosted the compilation cache by 19000%!!

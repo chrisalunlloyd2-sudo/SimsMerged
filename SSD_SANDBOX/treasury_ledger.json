@@ -1,0 +1,2674 @@
+{
+  "balances": {
+    "Sprite_Socrates": -565.0,
+    "Sprite_Geek": -575.0,
+    "Sprite_Writer": -495.0,
+    "Sprite_Newton": -585.0
+  },
+  "transactions": [
+    {
+      "time": 1781154319.1251295,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154319.6291275,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154375.6083086,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154375.8034246,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154376.4457393,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154513.2397192,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154513.3754845,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154595.677895,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154597.5777974,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154668.550752,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154668.617953,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154772.6269095,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154772.8109062,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154772.930084,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154783.772063,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154842.630901,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154843.6199815,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154844.6539915,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154847.6838796,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154963.6093664,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154965.0914285,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154965.3586082,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781154965.556732,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155013.1927826,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155016.5131688,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155016.827419,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155017.414882,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155074.1667943,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155074.950694,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155076.146876,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781155076.2327921,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316058.2640018,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316059.705711,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316060.098188,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316197.7141683,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316197.868198,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316200.285269,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316450.348916,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316451.061996,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316451.4528484,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316453.7985306,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316519.2298782,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316519.4208577,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316520.7181258,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316580.3817742,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316580.5111659,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316580.6138787,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316686.506177,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316686.8592672,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781316688.3769662,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781317245.8668833,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781317246.1238532,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781317247.2508135,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318249.5929313,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318249.6820107,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318249.7907114,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318251.841041,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318407.1607778,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318407.2089493,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318409.2038417,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318409.331146,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318808.2258964,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318808.3279445,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318809.53257,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318809.5791645,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318930.2205672,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781318930.4966471,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781319583.4873044,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781319583.6394334,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781319583.6654696,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781319585.8564432,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320095.9831986,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320096.2610548,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320096.3863986,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320464.7615376,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320465.2744057,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320465.593061,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320467.555098,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320533.323074,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320533.4110987,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320533.457693,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781320537.2198405,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322263.7648482,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322265.6123261,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322267.001893,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322362.8139348,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322364.501248,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322364.913036,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322365.1828754,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322406.9076223,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322407.5776117,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322408.0924695,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322411.0984492,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322531.286744,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322532.742224,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322532.936487,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322533.159274,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322631.755963,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322643.1968553,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322649.5481935,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322649.8538723,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322689.2227547,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322689.525715,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322689.6186314,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322962.7328458,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322968.935056,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781322972.2057185,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323184.112934,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323184.1906435,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323184.846907,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323186.2806625,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323437.4902658,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323441.4419448,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323443.5756915,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323443.7118664,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323560.4998972,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323563.1292284,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323565.26655,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323623.216314,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323625.0922115,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323627.5043736,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323631.7683046,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323676.0763662,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323677.8591266,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323678.3345532,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323679.003516,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323764.7299707,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323765.8830035,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323766.3006823,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323875.7104769,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323876.2307475,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323877.5548134,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323946.5014303,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323946.853833,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323946.9454994,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781323948.8688984,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781324026.2110267,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781324026.2421503,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781324026.4299881,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365480.8582077,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365481.0264215,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365482.6820943,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365487.2144878,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365594.7118754,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365595.9429514,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365596.7111173,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365598.4585764,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365693.1295362,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365693.4625604,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365693.5658143,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365693.6854916,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365923.2004347,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365923.4834177,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365923.6625597,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781365924.7695177,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366246.483606,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366248.5684466,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366248.7683237,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366252.139539,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366314.7691607,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366314.8362603,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366315.4695725,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366317.7762482,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366397.0390444,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366400.5261984,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366404.6361334,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366404.7645254,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366514.943336,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366516.2053497,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366516.2765315,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366836.073992,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366840.062406,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366854.7775443,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366858.4975793,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366871.6290784,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366874.0251865,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366889.1088283,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366991.6298504,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366991.7536716,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781366991.8358326,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367269.8509943,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367270.0029256,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367270.0543358,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367271.5420861,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367377.0501747,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367377.4441767,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367377.6784031,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367582.0784962,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367585.1767025,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367593.0456028,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367597.0275068,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367772.1721487,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781367773.0810828,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368015.1007442,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368015.233723,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368016.800711,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368016.8962824,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368169.74901,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368170.1286886,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368171.7190318,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368173.126501,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368227.9058876,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368232.4028819,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368233.2011,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368379.8434913,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368379.9457421,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368380.1215358,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368565.0906713,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368568.4353004,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368570.6543531,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368571.4872668,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368693.6161408,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368693.6710775,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368693.7447412,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368881.1945245,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368881.486625,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368881.6406221,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368896.8599205,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368896.9470694,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368896.9761052,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368898.536928,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368898.6601381,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781368899.9919791,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369149.7954822,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369149.9847937,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369150.3497238,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369152.204721,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369210.4556444,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369211.4076316,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369213.9254656,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369215.9408853,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369346.761016,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369346.829647,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369346.9488413,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369346.9974575,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369432.7001543,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369433.0069568,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369433.044051,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369433.180185,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369547.0263667,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369547.155562,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369547.4368787,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369548.992171,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369621.9345546,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369621.9726963,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369622.334619,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369721.764085,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369721.9401605,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369722.0079331,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369799.0351582,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369799.0897706,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781369799.1564229,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370095.2533216,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370095.8613474,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370095.9578838,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370098.6294265,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370154.6120772,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370154.8970776,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370156.5972264,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370242.701401,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370244.673436,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370244.6985185,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370249.498698,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370476.7880301,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370478.509823,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370478.5439062,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370497.7754169,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370587.8990667,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370588.5460193,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370588.8020167,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370591.2309024,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370665.7223258,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370678.803941,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370678.9237137,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370787.8948152,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370788.007098,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370789.3768463,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781370789.652084,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461090.5088835,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461091.7916336,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461160.26106,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461160.975145,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461163.004159,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461163.5317655,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461342.2150948,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461343.6810186,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461344.5499825,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461346.00017,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461439.7258475,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461440.4510374,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461441.1310637,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461443.0221488,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461873.8906589,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461877.9926686,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461878.4586759,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461884.3920765,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461986.1776867,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461986.4978492,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461989.074045,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781461991.06808,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462017.6775906,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462018.8806567,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462021.1556492,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462022.7658262,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462049.7768812,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462051.4949486,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462052.464711,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462058.37915,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462118.2309003,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462118.514602,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462119.0009093,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462120.6486738,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462168.6681316,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462170.290301,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462171.4673953,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462175.8691597,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462240.0881095,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462241.2574337,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462241.9644873,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462243.9543798,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462369.1807334,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462369.211762,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462369.4080436,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462369.516751,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462452.385253,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462453.2753654,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462453.5684566,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781462455.1995485,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463342.1631749,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463342.2422917,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463342.4914067,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463342.5309882,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463447.0624704,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463447.1230562,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463448.3694272,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781463450.668537,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464333.7738042,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464333.8239563,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464333.8539853,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464333.9231174,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464456.1974661,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464456.5075371,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464456.6595583,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464578.753237,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464579.5920367,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464580.4572535,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781464581.0302756,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781465767.7167645,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781465768.0058632,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781465768.2317276,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781465768.5487452,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781466443.371445,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781466443.4931395,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781466443.596359,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781466535.673398,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781466535.7367196,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781466537.7849336,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467325.478645,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467325.6550095,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467325.6975973,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467326.3048224,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467410.8405044,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467410.9121943,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467410.9602976,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781467411.052574,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781470827.7496305,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781470827.8613946,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781470828.9497032,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477006.9839635,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477007.154868,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477007.2791111,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477007.3127983,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477304.1136901,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477304.2906659,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477304.3628614,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477306.0586069,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477889.531543,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477889.693414,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477889.7195165,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781477889.8953881,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478283.4128442,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478283.6051722,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478283.8978288,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478283.935903,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478534.8610876,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478534.9703093,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781478535.726189,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781479179.2196183,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781479179.3328578,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781479179.3829722,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480591.8036926,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480591.9219358,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480593.062152,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480594.222049,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480874.4063442,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480875.0682356,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480875.41855,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781480875.8286977,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482101.1661208,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482101.2618606,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482101.3420613,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482137.1798427,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482307.7171822,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482307.8008919,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482307.8600552,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781482307.904694,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484203.1917155,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484203.542145,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484203.9041827,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484204.0171456,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484923.0070186,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484923.150922,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781484923.2059188,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781486462.5741987,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781486462.6614468,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781486462.7634685,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781486466.063741,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489239.333372,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489239.3849683,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489239.8840148,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489239.9337008,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489373.9301004,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489374.0169902,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489374.0511403,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489973.0204258,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489973.1266778,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489973.1672513,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781489973.3296883,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781490549.4591727,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781490549.56438,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781490549.6441023,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781490549.7152987,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781491373.381216,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781491373.8361502,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781491374.0446522,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781491374.2510993,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492520.247215,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492520.302355,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492520.6962452,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492520.9043024,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492616.2553856,
+      "agent_id": "Sprite_Socrates",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492616.3797123,
+      "agent_id": "Sprite_Writer",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492617.2450943,
+      "agent_id": "Sprite_Newton",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    },
+    {
+      "time": 1781492618.3631203,
+      "agent_id": "Sprite_Geek",
+      "amount": -5.0,
+      "reason": "Secure Genetic Transfer Fee"
+    }
+  ]
+}

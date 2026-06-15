@@ -145,6 +145,20 @@ class QuantumCore:
         self.dirty_pages.add((x, y))
         self.update_access_time(x, y)
 
+    def update_physical_telemetry(self, stats):
+        """
+        [Step 19]: Integrates real hardware metrics from psutil via RealMachineBridge.
+        """
+        self.heat = stats.get("cpu_load", 0.0) * 100.0
+        self.ram_load = stats.get("ram_load", 0.0)
+        self.cpu_frequency = stats.get("cpu_freq", 5.2) / 1000.0 # Convert MHz to GHz
+        
+        # Map per-core usage to core affinity matrix
+        core_usage = stats.get("core_usage", [])
+        for i, load in enumerate(core_usage):
+            if i < 16:
+                self.core_load[i] = load
+
     def cycle(self, env_nodes=None):
         self.system_tick += 1
         
@@ -229,12 +243,17 @@ class QuantumCore:
         now = time.time()
         cold_pages = [[x, y] for (x, y), t in self.cold_storage_pages.items() if now - t > 60]
         
+        # Block D1: Simulate physical VRAM load (High-Fidelity proxy)
+        vram_base = 0.2
+        vram_load = min(1.0, vram_base + (len(self.cold_storage_pages) / 500.0) + (random.uniform(0, 0.05)))
+
         return {
             'tick': self.system_tick,
             'stability': self.stability,
             'heat': self.heat,
             'frequency': self.cpu_frequency,
             'ram_load': self.ram_load,
+            'vram_load': vram_load, # NEW: Block D1
             'is_swapping': self.is_swapping,
             'is_refreshing': self.refresh_cycle_active,
             'leakage': self.charge_leakage,
@@ -250,3 +269,5 @@ class QuantumCore:
             'speculative_execution': self.speculative_execution_active,
             'prefetch_enabled': self.prefetch_enabled
         }
+
+quantum_core = QuantumCore()

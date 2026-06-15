@@ -1,0 +1,3 @@
+The answer to this question is Cody!
+
+In Python, dictionaries are used as an extension of the built-in `dict` data type. A dictionary in Python has a single key-value pair and can contain multiple keys or values separated by commas (`.`) that define its structure. The dictionary's internal representation is represented using a sequence of keys (attributes) and their associated values, which makes it efficient to represent any sequence of values (e.g., `[1,

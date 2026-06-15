@@ -1,0 +1,15 @@
+# TIMESTAMP: 2026-06-09
+# DESCRIPTION: Step 19.2 - GBNF Grammar for Agent Ballots
+
+root   ::= object
+object ::= "{" space pair ( "," space pair )* "}"
+pair   ::= string ":" space value
+string ::= "\"" [^"]* "\""
+value  ::= string | number | "true" | "false" | "null" | object | array
+array  ::= "[" space ( value ( "," space value )* )? "]"
+number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [+-]? [0-9]+)?
+space  ::= " "*
+
+# Specific Ballot Constraints
+# { "proposal_id": string, "vote": "YES" | "NO" | "ABSTAIN", "confidence": number }
+ballot ::= "{" space "\"proposal_id\"" ":" space string "," space "\"vote\"" ":" space ("\"YES\"" | "\"NO\"" | "\"ABSTAIN\"") "," space "\"confidence\"" ":" space number space "}"

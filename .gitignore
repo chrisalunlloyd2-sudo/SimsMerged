@@ -18,3 +18,13 @@ build/
 *.log
 PULSE_HEARTBEAT.txt
 agents_population.json
+triton_cache/
+SSD_SANDBOX/autonomous_tests/
+backend/syslog.log
+*.wav
+temp_speech_*.wav
+*.vram
+*.bin
+*.db
+*.sqlite3
+!database/simagentcity.db

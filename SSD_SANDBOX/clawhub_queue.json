@@ -1,0 +1,22 @@
+[
+  {
+    "agent": "Sprite_Geek",
+    "logit_id": "METROPOLIS_v1.4_LOGIT_sprite_geek_1780760779",
+    "rsa_signature": "MeYp/sKB1lfE1iu2FpZEPgKdwFQbhL2AoLf4hJ3JqwvbnbQtgQe0uhSjbpM3HmMDJ0p6UdY2+o4lVDxSmXeYdQk0U3RI8pApkLMgS7bzzP9oLcy/JFtB90atGsYZjrq1MBX1qAonYv7PD8kUDQrcpvEfBz1J2Bwn2JLmgzBjcLhBQnLPzmvf+zawWMM9jXfb7Lpry5ze0V2nUFtzTTv+OYmPvKvfE5XrPP0/SSSQ2/PWjzxiBTn9VLPPvcADXulDirxF6oEmhDa7u0vzfzSKfwoHBztCcx6ZTiSa3Otexliv5KGtKRvU8BECN2asTIlp3vhGavTrlTZiYPYKrr0q2g=="
+  },
+  {
+    "agent": "Sprite_Writer",
+    "logit_id": "METROPOLIS_v1.4_LOGIT_sprite_writer_1780760780",
+    "rsa_signature": "JxdO+N13luBdyQfWM8qxVQBRSUE0reeZ5iy51wNb7XuRZYopumSDLXJ9QmdAIQKJz1jjcpCm6QOynOEUfrpSuf4AdM8lO4YbZFDaBi6PWz7ZASAZAlfKR1m67r8GGRACdd9sL14//r/5dpDO5tslTv1lUIY3b4e3jkd4l0qveN18eahWl+VFMpBYHUH0xcBnjZvHfk/29OhEylxBVYjDo++vvFoGkJb28M0H/Nz9CwUjTESWpw+/BAt1uyOVDrFisR9Evk6+s3lY7o32GroUdN/YmIQx25rp28x9SS/on2/5KNVe7vxs+ZBy0PyEtLO/QTCN0IHBz/2dnNeDPsE8+w=="
+  },
+  {
+    "agent": "Sprite_Socrates",
+    "logit_id": "METROPOLIS_v1.4_LOGIT_sprite_socrates_1780760780",
+    "rsa_signature": "gJ7sb+bCSudolECmXno09iv+JqkSVQ8e8KGEg9LGnyyRO5kQmxPVNiUhqQLztu52Lh00JyFLYak4ZigqiQsuNYTeuZmzdHZ/wzU9IMyWvU3Git3Xi7arVw7VX6RuhaS9qNNjihj7r1e6a7xzb0DMFwZqyuCiW/neeCMocpZH6lXaBu9SljA5Ddb98PUbwEipyldh++moMc3hK1oOZNMLawHVB3GJ6jDKnNbNvgrnHe09IDfi2Tj49dIphPiTonvwibz02ajgglDCg+kadG088jsHiCpIC8bqWsjVy0i3o3p5j7+TJshy9oPsGbdC9hSlw4dfMqPIMreC1Z4jBfr3iQ=="
+  },
+  {
+    "agent": "Sprite_Newton",
+    "logit_id": "METROPOLIS_v1.4_LOGIT_sprite_newton_1780760782",
+    "rsa_signature": "p3rlqY2vOn99Y0uxOLoiojFMEz1jgS6fWNlLNLth52dHtgNh85qakv5D2T2TZbL7MawBz4pP4b4XOsZJXvUP1NR3gtTGg6kJarX1tSS/ZTJGq7Xox0Lb+HR4AHmeUit5ZLkKwQjELqUseJLf8KehjKGeez1gccAXgLSMQx5zJhai1f82RSUcGdP+GoKW97fM8uUjkAqQf0EfLWq8cHomIIOBUH5qol7GYR4M+CDIAxM4Eugcy8BhlcpUQbfqOSEQPdLfZKLs0Q1SUj3E9Bd9z9kbo+BHz3kn6AMgEVPLUBrzW+FH3RfrWtA3I0mkZr4gwAtW37gD6HFC9uwfRX3TXg=="
+  }
+]
