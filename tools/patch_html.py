@@ -12,23 +12,23 @@ end_str = "        buildButtons.forEach(btn => {"
 new_func = """        function renderSetting(v, container) {
             const row = document.createElement('div');
             row.style.marginBottom = '10px';
-            
+
             const labelContainer = document.createElement('div');
             labelContainer.style.display = 'flex';
             labelContainer.style.justifyContent = 'space-between';
-            
+
             const label = document.createElement('label');
             label.innerText = v.label;
-            
+
             const valueReadout = document.createElement('span');
             valueReadout.id = `readout-${v.id}`;
             valueReadout.style.color = '#0f0';
             valueReadout.innerText = v.val;
-            
+
             labelContainer.appendChild(label);
             labelContainer.appendChild(valueReadout);
             row.appendChild(labelContainer);
-            
+
             let input;
             if (v.type === 'range') {
                 input = document.createElement('input');
@@ -62,7 +62,7 @@ new_func = """        function renderSetting(v, container) {
                 valueReadout.innerText = input.type === 'checkbox' ? (finalVal ? 'ON' : 'OFF') : finalVal;
                 console.log("PARAM_SYNC:", v.id, finalVal);
             };
-            
+
             window.currentSettings[v.id] = v.val;
             row.appendChild(input);
             container.appendChild(row);
@@ -75,13 +75,13 @@ new_func = """        function renderSetting(v, container) {
             if (type === 'RESEARCH') {
                 const inputRow = document.createElement('div');
                 inputRow.innerHTML = '<label>Task ID (e.g., TASK_1 to TASK_2700):</label><br><input type="text" id="research-task-id" value="TASK_1" style="width:100%; background:#000; color:#0f0; border:1px solid #005555; margin-top:5px; margin-bottom:5px;">';
-                
+
                 const loadBtn = document.createElement('button');
                 loadBtn.innerText = 'LOAD RESEARCH PARAMS (15)';
                 loadBtn.style = 'width:100%; background:#005555; color:#fff; border:none; margin-bottom:10px; padding:5px; cursor:pointer; font-weight:bold;';
-                
+
                 const resultsDiv = document.createElement('div');
-                
+
                 loadBtn.onclick = async () => {
                     resultsDiv.innerHTML = '<span style="color:#888;">Fetching hyperparams...</span>';
                     try {
@@ -100,7 +100,7 @@ new_func = """        function renderSetting(v, container) {
                         resultsDiv.innerHTML = '<span style="color:#f00;">Backend API Error. Is it running?</span>';
                     }
                 };
-                
+
                 paramSuite.appendChild(inputRow);
                 paramSuite.appendChild(loadBtn);
                 paramSuite.appendChild(resultsDiv);

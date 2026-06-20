@@ -35,21 +35,21 @@ class QuantumCore:
         Performance is now affected by research attributes.
         \"\"\"
         self.system_tick += 1
-        
+
         # Logic: High Learning Rate or Temp increases instability and heat
         lr_impact = (self.attributes['lr'] / 0.001) * 0.01
         temp_impact = (self.attributes['temp'] / 0.7) * 0.02
-        
+
         self.stability -= (lr_impact + temp_impact) * random.uniform(0, 0.1)
         self.heat += (lr_impact * 10) + (temp_impact * 5)
-        
+
         # Self-healing logic
         if self.stability < 0.5:
             self.stability += 0.005 # Slow recovery
-            
+
         self.stability = max(0.1, min(1.0, self.stability))
         self.heat = max(30.0, min(100.0, self.heat))
-        
+
         return {
             "tick": self.system_tick,
             "stability": self.stability,

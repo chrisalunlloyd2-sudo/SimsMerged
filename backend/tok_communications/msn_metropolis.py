@@ -95,7 +95,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     try:
         while True:
             data = await websocket.receive_text()
-            
+
             if client_id == "GodHandUI":
                 # Human reset
                 CONSECUTIVE_AGENT_TURNS = 0
@@ -111,14 +111,14 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                     CONSECUTIVE_AGENT_TURNS = 0 # Reset after breaking
                     continue
                 await manager.broadcast(f"{client_id}: {data}")
-                
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
 async def process_slash_command(client_id: str, command: str):
     parts = command.split()
     cmd_type = parts[0].lower()
-    
+
     if cmd_type == "/fund":
         if len(parts) >= 3:
             agent_id, amount = parts[1], float(parts[2])
@@ -127,12 +127,12 @@ async def process_slash_command(client_id: str, command: str):
             status_msg = f"{persona['base_status']} | Funded: {amount} tokens"
             await manager.broadcast(json.dumps({"type": "AGENT_UPDATE", "agent_id": agent_id, "status": status_msg}))
             await manager.broadcast(f"[God Hand] Funded {amount} to {agent_id}")
-            
+
     elif cmd_type == "/assign":
         if len(parts) >= 3:
             agent_id, task_name = parts[1], " ".join(parts[2:])
             await manager.broadcast(f"[God Hand] Assigning '{task_name}' to {agent_id}...")
-            
+
             # PHASE 25: Sovereign Intervention - Update agent internal DAG
             from backend.core.config import METROPOLIS_AGENTS
             agent = next((a for a in METROPOLIS_AGENTS if a["id"] == agent_id or a["name"] == agent_id), None)
@@ -140,24 +140,24 @@ async def process_slash_command(client_id: str, command: str):
                 agent["last_action"] = "Sovereign_Task"
                 agent["chain_of_thought"] = f"Assigned by God Hand: {task_name}"
                 agent["status"] = "GATHERING" if "Gather" in task_name else ("DELIVERING" if "Build" in task_name else "WORKING")
-                
+
                 # Push task to actions agent for synthesis
                 from backend.core.action_agent import actions_agent
                 import asyncio
-                
+
                 async def execute_sovereign_task():
                     try:
                         await actions_agent.synthesize_recursive(f"Execute Sovereign Mandate: {task_name}", "python")
                         await manager.broadcast(f"{agent_id}: (u) Task '{task_name}' synthesis complete. Awaiting physical deployment.")
                         agent["status"] = "ACTIVE"
                         agent["chain_of_thought"] = "Sovereign Task Complete. Returning to autonomous loop."
-                        
+
                         # Trigger structural update
                         await manager.broadcast(json.dumps({"type": "AGENT_UPDATE", "agent_id": agent_id, "status": agent["status"]}))
                     except Exception as e:
                         logger.error(f"Sovereign task execution failed: {e}")
                         await manager.broadcast(f"{agent_id}: (u) ERROR: Synthesis failed for '{task_name}'.")
-                
+
                 asyncio.create_task(execute_sovereign_task())
             else:
                 await manager.broadcast(f"[System] Error: Agent {agent_id} not found in physical matrix.")
@@ -167,7 +167,7 @@ async def process_slash_command(client_id: str, command: str):
 async def update_agent(update: Dict):
     if "type" not in update:
         update["type"] = "AGENT_UPDATE"
-    
+
     # HYPER-EXPANSION: Hydrate update with full agent state if missing
     if update["type"] == "AGENT_UPDATE" and "agent_id" in update:
         from backend.core.config import METROPOLIS_AGENTS

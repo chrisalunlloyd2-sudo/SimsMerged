@@ -11,10 +11,10 @@ def aggregation_utils(stateMachine, scoreSum):
             "safety_rating": 0.0,
             "message": f"Error: {scoreSum} occurred in {stateMachine.get('name', 'unknown')}"
         })
-    
+
     # Calculate a baseline safety rating
     rating = min(100.0, max(0.0, scoreSum * 1.5))
-    
+
     return json.dumps({
         "status": "active",
         "safety_rating": rating,

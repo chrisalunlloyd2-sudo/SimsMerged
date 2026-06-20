@@ -17,10 +17,10 @@ class GlobalPulse:
         self.is_running = False
         self.tick_count = 0
         self.last_tick_time = time.time()
-        
+
         # System state flags (Step 44: System-wide pause toggle)
         self.is_paused = False
-        
+
         # Economic Constants (Step 45)
         self.inflation_rate_per_tick = 0.00001
         self.deflation_rate_per_tick = 0.000005
@@ -52,34 +52,34 @@ class GlobalPulse:
         """The core sub-millisecond heartbeat loop."""
         self.is_running = True
         logger.info(f"Starting Global Pulse at {self.tick_rate}s tick rate...")
-        
+
         while self.is_running:
             if self.is_paused:
                 await asyncio.sleep(0.5)
                 continue
-                
+
             current_time = time.time()
             drift = current_time - self.last_tick_time - self.tick_rate
-            
+
             # Step 48 & 46: Implement clock-drift correction and lag-compensation
             if drift > self.tick_rate:
                 logger.warning(f"Clock Drift Detected: {drift:.4f}s behind. Compensating...")
-            
+
             self.tick_count += 1
-            
+
             # Execute subsystem syncs
             await asyncio.gather(
                 self._economic_tick(),
                 self._sprite_sync_tick()
             )
-            
+
             # Sleep for remainder of tick, accounting for execution time
             execution_time = time.time() - current_time
             sleep_time = max(0.0, self.tick_rate - execution_time)
-            
+
             self.last_tick_time = time.time()
             await asyncio.sleep(sleep_time)
-            
+
             # Visual terminal pulse (Step 49)
             if self.tick_count % 10 == 0:
                 print(f"\r[PULSE] Tick: {self.tick_count} | Drift: {drift:.4f}s | Time: {datetime.now().strftime('%H:%M:%S.%f')[:-3]}", end="")
@@ -87,22 +87,22 @@ class GlobalPulse:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     pulse = GlobalPulse(tick_rate_ms=100) # 10 ticks per second
-    
+
     async def run_test():
         # Run pulse in background
         task = asyncio.create_task(pulse.pulse_loop())
-        
+
         # Test pausing
         await asyncio.sleep(2)
         print("\n")
         pulse.pause_system()
         await asyncio.sleep(1)
         pulse.resume_system()
-        
+
         # Stop after 5 seconds total
         await asyncio.sleep(2)
         pulse.is_running = False
         await task
         print("\nPulse Test Complete.")
-        
+
     asyncio.run(run_test())

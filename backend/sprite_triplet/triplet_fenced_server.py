@@ -65,15 +65,15 @@ async def start_research(topic: str, agent_id: Optional[str] = "Research_Directo
 async def run_cascade(request: CascadeRequest):
     """Executes the ARCHITECT -> TRANSLATOR -> CODER cascade."""
     add_log(f"[TRIPLET_SERVER] Initiating Cascade: {request.instruction[:50]}...")
-    
+
     # Step 41: Tok Tree Augmentation
     augmented_instruction = tok_tree.augment_prompt(request.instruction, request.tags)
-    
+
     if omniscient_steer.process_ask(augmented_instruction):
         return {"status": "steered", "message": "Handled by Omniscient Steer (Non-LLM)"}
-    
+
     result = await triplet.run_cascade(augmented_instruction)
-    
+
     # Step 45: Connect DMAIC-Analyzer directly to EconomySystem
     if dmaic_engine:
         expected_patterns = { "function_def": r"def\s+[a-zA-Z_]\w*\s*\(" }
@@ -93,10 +93,10 @@ async def run_cascade(request: CascadeRequest):
         data=result['l3_payload'],
         metadata={"instruction": request.instruction, "agent": request.agent_id}
     )
-    
+
     # Ingest the successful result into the Tok Tree for future runs
     tok_tree.insert_context(f"Success for '{request.instruction}': {result['l3_payload'][:100]}...", request.tags + ["cascade_result"])
-    
+
     return {"status": "success", "data": result}
 
 @app.post("/api/v1/steer")
@@ -124,12 +124,12 @@ async def run_qwen_cli(command: str, tags: list = []):
     cli_path = "C:\\Users\\viper\\Desktop\\SimsMerged\\backend\\bin\\qwen-coder.ps1"
     if not os.path.exists(cli_path):
         raise HTTPException(status_code=500, detail="Qwen Coder CLI not found. Run setup_qwen_coder.ps1 first.")
-    
+
     # Step 41: Tok Tree Augmentation
     augmented_command = tok_tree.augment_prompt(command, tags)
-    
+
     add_log(f"[QWEN_CLI] Executing: {command}")
-    
+
     # Using the augmented command safely
     # Note: Escaping double quotes if they exist in the augmented_command
     safe_command = augmented_command.replace('"', '\\"')
@@ -139,10 +139,10 @@ async def run_qwen_cli(command: str, tags: list = []):
         stderr=asyncio.subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
-    
+
     if process.returncode == 0:
         tok_tree.insert_context(f"CLI Success: {stdout.decode()[:100]}", tags + ["cli_result"])
-        
+
     return {
         "status": "success" if process.returncode == 0 else "error",
         "output": stdout.decode(),

@@ -54,19 +54,19 @@ class ChatExtractor:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    
+
     async def run_extractor_test():
         extractor = ChatExtractor()
-        
+
         # Note: This will log an error in the test because MSN Metropolis (uvicorn) isn't running in the background yet.
         # This is expected behavior for this isolated unit test.
         logger.info("Simulating Agent Movement...")
         await extractor.extract_coordinate_change("L3_MINER", (0,0,0), (1,0,0))
-        
+
         logger.info("Simulating DePIN Transaction...")
         await extractor.extract_depin_update("L3_BUILDER", 15.0, "Completing Cabin Blueprint")
-        
+
         logger.info("Simulating Compiler Failure...")
         await extractor.extract_compiler_error("L3_SMOLL", "SyntaxError: invalid syntax (line 4)")
-        
+
     asyncio.run(run_extractor_test())

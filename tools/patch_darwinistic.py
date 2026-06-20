@@ -10,7 +10,7 @@ new_draw_loop_extension = """
     // 5. Darwinistic Environmental Effects
     const entropy = parseFloat(window.activeResearchAttrs?.dropout || 0.2) * 5.0;
     const heat = parseFloat(window.systemHeat || 35.0);
-    
+
     if (heat > 70 || entropy > 2.0) {
         ctx.save();
         ctx.globalAlpha = 0.1;
@@ -20,7 +20,7 @@ new_draw_loop_extension = """
         }
         ctx.restore();
     }
-    
+
     requestAnimationFrame(draw);
 }
 """

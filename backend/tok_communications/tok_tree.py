@@ -47,7 +47,7 @@ class TokTreeDAG:
         """Step 6 / 23.3: Priority assignment with Backpressure Circuit Breaker."""
         if task_id not in self.nodes:
             return False
-            
+
         # Step 23.3: Circuit Breaker Logic
         current_queue = self.agent_queues.get(agent_id, 0)
         if current_queue >= 10:
@@ -58,13 +58,13 @@ class TokTreeDAG:
         if not node.can_execute():
             logger.warning(f"Task {task_id} cannot be assigned. Dependencies not met.")
             return False
-            
+
         node.status = "ASSIGNED"
         node.assigned_agent = agent_id
-        
+
         # Update queue tracker
         self.agent_queues[agent_id] = current_queue + 1
-        
+
         logger.info(f"Assigned {task_id} to Agent {agent_id}. Queue: {self.agent_queues[agent_id]}")
         return True
 
@@ -73,11 +73,11 @@ class TokTreeDAG:
         if task_id in self.nodes:
             node = self.nodes[task_id]
             node.status = "COMPLETED"
-            
+
             # Reduce queue length
             if node.assigned_agent in self.agent_queues:
                 self.agent_queues[node.assigned_agent] = max(0, self.agent_queues[node.assigned_agent] - 1)
-                
+
             logger.info(f"Task {task_id} completed. Releasing {node.base_reward} tokens.")
             return node.base_reward
         return 0.0
@@ -85,7 +85,7 @@ class TokTreeDAG:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     tree = TokTreeDAG()
-    
+
     # Test Circuit Breaker
     agent = "L3_TEST_AGENT"
     for i in range(12):

@@ -30,7 +30,7 @@ def run_metropolis_heartbeat_check():
         if res.status_code == 200:
             print("[SUCCESS] Metropolis Heartbeat: STABLE")
             return True
-    except:
+    except Exception:
         print("[FAILURE] Metropolis Heartbeat: DISCONNECTED")
     return False
 

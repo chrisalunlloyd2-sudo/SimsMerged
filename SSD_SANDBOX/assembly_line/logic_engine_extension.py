@@ -11,5 +11,5 @@ def logic_engine_extension(sys_dict):
                     output.append('SSD_IOPS_RESTRICTED')
         elif isinstance(value, dict) and (value.get('id', 0) < 0 or value.get('id', 0) > 100):
             output.append('You cannot enter a number greater than the ID of the system!')
-            
+
     return output

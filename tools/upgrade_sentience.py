@@ -23,7 +23,7 @@ class SentienceEngine:
         \"\"\"
         energy = agent_data.get('energy', 100)
         stability = agent_data.get('stability', 1.0)
-        
+
         # Default AI Attributes if none provided
         temp = float(attributes.get('temp', 0.7)) if attributes else 0.7
         top_p = float(attributes.get('top_p', 0.9)) if attributes else 0.9
@@ -35,7 +35,7 @@ class SentienceEngine:
             state = EmotionalState.DEPRESSED
         elif stability < 0.5:
             state = EmotionalState.STRESSED
-            
+
         # Impact of Temperature: High temp makes them erratic
         if temp > 1.2:
             state = EmotionalState.ERRATIC
@@ -45,7 +45,7 @@ class SentienceEngine:
 
         # 2. Action Logic
         possible_actions = ['rest', 'process', 'move', 'sync']
-        
+
         # Dropout impact: Randomly ignore 'best' choice
         if random.random() < dropout:
             action = random.choice(possible_actions)

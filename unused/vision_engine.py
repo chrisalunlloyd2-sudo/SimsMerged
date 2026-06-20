@@ -21,18 +21,18 @@ class MetropolisVision:
             # We use a simulated browser to 'see' the UI
             browser = await p.chromium.launch(headless=True)
             page = await browser.new_page(viewport={'width': 1920, 'height': 1080})
-            
+
             # Since index.html is likely local, we might need a file:/// path if not served
             local_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "index.html"))
             await page.goto(f"file:///{local_path}")
-            
+
             # Wait for the Isometric engine to render initial districts
-            await asyncio.sleep(3) 
-            
+            await asyncio.sleep(3)
+
             timestamp = time.strftime("%Y%m%d_%H%M%S")
             filename = f"{report_name}_{timestamp}.png"
             filepath = os.path.join(self.screenshot_dir, filename)
-            
+
             await page.screenshot(path=filepath)
             await browser.close()
             print(f"[VISION] State captured successfully: {filepath}")

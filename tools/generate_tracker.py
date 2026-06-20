@@ -21,7 +21,7 @@ def generate_table():
             task_id = match.group(3)
             desc = match.group(4).strip()
             tasks.append({"id": int(task_id), "desc": desc, "status": status})
-            
+
     tasks.sort(key=lambda x: x["id"])
 
     # Define backend mappings based on keywords
@@ -54,20 +54,20 @@ def generate_table():
     with open(OUTPUT_PATH, "w", encoding="utf-8") as out:
         out.write("# 🧬 SIMSMERGED: MASTER FEATURE LOGIC TABLE & TRACKER\n\n")
         out.write("This table links every procedural feature and newly proposed expansion to its corresponding backend architectural module.\n\n")
-        
+
         out.write("## 🚀 SENSIBLE NEW ADDITIONS & PHASED ROADMAP\n\n")
         out.write("| Implementation Phase | Feature Description | Backend Target |\n")
         out.write("|----------------------|---------------------|----------------|\n")
         for f in custom_features:
             out.write(f"| {f['phase']} | {f['desc']} | `{f['backend']}` |\n")
-            
+
         out.write("\n## 🌌 THE 2000+ CORE ROADMAP FEATURES\n\n")
         out.write("*Displaying grouped batches for sanity. All features are tracked linearly.* \n\n")
-        
+
         out.write("| Task ID | Feature Description | Status | Target Backend Module |\n")
         out.write("|---------|---------------------|--------|-----------------------|\n")
-        
-        # Write first 50 and some intervals to avoid making the markdown file literally 2000 lines long, 
+
+        # Write first 50 and some intervals to avoid making the markdown file literally 2000 lines long,
         # or we can write all of them since it's a file on disk. Let's write all of them, it's just a file.
         for t in tasks:
             mod = assign_backend(t['desc'])

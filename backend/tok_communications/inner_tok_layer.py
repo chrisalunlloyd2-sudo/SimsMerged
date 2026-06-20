@@ -54,7 +54,7 @@ class InnerTokDaemon:
         """Steps 12 & 14: Hook into JSON payloads and map to conversational analogies."""
         payload_str = json.dumps(raw_json)
         sentiment = self._analyze_sentiment(payload_str)
-        
+
         # Conversational Translation (Simulating LLM summarization pipeline Step 13)
         if "generate" in raw_json.get("action", ""):
             translation = f"{agent_id} is thinking about {raw_json.get('target', 'something')}..."
@@ -62,27 +62,27 @@ class InnerTokDaemon:
             translation = f"{agent_id} cursed at the console. A bug was found."
         else:
             translation = f"{agent_id} performed action: {raw_json.get('action', 'unknown')}."
-            
+
         with self.get_db_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT INTO inner_monologue 
+                INSERT INTO inner_monologue
                 (agent_id, topological_zone, raw_payload, conversational_translation, sentiment, timestamp)
                 VALUES (?, ?, ?, ?, ?, ?)
             ''', (agent_id, zone, payload_str, translation, sentiment, timestamp))
             conn.commit()
-            
+
         logger.info(f"[EAVESDROP | {sentiment}] {translation}")
 
 if __name__ == "__main__":
     import time
     logging.basicConfig(level=logging.INFO)
     daemon = InnerTokDaemon()
-    
+
     # Simulate L3 making an API call that fails
     mock_payload_fail = {"action": "compile_script", "target": "wood_gather.py", "status": "error: syntax invalid"}
     daemon.intercept_payload("L3_MINER", "ZONE_0_0_0", mock_payload_fail, time.time())
-    
+
     # Simulate L2 generating an idea
     mock_payload_think = {"action": "generate_architecture", "target": "cabin layout"}
     daemon.intercept_payload("L2_ORCHESTRATOR", "ZONE_5_5_0", mock_payload_think, time.time())

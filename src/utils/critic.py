@@ -49,10 +49,10 @@ class GeneticCritic:
         if 'for' in content and '+=' in content and '"' in content:
             # Simple heuristic detection
             print(f"Warning: Potential slow string concatenation in {file_path}")
-        
+
         # Heuristic: Replace simple getters/setters with something else? No, Java needs them.
         # Maybe optimize imports or something simpler.
-        
+
         # For now, let's just log potential optimizations
         if new_content != content:
             with open(file_path, 'w', encoding='utf-8') as f:

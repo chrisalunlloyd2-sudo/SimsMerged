@@ -25,17 +25,17 @@ class SSDVirtualFence:
         # Ensure size is a multiple of page_size
         self.max_size = (max_size_mb * 1024 * 1024 // self.page_size) * self.page_size
         self.kernel32 = ctypes.windll.kernel32
-        
+
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir, exist_ok=True)
-            
+
     def hook_create_file_mapping(self, filename: str):
         """
         Step 12 & 16.3: Hook Windows CreateFileMapping with page alignment.
         """
         filepath = os.path.join(self.cache_dir, filename)
         logger.info(f"Mapping page-aligned virtual SSD fence: {filepath}")
-        
+
         # Open file
         handle = self.kernel32.CreateFileW(
             filepath,
@@ -46,15 +46,15 @@ class SSDVirtualFence:
             0x00000080, # FILE_ATTRIBUTE_NORMAL
             None
         )
-        
+
         if handle == INVALID_HANDLE_VALUE:
             raise OSError("Failed to create Triton Disk Cache file.")
-            
+
         # Create Mapping with SEC_RESERVE for on-demand alignment
         size_high = (self.max_size >> 32) & 0xFFFFFFFF
         size_low = self.max_size & 0xFFFFFFFF
         SEC_RESERVE = 0x4000000
-        
+
         mapping_handle = self.kernel32.CreateFileMappingW(
             handle,
             None,
@@ -63,11 +63,11 @@ class SSDVirtualFence:
             size_low,
             f"Local\\TritonFence_{filename}"
         )
-        
+
         if not mapping_handle:
             self.kernel32.CloseHandle(handle)
             raise OSError("Failed to create file mapping object.")
-            
+
         return mapping_handle, handle
 
     def map_view_of_file(self, mapping_handle):
@@ -83,20 +83,20 @@ class SSDVirtualFence:
         )
         if not address:
             raise OSError("Failed to map view of file.")
-        
+
         logger.info(f"Successfully fenced Ollama memory to SSD address: {hex(address)}")
         return address
 
     def slow_burn_throttle(self, data_size: int):
         """
-        Step 16: Implement slow-burn throttling logic. 
+        Step 16: Implement slow-burn throttling logic.
         Limits IOPS to prevent SSD write exhaustion and maintain under 50MB RAM footprint.
         """
         # Throttle calculation: Delay 1ms per megabyte to simulate slow-burn SSD bounding
         throttle_time = (data_size / (1024 * 1024)) * 0.001
         if throttle_time > 0:
             time.sleep(throttle_time)
-            
+
     def run_garbage_collector(self):
         """
         Step 19: Build SSD garbage collector.
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     try:
         mapping, handle = fence.hook_create_file_mapping("ollama_l3_smoll.vram")
         addr = fence.map_view_of_file(mapping)
-        fence.slow_burn_throttle(10 * 1024 * 1024) 
+        fence.slow_burn_throttle(10 * 1024 * 1024)
         fence.run_garbage_collector()
         logger.info("SSD Fencing (Aligned) Benchmark complete.")
     except Exception as e:

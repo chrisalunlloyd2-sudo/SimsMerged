@@ -11,11 +11,11 @@ def bridge_sync():
     # Fix path to be absolute or relative to project root
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     db_path = os.path.join(base_dir, "backend", "data", "ai_attributes.json")
-    
+
     if not os.path.exists(db_path):
         # Fallback to current working directory based search
         db_path = os.path.join("backend", "data", "ai_attributes.json")
-    
+
     if not os.path.exists(db_path):
         print(f"Error: Database not found at {db_path}")
         return
@@ -23,7 +23,7 @@ def bridge_sync():
     # Simulate atomic read and hash
     with open(db_path, "r") as f:
         data = f.read(1024) # Sample for speed
-        
+
     sync_hash = hashlib.sha256(data.encode()).hexdigest()
     print(f"[CLAWHUB_BRIDGE] Deterministic Hash Generated: {sync_hash}")
     print("[CLAWHUB_BRIDGE] PROVING SUPERIORITY: SLM and DB structure validated against ClawHub standard.")

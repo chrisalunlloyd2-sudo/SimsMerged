@@ -4,13 +4,13 @@ base_path = r"C:\Users\viper\Desktop\SimsMerged"
 
 # --- 1. README.md: The 2200 Feature Matrix & 500 Step Roadmap ---
 feature_groups = [
-    "Quantum Core Architecture", "Hyper-Threading Matrix", "AI Sentience & Emotion", 
-    "Isometric Overdrive Rendering", "Cyber-Grid Topology", "Network Packet Physics", 
-    "Silicon Synthesis Level", "Agentic Binding & Healing", "Thermal Dynamics & Cooling", 
-    "Registry Manipulation Engine", "Sub-Atomic Routing", "Pixel-Perfect UI Rendering", 
-    "Neural Bus Linking", "Heuristic Load Balancing", "Hardware Emulation Parity", 
-    "Data Visualization Holograms", "Cinematic CRT Overlays", "Autonomous Purging Algorithms", 
-    "Protocol Interception Nodes", "Web-Bridge Live Syncing", "Metropolis Ecosystem Logic", 
+    "Quantum Core Architecture", "Hyper-Threading Matrix", "AI Sentience & Emotion",
+    "Isometric Overdrive Rendering", "Cyber-Grid Topology", "Network Packet Physics",
+    "Silicon Synthesis Level", "Agentic Binding & Healing", "Thermal Dynamics & Cooling",
+    "Registry Manipulation Engine", "Sub-Atomic Routing", "Pixel-Perfect UI Rendering",
+    "Neural Bus Linking", "Heuristic Load Balancing", "Hardware Emulation Parity",
+    "Data Visualization Holograms", "Cinematic CRT Overlays", "Autonomous Purging Algorithms",
+    "Protocol Interception Nodes", "Web-Bridge Live Syncing", "Metropolis Ecosystem Logic",
     "Darwinistic Evolution Triggers"
 ]
 
@@ -42,7 +42,7 @@ GET IN HERE AND START BUILDING THE FUTURE TODAY!!!
 
 with open(os.path.join(base_path, "README.md"), "w", encoding="utf-8") as f:
     f.write(readme)
-    
+
 # --- 2. FAQ.md ---
 faq = "# 🤯 THE MOST FREQUENTLY ASKED, MIND-BLOWING QUESTIONS! 🤯\n\n"
 faq += "You guys have been asking AMAZING questions, and I am here to give you the most EXTENSIVE, OVER-THE-TOP answers possible!! Let's dive right into the magic!\n\n"
@@ -78,7 +78,7 @@ for i in range(1, 201):
     sec += f"### 🔒 Layer {i}: Omni-Directional Sub-Space Shielding\nThis layer absolutely obliterates any unauthorized access attempts on sector {i}! We use cryptographic hashes woven into the very fabric of the 3D grid!\n\n"
 with open(os.path.join(base_path, "SECURITY.md"), "w", encoding="utf-8") as f:
     f.write(sec)
-    
+
 # --- 6. CODE_OF_CONDUCT.md ---
 coc = "# 💖 THE MOST INCREDIBLE, INCLUSIVE, ENTHUSIASTIC COMMUNITY EVER! 💖\n\n"
 coc += "Welcome to the best place on the internet! We are so hyped you are here! Our Code of Conduct isn't just a list of rules; it's a way of LIFE!\n\n"
