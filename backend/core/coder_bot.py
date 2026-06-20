@@ -18,32 +18,32 @@ class CoderBot:
     """
     async def run_steering_cycle(self):
         from .config import add_log, add_message
-        
+
         # 1. Identify missing features
         master_list = data_expert.get_master_list()
         todos = master_list.get("todos", [])
-        
+
         if not todos:
             return
 
         # 2. Select top priority
         target_goal = todos[0]
         project_id = f"PROJ_{int(time.time())}"
-        
+
         add_log(f"[CODER_BOT] Steering ActionsAgent for project: {project_id} ({target_goal})")
         add_message("Coder_Bot", f"🤖 Steering project synthesis for: {target_goal}")
 
         # 3. Trigger Actions Agent (Multi-Page Synthesis)
         try:
             files = await actions_agent.synthesize_project(project_id, target_goal)
-            
+
             # 4. Submit to Proposal Table (Step 83)
             summary = f"Synthesized {len(files)} pages: " + ", ".join(files.keys())
             proposal_table.submit_proposal(
-                "coder_bot", "Coder_Bot", "ARCHITECTURE_UPGRADE", 
+                "coder_bot", "Coder_Bot", "ARCHITECTURE_UPGRADE",
                 target_goal, summary
             )
-            
+
             add_message("Coder_Bot", f"✅ Project {project_id} submitted for audit. {len(files)} pages.")
         except Exception as e:
             add_log(f"[CODER_BOT_ERROR] Synthesis failed: {e}", "error")

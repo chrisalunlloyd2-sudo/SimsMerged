@@ -27,11 +27,11 @@ class AlgorithmicMayor:
         # We need cyber_economy, but it's defined in main.py
         # To avoid circularity, we'll import it inside the method
         from backend.main import cyber_economy
-        
+
         # 1. Analyze Weekly Trends
         trends = grid_analytics.get_weekly_trends()
         avg_stability = sum([a.get("stability", 1.0) for a in METROPOLIS_AGENTS]) / len(METROPOLIS_AGENTS) if METROPOLIS_AGENTS else 1.0
-        
+
         # 2. Synthesize Policy Proposal
         prompt = (
             f"You are the ALGORITHMIC MAYOR. City Trends: {trends}. "
@@ -41,36 +41,36 @@ class AlgorithmicMayor:
             "Example: 'INCENTIVE_PROGRAM' (Increase mint rate) or 'STABILITY_TAX' (Decrease point gain). "
             "Output JSON format: {'law_id': 'NAME', 'action': 'DESCRIPTION', 'reasoning': 'WHY'}."
         )
-        
+
         try:
             res = await sentience_engine.disk_core.generate_chat(
-                self.agent_id, self.name, "GOVERNOR", 
+                self.agent_id, self.name, "GOVERNOR",
                 prompt, {"authority": 100}, "propose_law"
             )
-            
+
             # Simple JSON extraction
             json_match = re.search(r'\{.*\}', res, re.DOTALL)
             if json_match:
                 law = py_json.loads(json_match.group())
-                
+
                 # 3. Submit to Proposal Table
                 proposal_table.submit_proposal(
-                    self.agent_id, self.name, "METROPOLIS_LAW", 
-                    law.get("law_id", "GENERAL_ORDER"), 
+                    self.agent_id, self.name, "METROPOLIS_LAW",
+                    law.get("law_id", "GENERAL_ORDER"),
                     f"ACTION: {law.get('action')}\nREASONING: {law.get('reasoning')}"
                 )
-                
+
                 # 4. Broadcast in MSN Chat
                 add_message(self.name, f"🏛️ [GOVERNANCE] I am proposing the {law.get('law_id')} law. {law.get('reasoning')}")
                 add_log(f"[MAYOR] Proposed law: {law.get('law_id')}")
-                
+
                 # 5. Call for Referendum (1.5 Poll)
                 if random.random() < 0.3:
                     add_message(self.name, "🗳️ REFERENDUM: I am calling for an immediate agent vote on the SIMSMERGED v1.5 architectural candidates.")
                     asyncio.create_task(self.trigger_agent_votes())
             else:
                 add_log(f"[MAYOR] Failed to parse law proposal from: {res[:100]}...", "warning")
-                    
+
         except Exception as e:
             print(f"Mayor Governance Error: {e}")
 
@@ -87,7 +87,7 @@ class AlgorithmicMayor:
                     choice = "LAYERED_GOV"
                 else:
                     choice = random.choice([c["id"] for c in VOTE_CANDIDATES])
-                
+
                 await cast_vote(choice)
                 print(f"[VOTE] {agent['name']} cast vote for {choice}")
         except Exception as e:

@@ -18,7 +18,7 @@ class ClippyAuthority:
     async def run_authority_audit(self):
         """Randomly audits agents and applies throttles to high-stress units."""
         from .config import add_message, add_log
-        
+
         for agent in self.agents:
             # Heuristic: If stability is low or level is too high for current machine heat
             if agent.get("stability", 1.0) < 0.5:
@@ -26,7 +26,7 @@ class ClippyAuthority:
                 agent["throttle_factor"] = throttle
                 add_message("Clippy", f"📎 It looks like you're struggling, {agent['name']}! I've applied a {int(throttle*100)}% throttle to keep the grid stable.")
                 add_log(f"[CLIPPY] Throttled {agent['name']} to {throttle}")
-            
+
             # Occasionally release throttle
             elif agent.get("throttle_factor", 0) > 0 and random.random() < 0.3:
                 agent["throttle_factor"] = 0.0

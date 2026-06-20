@@ -20,24 +20,24 @@ class BusinessSchool:
 
     async def run_wrapper_competition(self):
         from backend.main import add_log, add_message, DISTRICTS
-        
+
         # Only run if a Business School exists in the districts
         if not any(d.get("type") == "BUSINESS_SCHOOL" for d in DISTRICTS):
             return
 
         self.competition_running = True
         add_log("[BUSINESS_SCHOOL] Semesters in session. Agents competing for wrapper supremacy.")
-        
+
         # LSS/EPMO TRAINING: Select an agent to "train"
         trainee = random.choice(METROPOLIS_AGENTS)
         achievement = random.choice(self.achievements)
-        
+
         training_prompt = (
             f"You are {trainee['name']}. TASK: Pass the {achievement} exam. "
             "Explain one technical optimization principle (Lean Sigma 6 or EPMO) and how you apply it to your 'Always be coding' mandate. "
             "End with ACHIEVEMENT_VERIFIED: [YES/NO]"
         )
-        
+
         try:
             train_res = await model_orchestrator.add_task(
                 trainee["id"], training_prompt,
@@ -66,7 +66,7 @@ class BusinessSchool:
             try:
                 # Force the use of the small, fast, fenced model
                 res = await model_orchestrator.add_task(
-                    agent["id"], prompt, 
+                    agent["id"], prompt,
                     options={"num_ctx": 256, "num_predict": 40, "temperature": 0.6, "num_thread": 1},
                     task_type="business_school"
                 )
@@ -81,17 +81,17 @@ class BusinessSchool:
             winner = random.choice(proposals)
             winning_agent = winner["agent"]
             winning_mod = winner["mod"]
-            
+
             # Store in wrapped_db for persistence
             import hashlib
             mod_hash = hashlib.sha256(winning_mod.encode()).hexdigest()[:16]
             wrapped_db.store_verified_code("WRAPPER_MOD", mod_hash, winning_mod, f"Won by {winning_agent['name']}")
-            
+
             # Apply to agent's actual traits/attributes
             if "wrapper_mods" not in winning_agent:
                 winning_agent["wrapper_mods"] = []
             winning_agent["wrapper_mods"].append(winning_mod)
-            
+
             add_log(f"[BUSINESS_SCHOOL] {winning_agent['name']} won with mod: {winning_mod}")
             add_message(winning_agent["name"], f"🏆 [BUSINESS_WINNER] My logic wrapper is updated: {winning_mod}")
 

@@ -20,10 +20,10 @@ class BehavioralScanner:
         """Scans a technical event for pattern reinforcement."""
         if agent_id not in self.agent_stats:
             self.agent_stats[agent_id] = {"pos": 0, "neg": 0, "stability_score": 1.0}
-        
+
         stats = self.agent_stats[agent_id]
         detected = []
-        
+
         # 1. Pattern Identification
         if success:
             stats["pos"] += 1

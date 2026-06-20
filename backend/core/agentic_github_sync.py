@@ -42,7 +42,7 @@ class AgenticGitHubSync:
         and hydrate their specific language databases.
         """
         add_log("[GITHUB_SYNC] Initiating autonomous data hydration crawl...")
-        
+
         # Simulated Web/GitHub Crawl Targets
         targets = [
             {"topic": "Advanced JavaFX concurrency patterns", "lang": "java"},
@@ -50,19 +50,19 @@ class AgenticGitHubSync:
             {"topic": "Secure OAuth2 implementations in FastAPI", "lang": "python"},
             {"topic": "ES6 isometric game engine rendering loops", "lang": "javascript"}
         ]
-        
+
         target = random.choice(targets)
-        
+
         prompt = (
             f"You are the Data Hydration Agent. Research and provide a highly advanced, "
             f"production-ready code schema for: {target['topic']}. "
             "Output ONLY the raw code block. No markdown, no explanations."
         )
-        
+
         try:
             raw_code = await model_orchestrator.add_task("Hydration_Agent", prompt, task_type="data_crawl")
             scrubbed_code = self._scrub_pii(raw_code)
-            
+
             ghost_db = bm25_scaffold.get_ghost_code(target['lang'])
             ghost_db.update_learning(
                 scrubbed_code,
@@ -82,7 +82,7 @@ class AgenticGitHubSync:
         try:
             # 1. Sync assets first
             await self._sync_gui_assets()
-            
+
             # 2. Generate commit message
             syslog_path = os.path.join(SSD_SANDBOX_PATH, "syslog.log")
             recent_logs = ""
@@ -90,7 +90,7 @@ class AgenticGitHubSync:
                 with open(syslog_path, "r", encoding="utf-8") as f:
                     lines = f.readlines()
                     recent_logs = "".join(lines[-20:])
-            
+
             prompt = (
                 f"You are the GitHub Governor. Based on these recent system logs, generate a concise, "
                 f"professional git commit message. ONLY output the commit string.\n\nLOGS:\n{recent_logs}"
@@ -98,18 +98,18 @@ class AgenticGitHubSync:
             commit_msg = await model_orchestrator.add_task("GitHub_Governor", prompt, task_type="commit_gen")
             commit_msg = commit_msg.strip().replace('"', "'")
             if not commit_msg: commit_msg = "Autonomous Evolution Sync"
-            
+
             # 3. Check for auth
             token = auth_manager.get_token()
             if not token or "[UNINITIALIZED]" in token:
                  add_log("[GITHUB_SYNC] Auth token uninitialized. Skipping remote push.", "warning")
-            
+
             # 4. Git sequence
             subprocess.run(["git", "add", "."], cwd=self.project_root, check=False)
             subprocess.run(["git", "commit", "-m", f"[AGENTIC_SYNC] {commit_msg}"], cwd=self.project_root, check=False)
-            
+
             add_message("GitHub_Governor", f"🌐 [SYNC_COMPLETE] Sovereign commit anchored. Message: '{commit_msg}'")
-            
+
         except Exception as e:
             add_log(f"[GITHUB_SYNC_ERR] {e}", "error")
 
@@ -118,15 +118,15 @@ class AgenticGitHubSync:
         # Pillar III: Initial data hydration
         from .hydrate_continuity import hydrate
         hydrate()
-        
+
         await asyncio.sleep(60) # Initial delay
         while True:
             await self.hydrate_databases()
             await asyncio.sleep(120) # Hydrate frequently
-            
+
             if random.random() > 0.5: # Periodic commits
                 await self.execute_agentic_commit()
-            
+
             await asyncio.sleep(self.sync_interval)
 
 github_governor = AgenticGitHubSync()

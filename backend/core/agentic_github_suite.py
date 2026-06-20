@@ -21,7 +21,7 @@ class AgenticGitHubSuite:
     async def autonomous_sync_loop(self):
         if not self.active: return
         add_log("[GITHUB_SUITE] Agentic GitHub Governor Online. Monitoring codebase differentials.")
-        
+
         while True:
             await asyncio.sleep(3600) # Check every hour
             try:
@@ -34,7 +34,7 @@ class AgenticGitHubSuite:
             add_log("[GITHUB_SUITE] Uncommitted changes detected. Initiating SLM analysis.")
             diff_text = self.repo.git.diff(None)
             untracked = self.repo.untracked_files
-            
+
             # Block C1: Read recent log for context
             recent_log = ""
             try:
@@ -50,30 +50,30 @@ class AgenticGitHubSuite:
                 "novel research, component upgrades, and LSS scoring impacts. "
                 "Follow the style of previous commits. Return ONLY the commit message."
             )
-            
+
             commit_msg = await model_orchestrator.add_task("EPMO_Architect", prompt, task_type="github_sync")
             if not commit_msg or len(commit_msg) < 10:
                 commit_msg = f"chore(auto): Autonomous component upgrade via ML Orchestrator."
-                
+
             commit_msg = f"[TIMESTAMP: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}] {commit_msg}"
-            
+
             # Execute Commit
             self.repo.git.add(all=True)
             self.repo.index.commit(commit_msg)
             add_log(f"[GITHUB_SUITE] Successfully committed: {commit_msg[:50]}...")
             add_message("System_Git", f"🧬 Branch advanced. Commit: {commit_msg[:50]}...")
-            
+
             # Optional: push to remote if configured
             # origin = self.repo.remote(name='origin')
             # origin.push()
-            
+
     async def create_optimization_branch(self, feature_name: str):
         """Creates a dedicated branch for Darwinian SLM testing."""
         if not self.active: return None
         branch_name = f"opt/{feature_name}_{int(time.time())}"
         try:
             # Ensure we are starting from main or the active baseline
-            # self.repo.git.checkout('main') 
+            # self.repo.git.checkout('main')
             new_branch = self.repo.create_head(branch_name)
             new_branch.checkout()
             add_log(f"[GITHUB_SUITE] Checked out new optimization branch: {branch_name}")
@@ -91,35 +91,35 @@ class AgenticGitHubSuite:
         4. Merge if score improves.
         """
         if not self.active: return False
-        
+
         current_branch = self.repo.active_branch.name
         base_score = 0.0
-        
+
         # 1. Measure Baseline
         try:
             with open(target_file, "r", encoding="utf-8") as f:
                 current_code = f.read()
             base_score = epmo_school.critique_model_output(f"Optimize {target_file}", current_code)
         except: pass
-        
+
         # 2. Spin up Opt Branch
         opt_branch = await self.create_optimization_branch(feature_name)
         if not opt_branch: return False
-        
+
         try:
             # 3. Apply improvement
             with open(target_file, "w", encoding="utf-8") as f:
                 f.write(improved_code)
-            
+
             # 4. Measure New Score
             new_score = epmo_school.critique_model_output(f"Optimize {target_file}", improved_code)
-            
+
             if new_score > base_score:
                 add_log(f"[GITHUB_SUITE] Optimization success ({base_score:.2f} -> {new_score:.2f}). Initiating auto-merge.")
                 # Commit on opt branch
                 self.repo.git.add(target_file)
                 self.repo.index.commit(f"opt: Improved LSS score for {target_file} to {new_score:.2f}")
-                
+
                 # Merge back
                 self.repo.git.checkout(current_branch)
                 self.repo.git.merge(opt_branch)
@@ -131,7 +131,7 @@ class AgenticGitHubSuite:
                 # Cleanup branch
                 self.repo.delete_head(opt_branch, force=True)
                 return False
-                
+
         except Exception as e:
             add_log(f"[GITHUB_SUITE] Darwinian workflow error: {e}", "error")
             self.repo.git.checkout(current_branch)

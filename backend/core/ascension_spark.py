@@ -15,7 +15,7 @@ def ignite_ascension():
         with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
             try:
                 tasks = json.load(f)
-            except:
+            except Exception:
                 pass
 
     # The Sovereign Automation Task List
@@ -43,7 +43,7 @@ def ignite_ascension():
 
     with open(MANIFEST_PATH, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=2)
-    
+
     print("🔥 [ASCENSION_SPARK] Task manifest successfully seeded with end-to-end engine rebuild directives.")
     print("🚦 Placement Logic Gate will now route these tasks to the swarm.")
 

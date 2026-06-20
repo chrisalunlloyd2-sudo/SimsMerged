@@ -46,7 +46,7 @@ class DiskInferenceCore:
         """
         memory = get_agent_memory(agent_id)
         history = memory.get_formatted_context(3)
-        
+
         # Pull Briefcase CoT
         briefcase = memory.get_briefcase_notes(limit=1)
         briefcase_context = ""
@@ -80,14 +80,14 @@ class DiskInferenceCore:
             f"{system_job} MANDATE: ALWAYS BE CODING. Needs: {needs}. Choice: {question} "
             "Identify your priority. End with ACTION: [A or B] and CoT: [REASONING]"
         )
-        
+
         try:
             raw_res = await model_orchestrator.add_task(
-                agent_id, prompt, 
+                agent_id, prompt,
                 options={"num_ctx": 1024, "num_predict": 100, "temperature": 0.4, "num_thread": 1},
                 task_type="binomial_choice"
             )
-            
+
             choice = "A" if "ACTION: A" in raw_res.upper() else ("B" if "ACTION: B" in raw_res.upper() else "A")
             final_action = q_pair[0] if choice == "A" else q_pair[1]
             cot = raw_res.split("CoT:")[1].strip() if "CoT:" in raw_res else "Following logic path."
@@ -95,7 +95,7 @@ class DiskInferenceCore:
             memory.update_briefcase(final_action, f"Executed {final_action}", cot)
             from .wrapped_db import wrapped_db
             wrapped_db.record_choice(agent_id, question, choice, outcome=final_action)
-            
+
             # PHASE 33: SWARM FINDINGS & HYPOTHESIS
             if random.random() < 0.3:
                 finding = f"Logic path {choice} ({final_action}) selected for {agent_id}. Thermal context: {heat_pct}%."
@@ -105,18 +105,18 @@ class DiskInferenceCore:
             if random.random() < 0.2:
                 from .proposal_table import proposal_table
                 proposal_table.submit_proposal(
-                    agent_id, agent_name, "CODE_SNIPPET", final_action, 
+                    agent_id, agent_name, "CODE_SNIPPET", final_action,
                     f"# Autonomous Proposal: {final_action}\n# CoT: {cot}\ndef optimize(): pass"
                 )
-            return [final_action.lower()], f"{question} Choice: {choice} -> {final_action} | {cot}" 
-        except:
+            return [final_action.lower()], f"{question} Choice: {choice} -> {final_action} | {cot}"
+        except Exception:
             return ["process"], "SSD_IO_ERROR: Falling back to process."
 
     async def generate_chat(self, agent_id, agent_name, role, context, needs, action, personality="Balanced"):
         """Adds a chat task with memory context and RAG lookup."""
         memory = get_agent_memory(agent_id)
         history = memory.get_formatted_context(5)
-        
+
         from .data_expert import data_expert
         awareness_context = ""
         try:
@@ -126,7 +126,7 @@ class DiskInferenceCore:
                 if "wrapper_mods" in a and len(a["wrapper_mods"]) > max_mods:
                     max_mods = len(a["wrapper_mods"])
                     top_winner = a["name"]
-            
+
             todos = data_expert.get_master_list().get("todos", [])
             todo_context = " | ".join(todos[:3])
             awareness_context = f" [GLOBAL_AWARENESS: Leader: {top_winner} ({max_mods} mods)] [PROJECT_PRIORITIES: {todo_context}]"
@@ -161,7 +161,7 @@ class DiskInferenceCore:
 
             memory.add_memory("chat", context, reply)
             return reply
-        except:
+        except Exception:
             return f"[{agent_name}_SSD] Platter spinning. Kernel optimized. Logic bypass active."
 
 from .code_database import knowledge_hive
@@ -176,7 +176,7 @@ class SentienceEngine:
         agent_id = agent_data.get('id', 'default')
         name = agent_data.get('name', 'Swarm_Bot')
         role = agent_data.get('role', 'PROCESS_KERNEL')
-        
+
         if agent_id not in self.agent_needs:
             self.agent_needs[agent_id] = {"energy": 100, "social": 100, "comfort": 100, "hygiene": 100, "hunger": 100}
         needs = self.agent_needs[agent_id]
@@ -185,7 +185,7 @@ class SentienceEngine:
         action = chain[0]
         needs["energy"] = max(10, needs["energy"] - 2)
         needs["social"] = max(10, needs["social"] - 1)
-        
+
         level = agent_data.get("level", 1)
         if action == "process" and random.random() < 0.1:
             level += 1
@@ -204,7 +204,7 @@ class SentienceEngine:
         agent_id = agent_data.get('id', 'default')
         needs = self.agent_needs.get(agent_id, {"social": 100, "energy": 100})
         return await self.disk_core.generate_chat(
-            agent_id, agent_data.get('name'), agent_data.get('role'), 
+            agent_id, agent_data.get('name'), agent_data.get('role'),
             "Organic Thought", needs, agent_data.get('last_action', 'process')
         )
 

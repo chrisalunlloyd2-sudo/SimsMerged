@@ -10,7 +10,7 @@ from .config import SSD_SANDBOX_PATH, add_log
 
 class AdvancedBM25Orchestrator:
     """
-    Offline lexical search orchestrator. 
+    Offline lexical search orchestrator.
     Supports DYNAMIC LEARNING and Persistent Storage.
     Implements 'BM100' logic: A Lean Six Sigma multiplier based on code deterministic quality.
     """
@@ -65,7 +65,7 @@ class AdvancedBM25Orchestrator:
         self.corpus_size = len(self.corpus)
         if self.corpus_size == 0:
             return
-            
+
         self.avgdl = sum(len(doc) for doc in self.corpus) / self.corpus_size
         self.f = []
         self.df = {}
@@ -81,13 +81,13 @@ class AdvancedBM25Orchestrator:
 
         for word, freq in self.df.items():
             self.idf[word] = math.log((self.corpus_size - freq + 0.5) / (freq + 0.5) + 1)
-            
+
         self.is_initialized = True
 
     def get_scores(self, query):
         if not self.is_initialized or self.corpus_size == 0:
             return []
-            
+
         scores = [0.0] * self.corpus_size
         for q in query:
             q_idf = self.idf.get(q, 0)
@@ -105,7 +105,7 @@ class AdvancedBM25Orchestrator:
         scores = self.get_scores(query)
         if not scores:
             return []
-            
+
         top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
         results = []
         for idx in top_indices:

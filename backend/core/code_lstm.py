@@ -44,27 +44,27 @@ class LSTMScratch:
         """Forward pass through time."""
         h = np.zeros((self.hidden_dim, 1))
         c = np.zeros((self.hidden_dim, 1))
-        
+
         hs, cs, caches = [], [], []
-        
+
         for x in x_seq:
             x = x.reshape(-1, 1)
             concat = np.vstack((h, x))
-            
+
             f = self.sigmoid(np.dot(self.Wf, concat) + self.bf)
             i = self.sigmoid(np.dot(self.Wi, concat) + self.bi)
             c_tilde = self.tanh(np.dot(self.Wc, concat) + self.bc)
-            
+
             c = f * c + i * c_tilde
             o = self.sigmoid(np.dot(self.Wo, concat) + self.bo)
             h = o * self.tanh(c)
-            
+
             y = self.softmax(np.dot(self.Wy, h) + self.by)
-            
+
             hs.append(h)
             cs.append(c)
             caches.append((concat, f, i, c_tilde, c, o, y))
-            
+
         return hs, cs, caches
 
     def predict(self, x_seq: List[np.ndarray]) -> np.ndarray:

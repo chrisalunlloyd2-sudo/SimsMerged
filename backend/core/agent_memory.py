@@ -30,10 +30,10 @@ class AgentMemory:
         agent = next((a for a in METROPOLIS_AGENTS if a["id"] == self.agent_id), None)
         if agent and "LOGIC_COMPRESSION" in agent.get("traits", []):
             limit *= 2 # Achievement-based context expansion
-            
+
         from .llstm_bm25 import LLSTMDatabase
         llstm = LLSTMDatabase(self.agent_id)
-        
+
         # We pass a generic query "agent action" to pull recent BM25 vectors
         return llstm.retrieve_llstm_context("coding process action", short_term_limit=limit, long_term_limit=2)
 
@@ -105,7 +105,7 @@ class AgentMemory:
         ''', (limit,))
         rows = cursor.fetchall()
         conn.close()
-        
+
         # Return in chronological order
         return rows[::-1]
 

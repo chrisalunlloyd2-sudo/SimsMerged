@@ -44,7 +44,7 @@ class CodingAutomation:
         """Step 1: The 'Git Mirror' Method (No API Quota)."""
         repo_name = repo_url.split("/")[-1].replace(".git", "")
         target_path = os.path.join(CODE_RETRIEVAL_PATH, repo_name)
-        
+
         if not os.path.exists(target_path):
             print(f"[AUTOMATION] Mirroring repo: {repo_url}")
             git.Repo.clone_from(repo_url, target_path, depth=1)
@@ -60,7 +60,7 @@ class CodingAutomation:
                         self._store_pattern(item.name, "python", "class", ast.dump(item), ast.unparse(item))
                     elif isinstance(item, ast.FunctionDef):
                         self._store_pattern(item.name, "python", "function", ast.dump(item), ast.unparse(item))
-            except:
+            except Exception:
                 pass
 
     def _store_pattern(self, name, lang, p_type, fingerprint, code):
