@@ -36,7 +36,7 @@ class WisdomTree:
     def store_wisdom(self, component, code, metadata=None):
         """Stores a new verified pattern in the tree."""
         code_hash = hashlib.sha256(code.encode()).hexdigest()
-        
+
         if code_hash in self.tree["patterns"]:
             return False, "Wisdom already exists."
 
@@ -47,18 +47,18 @@ class WisdomTree:
             "timestamp": time.time(),
             "metadata": metadata or {}
         }
-        
+
         self.tree["patterns"][code_hash] = entry
-        
+
         if component not in self.tree["steer_points"]:
             self.tree["steer_points"][component] = []
         self.tree["steer_points"][component].append(code_hash)
-        
+
         self.tree["evolution_metrics"]["total_optimized_blocks"] += 1
         # GRADUAL SPEED-UP: Every 5 blocks, reduce the wait time by 5% (max 50% reduction)
         new_mult = max(0.5, 1.0 - (self.tree["evolution_metrics"]["total_optimized_blocks"] // 5) * 0.05)
         self.tree["evolution_metrics"]["efficiency_multiplier"] = new_mult
-        
+
         self._save_tree()
         add_log(f"🌳 [WISDOM_GROWN] New logic for '{component}' added to the Tree. Efficiency: {new_mult:.2f}x")
         return True, code_hash

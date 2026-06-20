@@ -9,20 +9,20 @@ def scan_security(filepath):
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-            
+
         report = {
             "pii_flags": [],
             "entropy_warnings": []
         }
-        
+
         # Check for paths
         if re.search(r'[A-Z]:\\[\w\\]+', content) or re.search(r'/home/\w+/', content):
             report["pii_flags"].append("Local absolute path detected.")
-            
+
         # Check for obvious keys
         if re.search(r'(?i)(api_key|secret|password|token)[\s=:]+[\'"]?[\w\-]{8,}[\'"]?', content):
             report["entropy_warnings"].append("Potential high-entropy secret detected.")
-            
+
         print(json.dumps(report))
         return report
     except Exception as e:

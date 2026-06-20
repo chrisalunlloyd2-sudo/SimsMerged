@@ -16,7 +16,7 @@ class SovereignTestOrchestrator:
 
     def run_tests(self, file_path):
         report = {"test_type": "unknown", "success": False, "output": ""}
-        
+
         # 1. Java / Maven Detection
         if file_path.endswith(".java") or "JavaCore" in file_path:
             report["test_type"] = "maven"

@@ -22,13 +22,13 @@ class TaskWatchdog:
         while True:
             await asyncio.sleep(30)
             current_queue = len(self.orchestrator.queue)
-            
+
             # Detect queue stagnation (Hung physical SSD access)
             if current_queue > 0 and current_queue == self.last_queue_size:
                 self.stuck_counter += 1
             else:
                 self.stuck_counter = 0
-            
+
             if self.stuck_counter >= 4: # Stuck for 2 minutes
                 add_log(f"[WATCHDOG] Detect neural hang. Queue size: {current_queue}. CLEARING...", "warning")
                 add_message("System_Watchdog", "⚠️ NEURAL_HANG detected due to physical I/O limits. Flushing queue to restore grid stability.")
@@ -37,7 +37,7 @@ class TaskWatchdog:
                     if not task["future"].done():
                         task["future"].set_result("[SSD_I/O_FLUSH] Weights dropped to prevent host lag.")
                 self.stuck_counter = 0
-            
+
             self.last_queue_size = current_queue
 
 async def start_watchdog_task(model_orchestrator):

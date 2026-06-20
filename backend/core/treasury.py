@@ -52,17 +52,17 @@ class TreasurySystem:
         iv = os.urandom(16)
         cipher = Cipher(algorithms.AES(self.encryption_key), modes.CBC(iv), backend=default_backend())
         encryptor = cipher.encryptor()
-        
+
         # Padding
         raw_data = json.dumps(data).encode()
         padding_len = 16 - (len(raw_data) % 16)
         raw_data += bytes([padding_len] * padding_len)
-        
+
         ciphertext = encryptor.update(raw_data) + encryptor.finalize()
-        
+
         # Record fee in treasury
         self.reward_agent(agent_id, -5.0, "Secure Genetic Transfer Fee")
-        
+
         return (iv + ciphertext).hex()
 
 treasury = TreasurySystem()

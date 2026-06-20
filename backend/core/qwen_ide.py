@@ -61,8 +61,8 @@ class QwenIDEWrapper:
                 base_wait = random.randint(60, 120)
                 scaled_wait = base_wait * efficiency_mult
                 add_message("Qwen_IDE", f"🧠 [DRAFTING] Thinking about '{task['component']}'... (Wait: {scaled_wait:.1f}s, mult: {efficiency_mult:.2f}x)")
-                await asyncio.sleep(scaled_wait) 
-                
+                await asyncio.sleep(scaled_wait)
+
                 # Use Steer Points (Similar code) for context
                 similar_patterns = wisdom_tree.search_wisdom(task["component"].split())
                 steer_context = ""
@@ -75,18 +75,18 @@ class QwenIDEWrapper:
                     "MANDATE: Output functional Python or JavaScript code. Output ONLY the code. "
                     "NEVER repeat verbatim existing wisdom; improve upon it or specialize it."
                 )
-                
+
                 try:
                     code = await model_orchestrator.add_task("sprite_geek", prompt, task_type="qwen_ide_draft")
                     task["candidate_code"] = code
                     task["status"] = "VERIFYING"
-                    
+
                     filename = f"candidate_{task['id']}.py"
                     task["filename"] = filename
                     filepath = os.path.join(BUILD_LAB_DIR, filename)
                     with open(filepath, "w", encoding="utf-8") as f:
                         f.write(code)
-                    
+
                     add_log(f"[QWEN_IDE] Candidate generated: {filename}")
                 except Exception as e:
                     add_log(f"[QWEN_IDE_ERR] Drafting failed for {task['id']}: {e}", "error")
@@ -94,7 +94,7 @@ class QwenIDEWrapper:
             elif task["status"] == "VERIFYING":
                 add_message("Judge_Socrates", f"⚖️ [REVIEWING] Auditing candidate code for '{task['component']}'...")
                 await asyncio.sleep(random.randint(30, 60))
-                
+
                 # 1. Structural Preflight (JavaFX Specific)
                 if "JavaFX" in task["component"] or "GUI" in task["component"]:
                     from .javafx_preflight import javafx_preflight
@@ -111,27 +111,27 @@ class QwenIDEWrapper:
                     "Identify bugs, security flaws, or logic errors. "
                     "If safe, end with: STATUS: VERIFIED. Otherwise, provide a CRITIQUE."
                 )
-                
+
                 try:
                     audit_res = await model_orchestrator.add_task("sprite_socrates", verify_prompt, task_type="qwen_ide_audit")
                     task["verification_logs"].append(audit_res)
-                    
+
                     if "STATUS: VERIFIED" in audit_res.upper():
                         task["status"] = "SECURITY_CHECK"
                         add_message("System", f"✅ [CODE_VERIFIED] '{task['component']}' passed audit. Initiating Security Fence check.")
                     else:
                         add_message("Judge_Socrates", f"❌ [AUDIT_FAIL] {task['component']} needs refactoring: {audit_res[:200]}...")
-                        task["status"] = "DRAFTING" 
+                        task["status"] = "DRAFTING"
                 except: pass
 
             elif task["status"] == "SECURITY_CHECK":
                 add_message("Security_Auditor", f"🛡️ [FENCING] Checking '{task['component']}' for RAM-bloat or network calls...")
                 await asyncio.sleep(15)
-                
+
                 code = task["candidate_code"].lower()
                 forbidden = ["requests.", "urllib.", "socket.", "import ram", "threading.", "multiprocessing."]
                 violations = [p for p in forbidden if p in code]
-                
+
                 if not violations:
                     task["status"] = "STAGED"
                     add_message("System", f"💎 [STAGED] '{task['component']}' is ready for promotion. Use /api/promote/{task['id']} to integrate.")
@@ -149,19 +149,19 @@ class QwenIDEWrapper:
         try:
             # Record in Wisdom Tree (LEARNING CYCLE)
             wisdom_tree.store_wisdom(task["component"], task["candidate_code"], {"task_id": task_id, "requirement": task["requirement"]})
-            
+
             # Determine production path
             prod_dir = os.path.join(SSD_SANDBOX_PATH, "production_modules")
             os.makedirs(prod_dir, exist_ok=True)
-            
+
             prod_filename = f"prod_{task['component'].lower().replace(' ', '_')}.py"
             src_path = os.path.join(BUILD_LAB_DIR, task["filename"])
             dest_path = os.path.join(prod_dir, prod_filename)
-            
+
             # Atomic Move
             import shutil
             shutil.copy2(src_path, dest_path)
-            
+
             task["status"] = "PROMOTED"
             add_message("System", f"🚀 [PROMOTED] '{task['component']}' is now live. Wisdom recorded. Tree expanded. 🌳")
             return True, f"Successfully promoted and learned {prod_filename}"

@@ -13,7 +13,7 @@ class InhibitorEngine:
         """
         # We assume agent is a dict or object with emotional_state
         state = agent.get('emotional_state') if isinstance(agent, dict) else getattr(agent, 'emotional_state', None)
-        
+
         # Check if the state matches DEPRESSED (from agent_sentience)
         # We use string comparison if EmotionalState is not imported here to avoid circular imports
         if str(state) == "EmotionalState.DEPRESSED" or state == "DEPRESSED":
@@ -22,7 +22,7 @@ class InhibitorEngine:
                 "target_node": "HOSPITAL",
                 "priority": "CRITICAL"
             }
-        
+
         return {
             "status": "CLEAR",
             "target_node": None

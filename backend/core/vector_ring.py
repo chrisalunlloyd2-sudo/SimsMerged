@@ -23,14 +23,14 @@ class VectorRingDB:
     def store_pattern(self, code: str, language: str, performative: str, metadata: Dict = None):
         """Adds a code block to the ring with metadata layers."""
         block_id = hashlib.sha256(code.encode()).hexdigest()[:16]
-        
+
         meta = metadata or {}
         meta.update({
             "language": language,
             "performative": performative,
             "hash": block_id
         })
-        
+
         self.collection.add(
             documents=[code],
             metadatas=[meta],
@@ -41,13 +41,13 @@ class VectorRingDB:
     def query_logic(self, prompt: str, language: str = None, top_k: int = 1) -> List[Dict]:
         """Searches for existing logic templates matching the prompt."""
         where = {"language": language} if language else {}
-        
+
         results = self.collection.query(
             query_texts=[prompt],
             n_results=top_k,
             where=where
         )
-        
+
         logic_matches = []
         if results['documents'] and len(results['documents'][0]) > 0:
             for i in range(len(results['documents'][0])):

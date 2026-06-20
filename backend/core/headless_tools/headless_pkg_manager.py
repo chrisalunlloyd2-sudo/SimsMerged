@@ -18,7 +18,7 @@ def verify_install(pkg_type, name):
         elif pkg_type == "npm":
             res = subprocess.run(["npm", "list", name], shell=True, capture_output=True, text=True)
             return res.returncode == 0
-    except:
+    except Exception:
         return False
     return False
 
@@ -28,10 +28,10 @@ def run_pkg_command(command_str):
         parts = command_str.split()
         pkg_type = parts[0]
         name = parts[-1]
-        
+
         print(f"Executing: {command_str}")
         res = subprocess.run(command_str, shell=True, capture_output=True, text=True)
-        
+
         report = {
             "command": command_str,
             "success": res.returncode == 0,
@@ -39,10 +39,10 @@ def run_pkg_command(command_str):
             "stderr": res.stderr[-500:],
             "verified": False
         }
-        
+
         if report["success"]:
             report["verified"] = verify_install(pkg_type, name)
-            
+
         print(json.dumps(report))
         return report
     except Exception as e:

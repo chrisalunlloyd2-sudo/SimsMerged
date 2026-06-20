@@ -23,10 +23,10 @@ class HeadlessAuthManager:
             with open(self.secret_vault, "r") as f:
                 vault = json.load(f)
             token = vault.get(f"{service}_token", "")
-            # In a real environment, we'd use AES here. 
+            # In a real environment, we'd use AES here.
             # For now, we return a secure placeholder or environment override.
             return os.environ.get("SOVEREIGN_GITHUB_TOKEN", token)
-        except:
+        except Exception:
             return None
 
     def rotate_token(self, service, new_token):
@@ -38,7 +38,7 @@ class HeadlessAuthManager:
             with open(self.secret_vault, "w") as f:
                 json.dump(vault, f, indent=2)
             return True
-        except:
+        except Exception:
             return False
 
 auth_manager = HeadlessAuthManager()

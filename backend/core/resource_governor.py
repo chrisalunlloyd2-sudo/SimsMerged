@@ -57,7 +57,7 @@ class ResourceGovernor:
 
             except Exception as e:
                 add_log(f"[GOVERNOR] Monitor Error: {str(e)}", level="error")
-            
+
             time.sleep(5) # Check every 5 seconds
 
     def _check_service_health(self):

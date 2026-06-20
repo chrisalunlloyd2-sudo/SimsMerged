@@ -25,15 +25,15 @@ class CppServerWatchdog(TripleWatchdog):
         log_file = "C:\\Users\\viper\\Desktop\\SimsMerged\\SSD_SANDBOX\\cpp_server_watchdog.log"
         super().__init__(
             target_script=target_script,
-            process_name="metropolis_slm_server", 
+            process_name="metropolis_slm_server",
             log_file=log_file,
             check_interval=15, # Check every 15 seconds
             timeout=60 # 60s timeout for heavy inference tasks
         )
-        
+
     def check_process_responsiveness(self):
         """
-        Specific health check for the C++ Server. 
+        Specific health check for the C++ Server.
         In production, this would ping the local inference API endpoint.
         """
         import urllib.request
@@ -51,14 +51,14 @@ class CppServerWatchdog(TripleWatchdog):
 def start_orchestration():
     print("🛡️ [WATCHDOG] Initializing C++ SLM Server Orchestrator...")
     orchestrator = CppServerWatchdog()
-    
+
     # 24/7 Background Persistence Loop
     # We do NOT use the simulated hang for production deployment
     print("🛡️ [WATCHDOG] Entering 24/7 background persistence mode.")
-    
+
     # Run in test mode briefly to ensure it initializes, then we would typically daemonize it.
     # For Step 42 execution, we just need to verify it parses and sets up correctly.
     orchestrator.log_event("TEST: CppServerWatchdog initialized and ready for deployment.")
-    
+
 if __name__ == "__main__":
     start_orchestration()

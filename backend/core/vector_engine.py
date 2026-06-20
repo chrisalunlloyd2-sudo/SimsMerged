@@ -19,7 +19,7 @@ class VectorEngine:
             try:
                 with open(self.storage_path, "r", encoding="utf-8") as f:
                     self.vectors = json.load(f)
-            except:
+            except Exception:
                 self.vectors = []
 
     def save_store(self):

@@ -48,19 +48,19 @@ class TokTree:
         """Retrieves matching context and augments the SLM prompt."""
         results = []
         query_tags = set(tags)
-        
+
         for node in self.tree_data["nodes"]:
             match_score = len(set(node.get("tags", [])).intersection(query_tags))
             if match_score > 0:
                 results.append((match_score, node))
-        
+
         if not results:
             return prompt
-            
+
         results.sort(key=lambda x: x[0], reverse=True)
         # Take top 3 context nodes
         top_contexts = [r[1]["context"] for r in results[:3]]
-        
+
         augmented_prompt = (
             "--- SYSTEM CONTEXT (TOK TREE) ---\n"
             + "\n".join(top_contexts) +

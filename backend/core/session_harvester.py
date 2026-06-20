@@ -37,17 +37,17 @@ class SessionHarvester:
             r"neural profiling",
             r"role reassignment"
         ]
-        
+
         extracted = []
         for p in patterns:
             if re.search(p, session_context, re.IGNORECASE):
                 extracted.append(f"MANDATE: {p.upper()}")
-        
+
         # Merge and dedup
         for item in extracted:
             if item not in self.todos:
                 self.todos.append(item)
-        
+
         self._save_todos()
         return extracted
 

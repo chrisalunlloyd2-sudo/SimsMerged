@@ -20,15 +20,15 @@ class PatternInventionEngine:
         """
         seed = random.choice(["Async", "Linear", "Darwinian", "Shannon", "Quantum", "Sovereign"])
         suffix = random.choice(["Syphon", "Matrix", "Foundry", "Delta", "Grid", "Engine"])
-        
+
         pattern_id = f"{seed}-{suffix}_v{random.randint(1, 10)}"
-        
+
         # Simulated logic invention
         logic = (
             f"Optimizes {context_text[:20]} by using a {seed.lower()} distribution layer "
             f"linked to a {suffix.lower()} retrieval node. Increases TPS by {random.randint(10, 50)}%."
         )
-        
+
         return {
             "pattern_id": pattern_id,
             "logic_schema": logic,
@@ -40,17 +40,17 @@ class PatternInventionEngine:
         # Scan OMNI ROADMAP for 'Incomplete' ideas to mutate
         roadmap_path = os.path.join(self.project_root, "SSD_SANDBOX", "SIMSMERGED_OMNI_ROADMAP_V2.md")
         report = {"proposals": []}
-        
+
         if os.path.exists(roadmap_path):
             with open(roadmap_path, "r", encoding="utf-8") as f:
                 content = f.read()
-            
+
             # Find [ ] items
             incomplete = re.findall(r'- \[ \] (.*)', content)
             for item in incomplete[:3]:
                 proposal = self.invent_pattern(item)
                 report["proposals"].append(proposal)
-                
+
         print(json.dumps(report))
         return report
 

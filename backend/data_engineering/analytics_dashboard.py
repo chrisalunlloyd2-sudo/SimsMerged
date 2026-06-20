@@ -25,14 +25,14 @@ class AnalyticsEngine:
         """Step 52: Build DePIN economic dashboard backend."""
         if not os.path.exists(DB_DEPIN):
             return {"error": "Ledger DB not found."}
-            
+
         with sqlite3.connect(DB_DEPIN) as conn:
             df = pd.read_sql_query("SELECT * FROM wallets", conn)
             df_tx = pd.read_sql_query("SELECT * FROM transactions", conn)
-            
+
         total_supply = df['balance'].sum() if not df.empty else 0
         total_burned = abs(df_tx[df_tx['tx_type'] == 'INFERENCE_BURN']['amount'].sum()) if not df_tx.empty else 0
-        
+
         return {
             "total_active_agents": len(df[df['status'] == 'ACTIVE']) if not df.empty else 0,
             "total_suspended_agents": len(df[df['status'] == 'SUSPENDED']) if not df.empty else 0,
@@ -45,14 +45,14 @@ class AnalyticsEngine:
         """Step 56: Implement data anonymization for exports."""
         if not os.path.exists(DB_DEPIN):
             return {"error": "Ledger DB not found."}
-            
+
         with sqlite3.connect(DB_DEPIN) as conn:
             df = pd.read_sql_query("SELECT agent_id, balance, status FROM wallets", conn)
-            
+
         if not df.empty:
             # Mask agent IDs
             df['agent_id'] = df['agent_id'].apply(lambda x: f"AGENT_***{x[-4:]}" if len(x)>4 else "AGENT_***")
-            
+
         return df.to_dict(orient="records")
 
 @app.get("/api/v1/analytics/economy")

@@ -62,7 +62,7 @@ class ProposalTable:
         conn = sqlite3.connect(PROPOSAL_DB_PATH)
         cursor = conn.cursor()
         cursor.execute('''
-            UPDATE proposals 
+            UPDATE proposals
             SET status = ?, audit_log = ?, is_safe = ?, aligns_with_project = ?
             WHERE id = ?
         ''', (status, audit_log, 1 if is_safe else 0, 1 if aligns else 0, prop_id))

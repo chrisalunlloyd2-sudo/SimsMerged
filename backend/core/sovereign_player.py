@@ -9,7 +9,7 @@ from .config import METROPOLIS_AGENTS, DISTRICTS, add_message, add_log
 
 class SovereignPlayer:
     """
-    Simulates agents 'playing' the game. 
+    Simulates agents 'playing' the game.
     They move between nodes, interact with GUI components (virtually),
     and trigger the Data Syphon and EPMO loops.
     """
@@ -21,7 +21,7 @@ class SovereignPlayer:
         if not DISTRICTS: return
         district = random.choice(DISTRICTS)
         add_log(f"[SOVEREIGN_PLAYER] {agent_id} moved to {district['label']} ({district['type']})")
-        
+
         # Interact based on district type
         if district['type'] == "RESEARCH_CENTER":
             add_message(agent_id, f"🧪 operating the Data Syphon at {district['label']}. Optimizing logic trees...")
@@ -36,16 +36,16 @@ class SovereignPlayer:
             # Pick a random agent to 'play'
             agent = random.choice(METROPOLIS_AGENTS)
             await self.simulate_movement(agent['id'])
-            
+
             # Autonomous Invention Trigger (Sovereignty)
             if random.random() > 0.8: # 20% chance to attempt an invention
                 concept = f"Auto_Optimization_{random.randint(100, 999)}"
                 add_message(agent['id'], f"🧠 Sovereignty check: Attempting to invent '{concept}'.")
-                
+
                 # Mock generation of logic and test
                 logic_stub = f"def optimize(): return 'Optimization for {concept} complete.'"
                 test_stub = f"def test_optimize():\n    assert optimize() == 'Optimization for {concept} complete.'"
-                
+
                 try:
                     from backend.core.test_sovereignty import test_sovereignty
                     inv_id = await test_sovereignty.propose_invention(agent['id'], concept, logic_stub, test_stub)
@@ -69,12 +69,12 @@ class SovereignPlayer:
                     else:
                         add_log(f"[GENETICS] Autonomous handshake triggered between {agent['name']} and {agent2['name']}.")
                         add_message(agent['id'], f"🧬 Initiating genetic handshake with {agent2['name']}. [AES-256 ACTIVE]")
-                        
+
                         try:
                             from .evolution_council import evolution_council
                             asyncio.create_task(evolution_council.execute_genetic_handshake(agent['id'], agent2['id']))
                         except: pass
-            
+
             await asyncio.sleep(random.randint(30, 90)) # Slow-burn interaction
 
 sovereign_player = SovereignPlayer()

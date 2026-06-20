@@ -19,7 +19,7 @@ def wait_for_server():
             # Simple probe
             requests.get(BASE_URL, timeout=1)
             break
-        except:
+        except Exception:
             time.sleep(2)
     else:
         pytest.fail("SLM Server (11434) not responsive after 30s")
@@ -52,7 +52,7 @@ def test_throttling_logic():
     }
     # First request
     requests.post(GENERATE_ENDPOINT, json=payload)
-    
+
     # Second request (immediate)
     response = requests.post(GENERATE_ENDPOINT, json=payload)
     assert response.status_code == 200

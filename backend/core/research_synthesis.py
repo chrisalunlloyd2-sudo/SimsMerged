@@ -35,7 +35,7 @@ class SynthesisEngine:
         ask_id = f"Agent_A_Architect_{suffix}" if suffix else "Agent_A_Architect"
         ask_prompt = f"Context: {context[-1000:]}\nGoal: {ask}\nVerify this data: {json.dumps(data)[:2000]}\nWhat specific academic points must be covered?"
         requirements = await llm_client.generate(ask_prompt, agent_id=ask_id)
-        
+
         # Role 2: The Professor (Tells/Synthesizes)
         tell_id = f"Agent_B_Professor_{suffix}" if suffix else "Agent_B_Professor"
         tell_prompt = (
@@ -44,7 +44,7 @@ class SynthesisEngine:
             "Write a 1200-word academic chapter. Maintain Shannon information density. Include in-text citations."
         )
         synthesis = await llm_client.generate(tell_prompt, agent_id=tell_id)
-        
+
         return synthesis
 
     async def generate_comprehensive_paper(self, topic: str, agent_id: str = "Research_Director"):
@@ -53,7 +53,7 @@ class SynthesisEngine:
 
         # 1. Advanced Scraping
         scraped_data = advanced_scraper.scrape_topic(topic, max_results=15)
-        
+
         # 2. Planning (Markov State: PLANNING)
         outline_prompt = (
             f"Generate a UNIVERSITY LEVEL academic outline for a 35-page research paper about '{topic}'. "
@@ -64,7 +64,7 @@ class SynthesisEngine:
         try:
             import re
             outline = json.loads(re.search(r'\[.*\]', outline_raw, re.DOTALL).group())
-        except:
+        except Exception:
             outline = [{"title": f"Chapter {i+1}", "scope": "Detailed analysis."} for i in range(18)]
 
         # 3. Multi-Chapter Generation (Markov States: SYNTHESIS -> VERIFICATION)
@@ -77,7 +77,7 @@ class SynthesisEngine:
 
         for idx, chapter in enumerate(outline):
             add_log(f"[MARKOV] Transitioning to SYNTHESIS state for: {chapter['title']}")
-            
+
             # Tandem Ask-Tell Loop
             chapter_text = await self.tandem_ask_tell(
                 ask=f"Write {chapter['title']} with scope: {chapter['scope']}",
@@ -86,7 +86,7 @@ class SynthesisEngine:
                 agent_id=agent_id,
                 suffix=f"Ch{idx+1}"
             )
-            
+
             # Probabilistic Markovian Verification
             stability_roll = random.random()
             if stability_roll < 0.9: # 90% chance to pass to next state
@@ -106,10 +106,10 @@ class SynthesisEngine:
         file_path = os.path.join(RESEARCH_DIR, file_name)
         with open(file_path, "w", encoding='utf-8') as f:
             f.write(paper_content)
-            
+
         add_log(f"[COMPLETE] 35-page study published to: {file_path}")
         add_message("Omni-HUD", f"🌟 MARKOV-SHANNON SUCCESS: '{topic}' published to /research_papers/.")
-        
+
         return file_path
 
 synthesis_engine = SynthesisEngine()

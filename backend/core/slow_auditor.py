@@ -35,7 +35,7 @@ class SlowAuditor:
             f"Proposal: {code}. Respond with SAFE: [YES/NO] and REASON: [TEXT]"
         )
         safe_res = await model_orchestrator.add_task(
-            self.auditor_id, safe_prompt, 
+            self.auditor_id, safe_prompt,
             options={"num_ctx": 2048, "num_predict": 100, "temperature": 0.2},
             task_type="audit_safe"
         )
@@ -56,10 +56,10 @@ class SlowAuditor:
         # 3. FINAL DECISION
         final_status = "APPROVED" if (is_safe and is_aligned) else "REJECTED"
         audit_log = f"Safe: {safe_res} | Align: {align_res}"
-        
+
         proposal_table.update_status(prop_id, final_status, audit_log, is_safe, is_aligned)
         add_log(f"[SLOW_AUDITOR] Proposal {prop_id} {final_status}.")
-        
+
         if final_status == "APPROVED":
             add_message("Auditor_Socrates", f"✅ Proposal {prop_id} APPROVED. Extraction queued.", "audit_success")
             # Store in wrapped_db for autonomous application

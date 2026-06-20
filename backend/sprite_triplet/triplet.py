@@ -14,18 +14,18 @@ logger.setLevel(logging.INFO)
 class SpriteTriplet:
     def __init__(self):
         self.config = TripletConfig()
-        
+
     async def invoke_ollama(self, port: int, model: str, prompt: str) -> str:
         """Simulates an API call to a fenced Ollama instance."""
         # Step 23.2: Intent-Verification Prefix [REQ]
         intent_prompt = f"[REQ] {prompt}"
-        
+
         url = f"http://127.0.0.1:{port}/api/generate"
         payload = {"model": model, "prompt": intent_prompt, "stream": False}
-        
+
         logger.info(f"Invoking {model} with intent prefix...")
-        await asyncio.sleep(self.config.RATE_LIMIT_DELAY) 
-        
+        await asyncio.sleep(self.config.RATE_LIMIT_DELAY)
+
         # Step 23.2: Intent-Verification Prefix [ACK]
         return f"[ACK] [MOCK_RESPONSE from {model}]: Executed '{prompt[:20]}...'"
 
@@ -35,8 +35,8 @@ class SpriteTriplet:
         logger.info("--- L1 Master (ARCHITECT) Decomposing ---")
         prompt = f"DECOMPOSE into architectural steps: {global_instruction}"
         return await self.invoke_ollama(
-            self.config.OLLAMA_PORTS["L1_MASTER"], 
-            self.config.MODELS["L1_MASTER"], 
+            self.config.OLLAMA_PORTS["L1_MASTER"],
+            self.config.MODELS["L1_MASTER"],
             prompt
         )
 
@@ -47,8 +47,8 @@ class SpriteTriplet:
         prompt = f"PROCEDURALIZE into code steps: {l1_output}"
         prompt = prompt[:self.config.L2_CONTEXT_LIMIT]
         return await self.invoke_ollama(
-            self.config.OLLAMA_PORTS["L2_ORCHESTRATOR"], 
-            self.config.MODELS["L2_ORCHESTRATOR"], 
+            self.config.OLLAMA_PORTS["L2_ORCHESTRATOR"],
+            self.config.MODELS["L2_ORCHESTRATOR"],
             prompt
         )
 
@@ -59,22 +59,22 @@ class SpriteTriplet:
         prompt = f"SYNTAX_GENERATE final code: {l2_output}"
         prompt = prompt[:self.config.L3_CONTEXT_LIMIT]
         final_code = await self.invoke_ollama(
-            self.config.OLLAMA_PORTS["L3_SMOLL"], 
-            self.config.MODELS["L3_SMOLL"], 
+            self.config.OLLAMA_PORTS["L3_SMOLL"],
+            self.config.MODELS["L3_SMOLL"],
             prompt
         )
-        
+
         mock_code_payload = f"def execute_task():\n    # {final_code}\n    pass"
         return mock_code_payload
 
     async def run_cascade(self, global_instruction: str) -> dict:
         """Executes the full L1 -> L2 -> L3 cascade."""
         logger.info(f"Starting Industrial Cascade for: {global_instruction}")
-        
+
         l1_out = await self.l1_macro_process(global_instruction)
         l2_out = await self.l2_orchestrator_process(l1_out)
         l3_out = await self.l3_smoll_process(l2_out)
-        
+
         # Submit to Mock IDE
         async with httpx.AsyncClient() as client:
             try:

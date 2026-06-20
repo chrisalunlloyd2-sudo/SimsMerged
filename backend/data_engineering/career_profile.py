@@ -38,11 +38,11 @@ class Profiler:
         pdf = PDFReport()
         pdf.add_page()
         pdf.set_font("helvetica", size=12)
-        
+
         pdf.set_font("helvetica", 'B', 14)
         pdf.cell(0, 10, f"Dossier: {agent_id}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.set_font("helvetica", size=12)
-        
+
         # 1. Fetch Economy Stats
         balance = 0.0
         status = "UNKNOWN"
@@ -53,20 +53,20 @@ class Profiler:
                 row = cursor.fetchone()
                 if row:
                     balance, status = row
-                    
+
         pdf.cell(0, 10, f"Status: {status}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.cell(0, 10, f"DePIN Token Balance: {balance:.4f}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(5)
-        
+
         # 2. Add analytics sections (Predictive model placeholders - Step 59)
         pdf.set_font("helvetica", 'B', 12)
         pdf.cell(0, 10, "Execution Analytics (Trailing 24h)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.set_font("helvetica", size=12)
-        
+
         # In a fully populated system, this queries the Arrow telemetry DB for exact crash ratios.
         crash_likelihood = "Low (0.01%)" if status == "ACTIVE" else "High - Suspension State"
         pdf.cell(0, 10, f"L3 Crash Likelihood Prediction: {crash_likelihood}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        
+
         filepath = os.path.join(REPORTS_DIR, f"{agent_id}_career_{datetime.now().strftime('%Y%m%d')}.pdf")
         pdf.output(filepath)
         logger.info(f"Career Profile PDF generated for {agent_id} at {filepath}")

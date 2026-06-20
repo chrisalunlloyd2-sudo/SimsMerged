@@ -9,16 +9,16 @@ def analyze_ast(filepath):
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-            
+
         tree = ast.parse(content)
-        
+
         report = {
             "functions": [],
             "classes": [],
             "missing_docstrings": 0,
             "complex_loops": 0
         }
-        
+
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
                 report["functions"].append(node.name)
@@ -32,7 +32,7 @@ def analyze_ast(filepath):
                 for child in ast.walk(node):
                     if child != node and isinstance(child, (ast.For, ast.While)):
                         report["complex_loops"] += 1
-                        
+
         print(json.dumps(report))
         return report
     except Exception as e:

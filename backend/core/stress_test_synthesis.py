@@ -17,14 +17,14 @@ from backend.core.config import add_log, add_message
 async def run_stress_test():
     topic = "The Evolutionary Taxonomy and Genetic Divergence of Felis Catus in Urban Metropolis Environments"
     add_log(f"🚀 [STRESS_TEST] Initiating Phase 9 Stress Test for topic: {topic}")
-    
+
     attempts = 0
     max_attempts = 3
-    
+
     while attempts < max_attempts:
         attempts += 1
         add_log(f"📝 [STRESS_TEST] Attempt {attempts}/{max_attempts}")
-        
+
         # Step 27: Clean Slate
         zombies = process_manager.cleanup_zombies()
         if zombies > 0:
@@ -33,7 +33,7 @@ async def run_stress_test():
         try:
             # Step 22: Execute Synthesis Loop
             file_path = await synthesis_engine.generate_comprehensive_paper(topic)
-            
+
             # Step 24: Validate word count (>17,500 words)
             if validate_research_paper(file_path):
                 add_log(f"✅ [STRESS_TEST] SUCCESS! Paper validated at {file_path}")
@@ -43,9 +43,9 @@ async def run_stress_test():
                 add_log(f"❌ [STRESS_TEST] FAILED: Paper did not meet fidelity requirements.", level="warning")
         except Exception as e:
             add_log(f"💥 [STRESS_TEST] ERROR during synthesis: {e}", level="error")
-        
+
         await asyncio.sleep(10) # Cooling down before retry
-    
+
     add_log("💀 [STRESS_TEST] ABORTED: Failed to reach 35-page finality after 3 attempts.", level="critical")
     return False
 
