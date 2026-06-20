@@ -11,7 +11,7 @@ def kill_processes():
     Forcefully terminates all java and python instances to prevent zombie overhead.
     """
     print("🧹 [CLEAN_SLATE] Initiating forceful process termination...")
-    
+
     # Use taskkill for reliability on Windows
     try:
         subprocess.run(["taskkill", "/F", "/IM", "java.exe", "/T"], capture_output=True)
@@ -23,20 +23,20 @@ def kill_processes():
 
 def restart_metropolis():
     kill_processes()
-    
+
     print("🚀 [RESTART] Launching Metropolis Backend & JavaFX Neo...")
-    
+
     # Backend Launch (Port 8000 & 8002)
     backend_cmd = "powershell -NoExit -Command \"& 'C:/Users/viper/python/python.exe' run_backend.py\""
     subprocess.Popen(backend_cmd, shell=True)
-    
+
     # Wait for backend to stabilize
     time.sleep(5)
-    
+
     # GUI Launch
     gui_cmd = "powershell -NoExit -Command \"$env:JAVA_HOME='C:/Users/viper/JavaSetup/jdk-17.0.8.1+1'; cd C:/Users/viper/Desktop/Sims_JavaFX_Neo; & 'C:/Users/viper/JavaSetup/apache-maven-3.9.4/bin/mvn.cmd' javafx:run\""
     subprocess.Popen(gui_cmd, shell=True)
-    
+
     print("🏁 [RESTART] Metropolis Systems Initialized.")
 
 if __name__ == "__main__":
