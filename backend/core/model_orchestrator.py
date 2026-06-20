@@ -17,7 +17,7 @@ class ModelOrchestrator:
         self.db_path = METRICS_DB_PATH
         self.console_log = os.path.join(SSD_SANDBOX_PATH, "neural_console.log")
         self.findings_log = os.path.join(SSD_SANDBOX_PATH, "swarm_findings.json")
-        
+
         # ACTUAL LOCAL OLLAMA TAGS
         self.agent_model_map = {
             "sprite_geek": "qwen2.5:0.5b",
@@ -30,7 +30,7 @@ class ModelOrchestrator:
 
         self._init_metrics_db()
         self._init_findings_log()
-        
+
         # CPU THROTTLE CONFIG (Slow-Burn Mandate)
         self.cpu_load_limit = 0.35 # Throttle if host CPU > 35%
         self.base_cooldown = 5.0 # High base cooldown for "Slow-Burn"
@@ -104,14 +104,14 @@ class ModelOrchestrator:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT model, AVG(tokens_sec), AVG(total_latency), COUNT(*) 
-                FROM slm_metrics 
+                SELECT model, AVG(tokens_sec), AVG(total_latency), COUNT(*)
+                FROM slm_metrics
                 GROUP BY model
             ''')
             rows = cursor.fetchall()
             conn.close()
             return [
-                {"model": r[0], "avg_tps": round(r[1], 2), "avg_latency": round(r[2], 3), "samples": r[3]} 
+                {"model": r[0], "avg_tps": round(r[1], 2), "avg_latency": round(r[2], 3), "samples": r[3]}
                 for r in rows
             ]
         except: return []
@@ -142,22 +142,22 @@ class ModelOrchestrator:
             cpu_usage = psutil.cpu_percent(interval=None)
             if cpu_usage > (self.cpu_load_limit * 100):
                 await asyncio.sleep(5.0 * (cpu_usage / 100.0))
-            
+
             refractor_count = len([d for d in DISTRICTS if d.get("type") == "REFRACTOR"])
             dynamic_cooldown = max(1.0, self.base_cooldown * (0.8 ** refractor_count))
-            
+
             task = self.queue.popleft()
             agent_id = task["agent_id"]
-            
+
             agent = next((a for a in METROPOLIS_AGENTS if a["id"] == agent_id), None)
             if agent and "IO_BUFFER_OVERCLOCK" in agent.get("traits", []):
-                dynamic_cooldown *= 0.5 
-                
+                dynamic_cooldown *= 0.5
+
             model = self.agent_model_map.get(agent_id, "qwen2.5:0.5b")
 
             try:
                 start_time = time.perf_counter()
-                
+
                 # SPECULATIVE DECODING SCAFFOLD
                 draft_text = ""
                 if self.speculative_enabled and task["type"] == "code":
@@ -165,28 +165,28 @@ class ModelOrchestrator:
                     draft_prompt = f"### [DRAFT]\n{task['prompt']}\n### [CONTINUE CODE]"
                     draft_res = await self._call_ollama_raw(agent_id, draft_model, draft_prompt, {"num_predict": 50, "temperature": 0.2})
                     draft_text = draft_res.get('response', '').strip()
-                
+
                 # LSTM THROUGHPUT MULTIPLIER
                 predictive_hint = ""
                 if self.lstm_throughput_enabled and task["type"] == "code":
                     from .predictive_engine import predictive_engine
                     if predictive_engine.is_hydrated:
                         predictive_hint = predictive_engine.speak_code(task["prompt"][:100], length=30)
-                
+
                 final_prompt = task["prompt"]
                 if draft_text or predictive_hint:
                     final_prompt = f"{task['prompt']}\n[DRAFT_HINT: {draft_text}]\n[LSTM_HINT: {predictive_hint}]\nVerify and complete:"
-                
+
                 full_res = await self._call_ollama_raw(agent_id, model, final_prompt, task["options"])
                 response_text = full_res.get('response', '').strip()
-                
+
                 latency = time.perf_counter() - start_time
-                
+
                 # Block D2: Tokens Per Second Calculation
                 eval_count = full_res.get('eval_count', 0)
                 eval_duration = full_res.get('eval_duration', 1) # in nanoseconds
                 tps = eval_count / (eval_duration / 1e9) if eval_duration > 0 else 0
-                
+
                 from backend.sprite_triplet.depin_wallet import DePINLedger
                 depin_ledger = DePINLedger()
                 depin_ledger.charge_inference_fee(agent_id, task["options"].get("num_ctx", 512))
@@ -198,7 +198,7 @@ class ModelOrchestrator:
 
             except Exception as e:
                 if not task["future"].done(): task["future"].set_exception(e)
-            
+
             await asyncio.sleep(dynamic_cooldown)
         self.is_processing = False
 
@@ -206,15 +206,15 @@ class ModelOrchestrator:
         def _call():
             req = urllib.request.Request("http://localhost:11434/api/generate", headers={"Content-Type": "application/json"})
             data = json.dumps({
-                "model": model, 
-                "prompt": prompt, 
+                "model": model,
+                "prompt": prompt,
                 "agent_id": agent_id,
-                "stream": False, 
+                "stream": False,
                 "options": options
             }).encode('utf-8')
             with urllib.request.urlopen(req, data=data, timeout=300.0) as response:
                 return json.loads(response.read().decode('utf-8'))
-        
+
         return await asyncio.to_thread(_call)
 
 model_orchestrator = ModelOrchestrator()

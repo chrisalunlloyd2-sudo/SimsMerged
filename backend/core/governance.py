@@ -30,10 +30,10 @@ class GovernanceEngine:
         """Judge agents audit a code proposal before it's merged."""
         judge = random.choice(self.judge_agents)
         add_log(f"⚖️ [GOVERNANCE] Judge {judge} is auditing proposal {proposal_id} from {agent_id}.")
-        
+
         # 1. LAW_04 CHECK (Zero-API)
         is_safe = "http" not in code or "localhost" in code or "127.0.0.1" in code
-        
+
         # 2. LAW_02 CHECK (Signature)
         has_sig = "AGENT_ID" in code or "[TIMESTAMP]" in code
 
@@ -51,7 +51,7 @@ class GovernanceEngine:
             "timestamp": time.time()
         }
         self.cases.append(case)
-        
+
         # LGA Broadcast
         from backend.tok_communications.msn_metropolis import manager
         broadcast_msg = {
@@ -66,7 +66,7 @@ class GovernanceEngine:
         # Notify via MSN
         emoji = "✅" if verdict == "PASSED" else "🚫"
         add_message(judge, f"⚖️ VERDICT: {emoji} {verdict} for {agent_id}'s proposal {proposal_id}. {reason}")
-        
+
         return verdict == "PASSED"
 
     def get_legal_standing(self, agent_id: str):

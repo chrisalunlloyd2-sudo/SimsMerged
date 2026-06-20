@@ -24,19 +24,19 @@ class LogicResolutionManager:
         """
         desc = task_description.lower()
         full_text = (task_description + context).lower()
-        
+
         # 1. ULTRA: Complex refactoring, end-to-end building, security audits
         if any(kw in desc for kw in ["refactor", "re-engineer", "end-to-end", "blueprint"]):
             return "ULTRA"
-            
+
         # 2. HIGH: Implementation, new components, complex math
         if any(kw in desc for kw in ["implement", "generate", "complex", "optimize"]):
             return "HIGH"
-            
+
         # 3. MEDIUM: Chatting, summaries, simple logic fixes
         if len(full_text) > 1000 or any(kw in desc for kw in ["fix", "analyze", "explain"]):
             return "MEDIUM"
-            
+
         # 4. LOW: Heartbeats, simple file-writes, trivial pings
         return "LOW"
 

@@ -7,14 +7,14 @@ import ast
 
 class JavaFXPreflightWrapper:
     """
-    Structural check that ensures all merged Python backend logic is structurally 
-    sound, contains no syntax errors, and validates against component finality rules 
+    Structural check that ensures all merged Python backend logic is structurally
+    sound, contains no syntax errors, and validates against component finality rules
     before the JavaFX engine initializes them.
     """
     def __init__(self, base_dirs):
         self.base_dirs = base_dirs
         self.forbidden_imports = ["os.system", "subprocess.call"] # Enforce Popen for watchdogs
-        
+
     def generate_sha256(self, filepath):
         hasher = hashlib.sha256()
         with open(filepath, 'rb') as f:
@@ -41,16 +41,16 @@ class JavaFXPreflightWrapper:
         print("\n--- 🛫 STARTING JAVAFX PREFLIGHT WRAPPER ---")
         finality_log = {}
         all_passed = True
-        
+
         for filepath in target_files:
             if not os.path.exists(filepath):
                 print(f"❌ ERROR: File not found -> {filepath}")
                 all_passed = False
                 continue
-                
+
             filename = os.path.basename(filepath)
             passed, msg = self.check_syntax_and_structure(filepath)
-            
+
             if passed:
                 checksum = self.generate_sha256(filepath)
                 finality_log[filename] = checksum
@@ -58,7 +58,7 @@ class JavaFXPreflightWrapper:
             else:
                 print(f"❌ FAIL: {filename} -> {msg}")
                 all_passed = False
-                
+
         return all_passed, finality_log
 
 if __name__ == "__main__":
@@ -68,10 +68,10 @@ if __name__ == "__main__":
         "C:\\Users\\viper\\Desktop\\Sims_JavaFX_Neo\\sprite_core\\watchdog_module.py",
         "C:\\Users\\viper\\Desktop\\Sims_JavaFX_Neo\\sprite_core\\dmaic_analyzer.py"
     ]
-    
+
     preflight = JavaFXPreflightWrapper(base_dirs=[])
     passed, checksums = preflight.run_preflight(targets)
-    
+
     if passed:
         print("\n✅ PREFLIGHT SUCCESS: All components structurally verified.")
         # Log to BOOT_STATE.md

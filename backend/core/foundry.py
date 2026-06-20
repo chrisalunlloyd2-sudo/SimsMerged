@@ -26,13 +26,13 @@ class Foundry:
         """REAL_FOUNDRY: Processes all technical tasks via real SLM inference."""
         from .model_orchestrator import model_orchestrator
         agent_id = "sprite_geek" # Lead Optimizer
-        
+
         prompt = (
             f"FOUNDRY_TASK: {task_description}. "
             "MANDATE: ALWAYS BE CODING. Provide a functional technical implementation. "
             "Output ONLY the code or technical specification."
         )
-        
+
         try:
             res = await model_orchestrator.add_task(agent_id, prompt, task_type="foundry_task")
             # Store in additive project repository
@@ -42,21 +42,21 @@ class Foundry:
             with open(filepath, "w", encoding="utf-8") as f:
                 f.write(res)
             return f"Foundry successfully synthesized and fenced {filename} to SSD."
-        except:
+        except Exception:
             return "ERR: Foundry handshake failed."
 
     async def react_aider_workflow(self, task):
         """REAL_REACT: Uses ModelOrchestrator to perform un-simulated ReAct logic."""
         from .model_orchestrator import model_orchestrator
         agent_id = "sprite_socrates"
-        
+
         prompt = (
             f"RE-ACT TASK: {task}. Identify the bottleneck, propose a fix, and write the code. "
             "End with ACTION_DONE."
         )
-        
+
         try:
             res = await model_orchestrator.add_task(agent_id, prompt, task_type="react_aider")
             return f"ReAct Sovereignty: Agent verified logic and integrated fix."
-        except:
+        except Exception:
             return "ERR: ReAct handshake failed."

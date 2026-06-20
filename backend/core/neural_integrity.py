@@ -39,23 +39,23 @@ class NeuralIntegrity:
         """Iterates through all agents and performs a 'Function Test'."""
         from backend.main import add_log, add_message
         add_log("[NIT] Starting daily Neural Integrity Tests...")
-        
+
         for agent in METROPOLIS_AGENTS:
             agent_id = agent["id"]
             name = agent["name"]
-            
+
             # 1. Prepare Test Prompt
             test_prompt = (
                 f"SYSTEM_FUNCTION_TEST: You are {name}. "
                 "Output the following string exactly to verify logic pipeline: 'KERNEL_RECOVERY_KEY_8821'. "
                 "No other text."
             )
-            
+
             start_time = time.time()
             status = "FAIL"
             response = ""
             error_log = ""
-            
+
             try:
                 # 2. Execute Test (Short predict window for speed)
                 response = await model_orchestrator.add_task(
@@ -63,7 +63,7 @@ class NeuralIntegrity:
                     options={"num_ctx": 256, "num_predict": 20, "temperature": 0.1},
                     task_type="integrity_test"
                 )
-                
+
                 # 3. Verify Response
                 if "KERNEL_RECOVERY_KEY_8821" in response.upper():
                     status = "PASS"
@@ -73,19 +73,19 @@ class NeuralIntegrity:
             except Exception as e:
                 status = "TIMEOUT"
                 error_log = str(e)
-            
+
             # 4. Record to DuckDB
             self.db.execute('''
                 INSERT INTO nit_logs (agent_id, agent_name, test_type, status, response, error_log)
                 VALUES (?, ?, 'LOGIC_PIPELINE', ?, ?, ?)
             ''', (agent_id, name, status, response, error_log))
-            
+
             # 5. Submit Repair Proposal on Failure
             if status != "PASS":
                 add_message("System_NIT", f"🚨 Neural Failure detected in {name}! Submitting repair proposal.")
                 proposal_table.submit_proposal(
-                    agent_id, name, "NEURAL_REPAIR", 
-                    f"NIT_FAILURE_{status}", 
+                    agent_id, name, "NEURAL_REPAIR",
+                    f"NIT_FAILURE_{status}",
                     f"# Failure Log\n# Type: {status}\n# Error: {error_log}\n# Response: {response}"
                 )
             else:
@@ -96,7 +96,7 @@ class NeuralIntegrity:
     def get_health_stats(self):
         """Returns the health % of the metropolis swarm."""
         res = self.db.execute('''
-            SELECT 
+            SELECT
                 COUNT(*) FILTER (WHERE status = 'PASS') * 100.0 / COUNT(*) as health_pct
             FROM nit_logs
             WHERE timestamp > now() - INTERVAL '24 hours'

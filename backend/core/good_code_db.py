@@ -42,7 +42,7 @@ class GoodCodeDatabase:
         where = f"WHERE code LIKE '%{query}%'"
         if language:
             where += f" AND language = '{language}'"
-        
+
         results = self.conn.execute(f"SELECT code, category, tags FROM good_code {where} ORDER BY quality_score DESC LIMIT 5").fetchall()
         return [{"code": r[0], "category": r[1], "tags": json.loads(r[2])} for r in results]
 

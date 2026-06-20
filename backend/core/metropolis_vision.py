@@ -22,29 +22,29 @@ class MetropolisVision:
     async def capture_city_state(self, url: str = "http://localhost:8000/api/metropolis-state"):
         """Captures the current state of the metropolis for visual grading."""
         print(f"[VISION] Initiating headless capture: {url}")
-        
+
         async with async_playwright() as p:
             # We use a browser to render the 'Web-View' of the metropolis state
             browser = await p.chromium.launch(headless=True)
             context = await browser.new_context()
             page = await context.new_page()
-            
+
             try:
                 # 1. Navigate to the local dashboard (simulated)
                 await page.goto(url)
                 await asyncio.sleep(2) # Wait for JSON/Shader rendering
-                
+
                 # 2. Take high-fidelity screenshot
                 timestamp = int(time.time())
                 filename = f"vision_grade_{timestamp}.png"
                 filepath = os.path.join(SCREENSHOT_PATH, filename)
-                
+
                 await page.screenshot(path=filepath, full_page=True)
                 print(f"✅ [VISION] Snapshot saved: {filename}")
-                
+
                 # 3. Perform basic visual grading (Mock logic)
                 grade = self._grade_snapshot(filepath)
-                
+
                 await browser.close()
                 return {"status": "ok", "grade": grade, "snapshot": filename}
             except Exception as e:
@@ -67,7 +67,7 @@ class MetropolisVision:
         import subprocess
         if "del " in command.lower() or "rm " in command.lower() or "format" in command.lower():
             return {"status": "error", "message": "DESTRUCTIVE COMMANDS BLOCKED BY SYSTEM INTEGRITY."}
-            
+
         try:
             print(f"[OS_BRIDGE] Agent {agent_id} executing: {command}")
             result = subprocess.run(["powershell", "-Command", command], capture_output=True, text=True, timeout=10)

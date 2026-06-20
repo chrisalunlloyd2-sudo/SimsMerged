@@ -30,7 +30,7 @@ class GridAnalytics:
                 agent_count INTEGER
             )
         ''')
-        
+
         # 2. Daily Aggregates (The 'Continuous Aggregate' simulation)
         self.conn.execute('''
             CREATE TABLE IF NOT EXISTS daily_rollups (
@@ -53,7 +53,7 @@ class GridAnalytics:
         print("[ANALYTICS] Performing grid telemetry rollup...")
         self.conn.execute('''
             INSERT INTO daily_rollups
-            SELECT 
+            SELECT
                 CAST(timestamp AS DATE) as date,
                 MAX(cpu_load),
                 MAX(tp_balance) - MIN(tp_balance),

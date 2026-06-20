@@ -26,7 +26,7 @@ class GitHubHarvester:
                 # 1. Mirror Repo (No API call)
                 local_path = coding_automation.retrieve_github_repo(url)
                 print(f"✅ Mirrored: {url} to {local_path}")
-                
+
                 # 2. Perform AST Indexing (Deterministic)
                 count = 0
                 for root, dirs, files in os.walk(local_path):

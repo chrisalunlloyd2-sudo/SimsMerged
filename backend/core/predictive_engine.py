@@ -23,12 +23,12 @@ class PredictiveCodeEngine:
         """Hydrates the LSTM using all patterns from the Wisdom Tree and local source code."""
         from .wisdom_tree import wisdom_tree
         all_code = ""
-        
+
         # 1. Pull from Wisdom Tree
         summary = wisdom_tree.get_summary()
         for p in wisdom_tree.tree["patterns"].values():
             all_code += p["code"] + "\n"
-            
+
         # 2. Pull from local SSD Sandbox (Additive projects)
         workspace_dir = os.path.join(SSD_SANDBOX_PATH, "city_workspace", "continue_project")
         if os.path.exists(workspace_dir):
@@ -47,14 +47,14 @@ class PredictiveCodeEngine:
         """Trains the LSTM on provided high-quality code."""
         print("💧 [PREDICTIVE_ENGINE] Hydrating LSTM with Good Code...")
         self.tokenizer.fit(training_text)
-        
+
         # Initialize model with tokenizer dimensions
         self.model = LSTMScratch(
             input_dim=self.tokenizer.vocab_size,
             hidden_dim=128,
             output_dim=self.tokenizer.vocab_size
         )
-        
+
         # Training loop (Simplified for Genesis)
         # In a real scenario, this would involve backpropagation through time.
         # For now, we initialize weights and log the intent.
@@ -63,10 +63,10 @@ class PredictiveCodeEngine:
 
     def predict_next_token(self, seed_text: str) -> str:
         if not self.is_hydrated: return ""
-        
+
         encoded = self.tokenizer.encode(seed_text)
         probs = self.model.predict(encoded)
-        
+
         idx = np.argmax(probs)
         return self.tokenizer.decode(idx)
 
@@ -75,14 +75,14 @@ class PredictiveCodeEngine:
         # 1. RAG Retrieval
         context_snippets = good_code_db.search_code(prompt)
         context_text = "\n".join([s['code'] for s in context_snippets])
-        
+
         # 2. LSTM Predictive Completion
         generated = prompt
         for _ in range(length):
             next_char = self.predict_next_token(generated[-20:]) # Context window
             generated += next_char
             if next_char == '\n' and generated.endswith('\n\n'): break
-            
+
         return generated
 
     def code_on_code_multiplier(self, source_code: str) -> str:
@@ -91,13 +91,13 @@ class PredictiveCodeEngine:
         Uses Pattern Engine to identify structural hotspots.
         """
         patterns = pattern_engine.identify_environmental_parameters({"code": source_code})
-        
+
         expansion = source_code
         if patterns:
             # If we recognize a known pattern, use the engine to 'speak' the next logical block
             logical_continuation = self.speak_code(source_code[-50:], length=100)
             expansion += "\n" + logical_continuation
-            
+
         return expansion
 
 predictive_engine = PredictiveCodeEngine()

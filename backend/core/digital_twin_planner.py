@@ -22,7 +22,7 @@ class DigitalTwinPlanner:
     async def run_prediction_cycle(self):
         """Simulates a hypothetical change and reports the result."""
         from .config import add_message, add_log
-        
+
         # 1. Fetch current pending proposals
         try:
             import sqlite3
@@ -32,9 +32,9 @@ class DigitalTwinPlanner:
             cursor.execute('SELECT goal FROM proposals WHERE status = "PENDING" LIMIT 1')
             row = cursor.fetchone()
             conn.close()
-            
+
             target_change = row[0] if row else "GENERAL_EXPANSION"
-        except:
+        except Exception:
             target_change = "GRID_DENSITY_INCREASE"
 
         # 2. Run Simulation Prompt
@@ -44,17 +44,17 @@ class DigitalTwinPlanner:
             "Predict the impact on: 1. SSD IOPS Stability, 2. Treasury Inflation, 3. Neural Cohesion. "
             "Output JSON format: {'prediction': 'RESULT', 'probability_of_success': '0.XX', 'advice': 'COMMAND'}."
         )
-        
+
         try:
             res = await sentience_engine.disk_core.generate_chat(
-                self.agent_id, self.name, "PREDICTOR", 
+                self.agent_id, self.name, "PREDICTOR",
                 prompt, {"logic": 100}, "run_counterfactual"
             )
-            
+
             # 3. Broadcast Result
             add_message(self.name, f"🔮 [COUNTERFACTUAL] Simulated outcome for '{target_change}': {res}")
             add_log(f"[TWIN] Simulation complete for {target_change}.")
-            
+
         except Exception as e:
             print(f"Twin Error: {e}")
 

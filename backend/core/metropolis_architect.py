@@ -26,9 +26,9 @@ class MetropolisArchitect:
         # 1. Select a target for refactoring
         target = random.choice(self.target_files)
         agent = random.choice(main.METROPOLIS_AGENTS)
-        
+
         main.add_log(f"[ARCHITECT] {agent['name']} is analyzing '{target}' for optimization...", "info")
-        
+
         # 2. SLM Proposes Refactor
         prompt = (
             f"You are {agent['name']} ({agent['role']}). TASK: Hot-Patch '{target}'. "
@@ -36,20 +36,20 @@ class MetropolisArchitect:
             "Output ONLY the optimized functional Python function or class. "
             "MANDATE: ALWAYS BE CODING."
         )
-        
+
         try:
             patch_code = await model_orchestrator.add_task(agent["id"], prompt, task_type="architect_patch")
-            
+
             # 3. Write to Sandbox for Verification
             patch_filename = f"patch_{target}_{int(time.time())}.py"
             patch_path = os.path.join(RESEARCH_DIR, patch_filename)
             with open(patch_path, "w", encoding="utf-8") as f:
                 f.write(patch_code)
-            
+
             # 4. Sandbox Verification
             main.add_log(f"[ARCHITECT] Verifying patch '{patch_filename}' in sandbox...", "info")
             result = execution_sandbox.run_script(patch_filename)
-            
+
             if "SUCCESS" in result:
                 main.add_log(f"[ARCHITECT] Patch VERIFIED. Integrating into genetic memory.", "info")
                 with open(self.hot_patch_log, "a", encoding="utf-8") as f:
@@ -59,7 +59,7 @@ class MetropolisArchitect:
             else:
                 main.add_log(f"[ARCHITECT] Patch FAILED verification. Logic discarded.", "warn")
                 return False
-        except:
+        except Exception:
             return False
 
 if __name__ == "__main__":

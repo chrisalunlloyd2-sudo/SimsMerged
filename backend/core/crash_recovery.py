@@ -24,7 +24,7 @@ class CrashRecoveryOrchestrator:
         """Updates the pulse with a high-fidelity timestamp and project ID."""
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
         pulse_entry = f"[{timestamp}] [SimsMerged-v1.4.2] [{agent_id}] PULSE: {status}\n"
-        
+
         try:
             with open(PULSE_PATH, "a", encoding='utf-8') as f:
                 f.write(pulse_entry)
@@ -45,13 +45,13 @@ class CrashRecoveryOrchestrator:
         3. Restarts the Fenced Server.
         """
         self.recovery_mode = True
-        
+
         # Identify the failure pattern
         patterns = pattern_engine.identify_environmental_parameters({"error": "system_stall", "last_pulse": self.last_pulse_time})
-        
+
         if patterns:
             add_message("Recovery_Orchestrator", f"🛠️ [RECOVERY] Identified Crash Pattern: {patterns[0]['pattern_id']}. Applying fix...")
-        
+
         # Placeholder for 'Fix & Resume' logic (e.g., clearing lock files, restarting processes)
         self.heartbeat("Recovery_Orchestrator", "RECOVERY_COMPLETE: Resumed from Finish Line.")
         self.recovery_mode = False

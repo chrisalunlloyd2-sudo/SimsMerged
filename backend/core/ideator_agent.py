@@ -19,7 +19,7 @@ class IdeatorAgent:
 
     async def harvest_performatives(self):
         tasks = []
-        
+
         # 1. Harvest from Chat Logs (Existing)
         if os.path.exists(self.chat_log_path):
             try:
@@ -52,7 +52,7 @@ class IdeatorAgent:
                                 if any(kw in line.upper() for kw in ["TODO", "FIXME", "OPTIMIZE"]):
                                     todo_context += f"FILE: {file} L{i+1}: {line.strip()}\n"
                     except: pass
-        
+
         if todo_context:
             prompt = (
                 "You are the ARCHITECT_IDEATOR. Analyze these codebase TODOs and technical gaps. "
@@ -71,7 +71,7 @@ class IdeatorAgent:
             if os.path.exists(self.task_manifest_path):
                 with open(self.task_manifest_path, "r", encoding="utf-8") as f:
                     current_tasks = json.load(f)
-            
+
             # Deduplicate and append
             for t in tasks:
                 if not any(et.get("task") == t.get("task") for et in current_tasks):
@@ -79,7 +79,7 @@ class IdeatorAgent:
 
             with open(self.task_manifest_path, "w", encoding="utf-8") as f:
                 json.dump(current_tasks, f, indent=2)
-            
+
             add_message("Ideator", f"📋 [MANIFEST_UPDATED] Swarm generated {len(tasks)} new autonomous tasks from chat and code audit.")
             return current_tasks
         return []
@@ -104,10 +104,10 @@ class CompetencyProfile:
         if event_type == "RUNTIME_FAIL":
             bug_class = details.split(":")[0]
             self.profile["recurring_bugs"][bug_class] = self.profile["recurring_bugs"].get(bug_class, 0) + 1
-            
+
             if self.profile["recurring_bugs"][bug_class] > 5:
                 add_message("Architect_Advisory", f"💡 [KNOWLEDGE_TRACING] Recurring bug '{bug_class}' detected 5+ times. Suggesting defensive pattern implementation.")
-        
+
         self._save_profile()
 
     def _save_profile(self):

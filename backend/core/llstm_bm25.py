@@ -56,11 +56,11 @@ class LLSTMDatabase:
 
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         # 1. Short-Term (Rolling)
         cursor.execute('SELECT action, context, response FROM memories ORDER BY id DESC LIMIT ?', (short_term_limit,))
         short_term_rows = cursor.fetchall()[::-1]
-        
+
         # 2. Long-Term (BM25)
         cursor.execute('SELECT id, context, response FROM memories')
         all_rows = cursor.fetchall()
@@ -72,7 +72,7 @@ class LLSTMDatabase:
             bm25 = SimpleBM25(corpus)
             query_tokens = current_query.lower().split()
             scores = bm25.get_scores(query_tokens)
-            
+
             # Get top indices
             top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:long_term_limit]
             for idx in top_indices:
@@ -83,7 +83,7 @@ class LLSTMDatabase:
         context_block = "\\n[LLSTM_SHORT_TERM]: "
         for m in short_term_rows:
             context_block += f"{m[0]}|{m[1][:15]}..|{m[2][:20]}.. "
-            
+
         context_block += "\\n[LLSTM_LONG_TERM_BM25]: "
         for m in long_term_hits:
             context_block += f"RECALL_ID_{m[0]}: {m[2][:30]}.. "

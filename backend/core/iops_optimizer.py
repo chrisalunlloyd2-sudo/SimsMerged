@@ -22,25 +22,25 @@ class IOPSOptimizer:
         async with self.lock:
             while self.active_swaps >= self.max_concurrent_swaps:
                 await asyncio.sleep(0.5) # Wait for I/O clearance
-            
+
             self.active_swaps += 1
             start_time = time.time()
-            
+
             # Simulate physical I/O delay based on weight size
             # (Assuming 500MB/s SSD throughput)
             io_delay = weight_size_mb / 500.0
             await asyncio.sleep(io_delay)
-            
+
             self.active_swaps -= 1
             duration = time.time() - start_time
-            
+
             self.swap_history.append({
                 "agent": agent_id,
                 "size": weight_size_mb,
                 "duration": duration,
                 "timestamp": time.time()
             })
-            
+
             if len(self.swap_history) > 100: self.swap_history.pop(0)
             return True
 

@@ -30,7 +30,7 @@ class ThrottledSLM:
         self.lock = threading.Lock()
         self.vocabulary = {}
         self.kv_cache = {} # Local ephemeral cache for speculative hits
-        
+
     def sync_learning(self):
         """Learns from the chat log to build the local SLM state."""
         try:
@@ -49,11 +49,11 @@ class ThrottledSLM:
 
     def generate(self, agent_id, prompt):
         now = time.time()
-        
+
         # Step 20: Thermal & Extreme SSD Throttling Gate (SUPER THROTTLE)
         cpu_load = psutil.cpu_percent()
         thermal_throttle = 1.0
-        
+
         if cpu_load > 60.0:
             thermal_throttle = 2.0 # Force extreme delay if CPU is even slightly busy
             print(f"[SLM] ⚠️ MODERATE PRESSURE: {cpu_load}%. Engaging SSD delay.")
@@ -64,12 +64,12 @@ class ThrottledSLM:
         with self.lock:
             # 1. Extreme 30-Second Turn-Based Throttle Check (Resource Sharing)
             last_time = self.agent_last_chat.get(agent_id, 0)
-            if now - last_time < 30: 
+            if now - last_time < 30:
                 remaining = int(30 - (now - last_time))
                 return f"THROTTLED: {remaining}s remaining. Waiting for SSD_MMAP slice."
 
             self.agent_last_chat[agent_id] = now
-            
+
             # Speculative Hit check
             prompt_hash = hash(prompt)
             if prompt_hash in self.kv_cache and random.random() < 0.3:
@@ -80,10 +80,10 @@ class ThrottledSLM:
                 mm = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
                 offset = random.randint(0, mm.size() - 200)
                 _ = mm[offset:offset+200] # Speculative multi-byte read
-                
+
                 response = []
                 current = prompt.split()[-1] if prompt.split() else "System"
-                
+
                 for _ in range(25): # Expanded response length
                     time.sleep(0.1 * thermal_throttle) # Explicit SUPER THROTTLE during token generation
                     if current in self.vocabulary:
@@ -91,15 +91,15 @@ class ThrottledSLM:
                     else:
                         current = random.choice(list(self.vocabulary.keys())) if self.vocabulary else "Evolution"
                     response.append(current)
-                
+
                 mm.close()
-            
+
             final_response = " ".join(response)
             self.kv_cache[prompt_hash] = final_response
-            
+
             # HYPER-EXPANSION: Trigger Audio Chatter
             audio_chatter.speak(final_response, agent_id)
-            
+
             return final_response
 
 slm_engine = ThrottledSLM()

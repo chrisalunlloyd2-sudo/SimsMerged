@@ -10,7 +10,7 @@ from backend.core.bm25_orchestrator import bm25_scaffold
 
 def populate_ghost_db():
     ghost_python = bm25_scaffold.get_ghost_code("python")
-    
+
     templates = [
         {
             "id": "T1",
@@ -31,7 +31,7 @@ def populate_ghost_db():
             "tags": ["pom", "xml", "scaffold"]
         }
     ]
-    
+
     ghost_python.ingest_corpus(templates)
     print("Ghost Code DB Hydrated with Sovereign Templates.")
 

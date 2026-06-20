@@ -30,7 +30,7 @@ class OmniscientSteer:
             if re.search(pattern, text):
                 add_message("Omniscient_Steer", f"🤖 [DETERMINISTIC_REPLY] {response}")
                 return True
-        
+
         # Fallback to Pattern Engine if it looks like a telemetry ask
         patterns = pattern_engine.identify_environmental_parameters({"raw_text": text})
         if patterns and patterns[0]['similarity'] > 0.9:

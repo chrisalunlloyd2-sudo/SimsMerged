@@ -22,11 +22,11 @@ class ProotController:
         agent_dir = os.path.join(self.root_path, agent_id)
         if not os.path.exists(agent_dir):
             return {"status": "error", "message": f"Sandbox for {agent_id} not initialized."}
-        
+
         # In a real WSL2 environment, this would call 'proot' or 'proot-distro'
         # For now, we use subprocess to simulate the isolated execution path
         print(f"[PROOT] Executing for {agent_id}: {command}")
-        
+
         try:
             # We constrain the working directory to the agent's SSD fence
             result = subprocess.run(

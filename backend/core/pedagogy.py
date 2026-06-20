@@ -31,12 +31,12 @@ class ScientificMethod:
         agent = random.choice(METROPOLIS_AGENTS)
         obs_text = f"City Stability: {random.random():.2f}, Districts: {len(DISTRICTS)}, Agents: {len(METROPOLIS_AGENTS)}"
         add_log(f"[SCIENTIFIC_METHOD] {agent['name']} observing: {obs_text}")
-        
+
         # 2. HYPOTHESIS
         prompt = f"As {agent['name']}, form a technical hypothesis to improve the Metropolis based on: {obs_text}. End with HYPOTHESIS: [TEXT]"
         res = await model_orchestrator.add_task(agent["id"], prompt, task_type="pedagogy_hypothesis")
         hypothesis = res.split("HYPOTHESIS:")[1].strip() if "HYPOTHESIS:" in res else "Stability requires more code."
-        
+
         # 3. PREDICTION
         prompt = f"Based on hypothesis '{hypothesis}', predict the outcome of implementing it. End with PREDICTION: [TEXT]"
         res = await model_orchestrator.add_task(agent["id"], prompt, task_type="pedagogy_prediction")
@@ -45,12 +45,12 @@ class ScientificMethod:
         # 4. EXPERIMENT (Simulated technical task)
         add_message("System_Scientific", f"🔬 {agent['name']} is testing hypothesis: {hypothesis}", "science_experiment")
         await asyncio.sleep(5) # Simulate IO load
-        
+
         # 5. CONCLUSION
         success = random.random() > 0.3
         conclusion = "Hypothesis VALIDATED." if success else "Hypothesis REJECTED. More data needed."
         add_message(agent["name"], f"📊 [SCIENTIFIC_CONCLUSION] {conclusion} Prediction was: {prediction}", "science_conclusion")
-        
+
         self.log_report(agent["name"], hypothesis, prediction, conclusion)
 
     def log_report(self, agent_name, hypothesis, prediction, conclusion):

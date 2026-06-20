@@ -16,12 +16,12 @@ class CyberEconomy:
             "DATA_CORP": 45.0,
             "AI_FUTURES": 350.0,
             "RESEARCH_POOL": 0.0,
-            "DANUBE_COIN": 1.0 
+            "DANUBE_COIN": 1.0
         }
         self.agent_wallets = {}
         self.last_tick = time.time()
         self.transaction_tax_burn_rate = 0.02
-        
+
         # Mined Models Database (REAL OLLAMA TAGS)
         self.unlocked_models = ["smollm:135m", "qwen:0.5b", "h2o-danube2:0.5b"]
         self.available_models = [
@@ -50,7 +50,7 @@ class CyberEconomy:
         now = time.time()
         elapsed = now - self.last_tick
         self.last_tick = now
-        
+
         is_night = False
         if chrono_state:
             is_night = not chrono_state.get("is_daylight", True)
@@ -68,16 +68,16 @@ class CyberEconomy:
         # NOCTURNAL TOKENOMICS: 2x Minting at Night, 0.5x during Day (Sleep phase)
         cycle_multiplier = 2.0 if is_night else 0.5
         mint_rate = (2.0 * elapsed) * (total_power / len(METROPOLIS_AGENTS)) * cycle_multiplier
-        
+
         self.base_mint_rate = mint_rate
         self.crypto_balance = min(1000000.0, self.crypto_balance + mint_rate)
-            
+
         # Volatility logic
         for symbol in self.stock_market:
             if symbol == "RESEARCH_POOL": continue
             change = random.uniform(-0.01, 0.015)
             self.stock_market[symbol] = max(0.1, self.stock_market[symbol] * (1.0 + change))
-            
+
         return {
             "balance": round(self.crypto_balance, 2),
             "mint_rate": round(mint_rate, 4),
@@ -99,38 +99,38 @@ class CyberEconomy:
         """
         if agent_name not in self.agent_wallets:
             self.agent_wallets[agent_name] = {"balance": 100.0, "portfolio": {}}
-            
+
         wallet = self.agent_wallets[agent_name]
-        
+
         # Award performance bonus Sprite coins
         wallet["balance"] += performance_bonus
-        
+
         stock = random.choice(list(self.stock_market.keys()))
         price = self.stock_market[stock]
-        
+
         if stock == "RESEARCH_POOL":
             # Direct donation to neural model research
             donation = min(wallet["balance"] * 0.1, 10.0)
             wallet["balance"] -= donation
             self.stock_market["RESEARCH_POOL"] += donation
             return f"RESEARCH_DONATED_{donation:.1f}"
-        
+
         if wallet["balance"] >= price and random.random() > 0.4:
             # Burn a transaction tax to prevent economic bloat
             tax = price * self.transaction_tax_burn_rate
             wallet["balance"] -= (price + tax)
             self.crypto_balance -= tax # Burn the coins from total system circulation
-            
+
             wallet["portfolio"][stock] = wallet["portfolio"].get(stock, 0) + 1
             return f"BOUGHT_{stock}"
-            
+
         elif wallet["portfolio"].get(stock, 0) > 0 and random.random() > 0.4:
             tax = price * self.transaction_tax_burn_rate
             wallet["portfolio"][stock] -= 1
             wallet["balance"] += (price - tax)
             self.crypto_balance -= tax # Burn tax
             return f"SOLD_{stock}"
-            
+
         return "HOLD"
 
     def mine_depin_block(self, agent_name, action, prev_hash, difficulty=1):
@@ -141,9 +141,9 @@ class CyberEconomy:
         target_prefix = "0" * difficulty
         nonce = 0
         max_nonces = 1500 # Strict cap to keep CPU execution under 5ms (highly optimized)
-        
+
         start_time = time.time()
-        
+
         while nonce < max_nonces:
             data = f"{agent_name}{action}{prev_hash}{nonce}".encode()
             block_hash = hashlib.sha256(data).hexdigest()
@@ -156,7 +156,7 @@ class CyberEconomy:
                     "status": "VERIFIED_POW"
                 }
             nonce += 1
-            
+
         # Fallback in case of max search timeout
         fallback_data = f"{agent_name}{action}{prev_hash}fallback".encode()
         fallback_hash = hashlib.sha256(fallback_data).hexdigest()

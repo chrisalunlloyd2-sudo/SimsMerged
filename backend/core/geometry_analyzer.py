@@ -20,27 +20,27 @@ class GeometryAnalyzer:
         """
         features = pattern_engine.extract_features(str(data))
         geom = pattern_engine.map_multi_dimensional_geometry(features)
-        
+
         # Calculate geometric drift from history
         drift = 0.0
         if self.manifold_history:
             prev_geom = self.manifold_history[-1]
             drift = np.sqrt(
-                (geom['x'] - prev_geom['x'])**2 + 
-                (geom['y'] - prev_geom['y'])**2 + 
+                (geom['x'] - prev_geom['x'])**2 +
+                (geom['y'] - prev_geom['y'])**2 +
                 (geom['z'] - prev_geom['z'])**2
             )
-            
+
         self.manifold_history.append(geom)
         if len(self.manifold_history) > 100: self.manifold_history.pop(0)
-        
+
         analysis = {
             "geometry": geom,
             "drift": float(drift),
             "stability_index": 1.0 / (1.0 + drift),
             "recommendation": "STABLE" if drift < 10 else "ANOMALY_DETECTED"
         }
-        
+
         return analysis
 
     def identify_structural_patterns(self, code_snippet: str) -> List[Dict]:

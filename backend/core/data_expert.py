@@ -45,13 +45,13 @@ class DataExpert:
             text = msg.get("text", "")
             # Step 1: Chunking/Separating
             text_chunks = self._chunk_text(text, max_len=100)
-            
+
             for chunk in text_chunks:
                 # Step 2: Extraction Heuristic
                 if any(verb in chunk.lower() for verb in ["add", "implement", "make", "create", "fix", "need"]):
                     if len(chunk.strip()) > 10:
                         new_items.append(chunk.strip())
-        
+
         for item in new_items:
             if item not in self.master_todo_list:
                 self.master_todo_list.append(item)
@@ -88,12 +88,12 @@ class DataExpert:
         Compares harvested mandates against actual file implementations and CATALOG metadata.
         """
         missing = []
-        
+
         # 1. Check for Hyper-Productivity Implementation
         # We have the ActionsAgent class, but is it producing 'many pages'?
         if not os.path.exists(os.path.join(SSD_SANDBOX_PATH, "external_code_cache")):
             missing.append("CRITICAL: Github Code Mirroring not initialized.")
-        
+
         # 2. Check for Physical Containerization
         # proot/docker isolation check
         if not os.path.exists(os.path.join(SSD_SANDBOX_PATH, "containers_active.lock")):
@@ -101,7 +101,7 @@ class DataExpert:
 
         # 3. Check for Real DuckDB Timescale usage in main loop
         # Is the main loop actually querying the new DuckDB for decisions?
-        
+
         self.missing_features = missing
         self._save_state()
         return missing
@@ -117,13 +117,13 @@ class DataExpert:
             r"4 step multi recursion loop",
             r"extract todos truncate and separate into small chunks"
         ]
-        
+
         for p in patterns:
             if re.search(p, session_text, re.IGNORECASE):
                 mandate = f"MANDATE DETECTED: {p}"
                 if mandate not in self.master_todo_list:
                     self.master_todo_list.append(mandate)
-        
+
         self._save_state()
         return self.master_todo_list
 

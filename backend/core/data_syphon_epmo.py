@@ -32,12 +32,12 @@ class BM25Ranker:
         self.corpus_size = len(corpus)
         self.doc_len = [len(doc) for doc in corpus]
         self.avgdl = sum(self.doc_len) / self.corpus_size if self.corpus_size else 0
-        
+
         df = {}
         for doc in corpus:
             for word in set(doc):
                 df[word] = df.get(word, 0) + 1
-        
+
         for word, freq in df.items():
             self.idf[word] = math.log(1 + (self.corpus_size - freq + 0.5) / (freq + 0.5))
 
@@ -48,7 +48,7 @@ class BM25Ranker:
             doc_counts = Counter(query) # Should ideally be the document, but simplified for speed
             for word in query:
                 if word not in self.idf: continue
-                # We need term frequency in document. 
+                # We need term frequency in document.
                 # This is a simplified proxy since we don't store full inverted index in memory.
                 # In production, we use DuckDB FTS instead.
         return scores
@@ -80,7 +80,7 @@ class NeverMakeCodeTwiceDB:
         code_hash = hashlib.md5((performative + code).encode()).hexdigest()
         var_str = json.dumps(variables)
         now = time.time()
-        
+
         # Invalidate cache on new submission
         self.search_cache.clear()
 
@@ -91,7 +91,7 @@ class NeverMakeCodeTwiceDB:
             self.conn.execute("UPDATE code_blocks SET score = ?, iterations = iterations + 1, timestamp = ? WHERE hash = ?", (new_score, now, code_hash))
             return False # Already existed
         else:
-            self.conn.execute("INSERT INTO code_blocks VALUES (?, ?, ?, ?, ?, ?, ?)", 
+            self.conn.execute("INSERT INTO code_blocks VALUES (?, ?, ?, ?, ?, ?, ?)",
                               (code_hash, performative, code, var_str, score, 1, now))
             return True
 
@@ -104,14 +104,14 @@ class NeverMakeCodeTwiceDB:
         try:
             # Using DuckDB FTS
             res = self.conn.execute("""
-                SELECT performative, code, score FROM code_blocks 
-                WHERE fts_main_code_blocks.match_bm25(hash, ?) 
+                SELECT performative, code, score FROM code_blocks
+                WHERE fts_main_code_blocks.match_bm25(hash, ?)
                 ORDER BY score DESC LIMIT ?
             """, (query, limit)).fetchall()
             results = [{"performative": r[0], "code": r[1], "score": r[2]} for r in res]
             self.search_cache[cache_key] = results
             return results
-        except:
+        except Exception:
             # Fallback exact/like search
             res = self.conn.execute("SELECT performative, code, score FROM code_blocks WHERE performative LIKE ? ORDER BY score DESC LIMIT ?", (f"%{query}%", limit)).fetchall()
             results = [{"performative": r[0], "code": r[1], "score": r[2]} for r in res]
@@ -190,16 +190,16 @@ class LeanSixSigmaEPMO:
         try:
             with open(temp_file, "w", encoding="utf-8") as f:
                 f.write(code)
-            
+
             # Simple syntax check first
             compile(code, temp_file, 'exec')
-            
+
             # Run in sandbox
             res = execution_sandbox.run_script(os.path.basename(temp_file))
             if "ERR" in res:
                 return False
             return True
-        except:
+        except Exception:
             return False
         finally:
             if os.path.exists(temp_file): os.remove(temp_file)
@@ -207,26 +207,26 @@ class LeanSixSigmaEPMO:
     def critique_model_output(self, task_ask: str, generated_code: str):
         # [BLOCK B2]: Advanced Lean Six Sigma Heuristic Weighing
         score = 5.0 # Base entry score
-        
+
         try:
             # First Check: Does it even parse?
             tree = ast.parse(generated_code)
-        except:
+        except Exception:
             return 0.1 # Absolute failure
 
         # [BLOCK 4]: Hard-Fail Verification
         if not self.verify_runtime(generated_code):
             return 0.5 # Penalty for runtime failure
-        
+
         # 1. Readability & Documentation
         has_docstrings = any(isinstance(n, (ast.FunctionDef, ast.ClassDef)) and ast.get_docstring(n) for n in ast.walk(tree))
         if has_docstrings: score += 1.5
-        
+
         # 2. Error-Handling Robustness
         has_try_except = any(isinstance(n, ast.Try) for n in ast.walk(tree))
         if has_try_except: score += 2.0
         else: score -= 1.0 # Penalty for "naked" code
-        
+
         # 3. Big-O Complexity (Nested Loop Detection)
         nested_loops = 0
         for node in ast.walk(tree):
@@ -235,7 +235,7 @@ class LeanSixSigmaEPMO:
                 for child in ast.walk(node):
                     if child != node and isinstance(child, (ast.For, ast.While)):
                         nested_loops += 1
-        
+
         if nested_loops > 0:
             score -= (nested_loops * 0.5) # Penalty for quadratic/cubic complexity
         else:
@@ -245,7 +245,7 @@ class LeanSixSigmaEPMO:
         lines = generated_code.split('\n')
         comment_lines = len([l for l in lines if l.strip().startswith('#')])
         if comment_lines > len(lines) * 0.1: score += 1.0
-        
+
         # Log telemetry
         self.stats.append({"ask": task_ask, "score": score, "time": time.time()})
         return max(0.1, min(score, 10.0)) # Clamp to 0.1 - 10.0 scale
@@ -254,9 +254,9 @@ class LeanSixSigmaEPMO:
         current_code = initial_code
         current_score = self.critique_model_output(performative, current_code)
         iterations = 0
-        
+
         add_message("System_EPMO", f"🧬 Darwinian Advance started for: '{performative[:30]}...' (Base Score: {current_score:.2f})")
-        
+
         while iterations < 3: # Max 3 generation advances per block
             # [BLOCK 2]: SURGICAL SPECIFICATION
             # Ask the model to generate a PATCH instead of full rewrite
@@ -267,21 +267,21 @@ class LeanSixSigmaEPMO:
                 "MANDATE: Output a SURGICAL PATCH. Identify a search block and its replacement.\n"
                 "Output JSON format: {'search': '...', 'replace': '...'}"
             )
-            
+
             try:
                 patch_res = await model_orchestrator.add_task("EPMO_Architect", prompt, task_type="surgical_patch")
                 patch_data = json.loads(patch_res)
-                
+
                 new_code = SurgicalPatchManager.apply_patch(current_code, patch_data['search'], patch_data['replace'])
                 new_score = self.critique_model_output(performative, new_code)
-                
+
                 if new_score > current_score:
                     current_code = new_code
                     current_score = new_score
                     add_log(f"[EPMO] Surgical mutation successful. Score: {new_score:.2f}")
                 else:
                     break # No more advances
-            except:
+            except Exception:
                 # Fallback to full rewrite if patch fails
                 prompt_fallback = f"Optimize and advance this code mathematically for performance and Lean Six Sigma efficiency.\nGoal: {performative}\nCurrent Code:\n{current_code}\n\nReturn ONLY the improved Python code."
                 new_code = await model_orchestrator.add_task("EPMO_Architect", prompt_fallback, task_type="darwin_advance")
@@ -290,18 +290,18 @@ class LeanSixSigmaEPMO:
                     current_code = new_code
                     current_score = new_score
                 break
-            
+
             iterations += 1
             await asyncio.sleep(1)
-            
+
         # Submit to DB
         variables = ["var_" + str(i) for i in range(3)] # Simulated tethering
         code_db.submit_code(performative, current_code, variables, score=current_score)
-        
+
         # Block B3: Reward the Architect for LSS Performance
         reward_msg = economy.ai_trade("EPMO_Architect", performance_bonus=current_score)
         add_log(f"[EPMO] Reward issued to EPMO_Architect: {current_score:.2f} TP. Economy Result: {reward_msg}")
-        
+
         add_message("System_EPMO", f"✅ Advancements exhausted. Code anchored in DB at score {current_score:.2f}.")
         return current_code
 
@@ -310,7 +310,7 @@ epmo_school = LeanSixSigmaEPMO()
 async def start_epmo_loop():
     """Background loop for EPMO Business School."""
     add_log("🎓 Lean Six Sigma EPMO Business School Online. Data Syphon active.")
-    
+
     # 1. Scrape existing project to seed Ghost Code DB
     try:
         Scraper.scrape_directory(os.path.join(os.path.dirname(__file__), "..", "core"))

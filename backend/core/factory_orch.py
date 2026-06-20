@@ -26,10 +26,10 @@ class NeuralFactory:
         self.root = os.path.join(FACTORIES_DIR, project_id)
         self.workspace = os.path.join(self.root, "workspace")
         os.makedirs(self.workspace, exist_ok=True)
-        
+
         self.blueprint_path = os.path.join(self.root, "blueprint.json")
         self.blueprint = self._load_blueprint(goal)
-        
+
     def _load_blueprint(self, goal):
         if os.path.exists(self.blueprint_path):
             with open(self.blueprint_path, "r", encoding="utf-8") as f:
@@ -57,7 +57,7 @@ class FactoryOrchestrator:
     def __init__(self):
         self.factories = {}
         self.metrics = self._load_metrics()
-        
+
     def _load_metrics(self):
         if os.path.exists(METRICS_DB_PATH):
             with open(METRICS_DB_PATH, "r", encoding="utf-8") as f:
@@ -81,7 +81,7 @@ class FactoryOrchestrator:
         for model, data in self.metrics["model_performance"].items():
             score = data.get(f"{task_type}_score", 0.1)
             scores.append((model, score))
-        
+
         # Sort by score and pick the best
         scores.sort(key=lambda x: x[1], reverse=True)
         return scores[0][0]
@@ -95,10 +95,10 @@ class FactoryOrchestrator:
     async def run_factory_cycle(self):
         """Assembles project components bit-by-bit across all factories."""
         from .darwinian_orch import darwinian_orch
-        
+
         for pid, f in self.factories.items():
             if f.blueprint.get("status", "IDLE") == "COMPLETED": continue
-            
+
             # Step 1: Scientific Task Definition
             if not f.blueprint.get("current_task"):
                 # Ask a model to decompose the next step
@@ -111,11 +111,11 @@ class FactoryOrchestrator:
                     f.blueprint["status"] = "WORKING"
                     add_message("System", f"⚙️ [FACTORY_TASK] {pid} next task: {task_data.get('task', 'Untitled Component')}")
                 except: continue
-                
+
             # Step 2: Handoff to Banter Hub for 'Talk-About' Synthesis
             task = f.blueprint["current_task"]
             await darwinian_orch.initiate_code_banter(f"{pid}_{task['task'][:10]}", task["task"])
-            
+
             # Wait for Banter Hub to finish (Simulated check)
             # In a real loop, we'd check if the code was saved to assembly_line
             # For this phase, we signal the handoff is complete.

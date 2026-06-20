@@ -30,7 +30,7 @@ RESEARCH_DIR = os.path.join(SSD_SANDBOX_PATH, "research_outputs")
 # GLOBAL STATE CONTAINERS
 MSG_LOG = []
 EVENT_LOG = []
-NEURAL_LINKS = [] 
+NEURAL_LINKS = []
 DISTRICTS = []
 
 MSG_LOG_PATH = os.path.join(SSD_SANDBOX_PATH, "metropolis_chat.json")
@@ -46,7 +46,7 @@ def load_metropolis_state():
                 MSG_LOG.clear()
                 MSG_LOG.extend(data)
         except: pass
-    
+
     # 2. Load Population
     if os.path.exists(AGENTS_LOG_PATH):
         try:

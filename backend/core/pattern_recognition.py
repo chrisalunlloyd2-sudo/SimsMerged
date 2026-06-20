@@ -41,12 +41,12 @@ class PatternRecognitionEngine:
         # Convert input to string/bytes if not already
         if not isinstance(data, (str, bytes)):
             data = str(data)
-        
+
         # Simple hashing/vectorization for now to produce a 'dense summary'
         # In a real CNN, this would be the output of the flattening layer.
         arr = np.frombuffer(data.encode() if isinstance(data, str) else data, dtype=np.uint8)
         if len(arr) == 0: return np.zeros(64)
-        
+
         # Normalize and pad/truncate to fixed size for 'geometric mapping'
         features = np.interp(np.linspace(0, len(arr), 64), np.arange(len(arr)), arr)
         return features
@@ -63,7 +63,7 @@ class PatternRecognitionEngine:
     def store_pattern(self, pattern_id: str, category: str, data: Any, metadata: Dict = None):
         features = self.extract_features(data)
         geom = self.map_multi_dimensional_geometry(features)
-        
+
         self.conn.execute(
             "INSERT OR REPLACE INTO logits (pattern_id, category, dense_summary, geometry_map, metadata) VALUES (?, ?, ?, ?, ?)",
             (pattern_id, category, features.tobytes(), json.dumps(geom), json.dumps(metadata or {}))
@@ -75,23 +75,23 @@ class PatternRecognitionEngine:
         Identifies patterns in telemetry using non-LLM algorithmic matching.
         """
         current_features = self.extract_features(json.dumps(telemetry_data))
-        
+
         # Query existing logits
         results = self.conn.execute("SELECT pattern_id, dense_summary, geometry_map FROM logits").fetchall()
-        
+
         matches = []
         for pid, blob, geom_json in results:
             stored_features = np.frombuffer(blob, dtype=np.float64) # Adjust dtype as needed
             # Simple Euclidean distance for pattern recognition
             distance = np.linalg.norm(current_features - stored_features)
-            
+
             if distance < 500: # Threshold for 'recognition'
                 matches.append({
                     "pattern_id": pid,
                     "similarity": 1.0 / (1.0 + distance),
                     "geometry": json.loads(geom_json)
                 })
-        
+
         return sorted(matches, key=lambda x: x['similarity'], reverse=True)
 
 pattern_engine = PatternRecognitionEngine()

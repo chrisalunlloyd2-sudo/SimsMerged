@@ -56,7 +56,7 @@ class PreflightEngine:
         add_message("Genetic_Mutator", f"🧬 [MUTATION] Enhancing the '{category}' prompt based on swarm critique.")
         with open(self.genetic_prompt_file, "r") as f:
             prompts = json.load(f)
-        
+
         current_prompt = prompts[category]
         mutation_prompt = (
             f"GENETIC_MUTATOR: We are in the Preflight phase. Current Prompt: '{current_prompt}'. "
@@ -64,7 +64,7 @@ class PreflightEngine:
             "Rewrite the prompt to be more technical, specific, and effective for a local SLM. "
             "Output ONLY the new prompt string."
         )
-        
+
         try:
             new_prompt = await model_orchestrator.add_task("sprite_writer", mutation_prompt, task_type="genetic_mutation")
             prompts[category] = new_prompt
@@ -87,7 +87,7 @@ class PreflightEngine:
             category = random.choice(["GUI_FIX", "BACKEND_FIX", "PREFLIGHT_TEST", "GUI_GOAL"])
             goal = random.choice(self.gui_goals) if category == "GUI_GOAL" else None
             evolved_prompt = await self.get_evolved_prompt(category, goal=goal)
-            
+
             proposer = random.choice(METROPOLIS_AGENTS)
             hypothesis = await model_orchestrator.add_task(proposer["id"], evolved_prompt, task_type="hypothesis")
             add_message(proposer["name"], f"💡 [HYPOTHESIS] {hypothesis[:200]}...")
@@ -95,7 +95,7 @@ class PreflightEngine:
             # 2. CRITIQUE PHASE
             critic = random.choice(METROPOLIS_AGENTS)
             while critic["id"] == proposer["id"]: critic = random.choice(METROPOLIS_AGENTS)
-            
+
             critique_prompt = f"TECHNICAL CRITIQUE: Analyze this hypothesis from {proposer['name']}: '{hypothesis}'. Identify any logical flaws or SSD I/O risks."
             critique = await model_orchestrator.add_task(critic["id"], critique_prompt, task_type="critique")
             add_message(critic["name"], f"🧐 [CRITIQUE] {critique[:200]}...")
@@ -108,10 +108,10 @@ class PreflightEngine:
             if approved:
                 add_message("System", "🗳️ [VOTE_PASSED] Executing coding combination...")
                 task_id = await qwen_ide.propose_coding_task(f"Preflight_{category}", hypothesis)
-                
+
                 # Perform 1 iteration of the IDE cycle immediately
                 await qwen_ide.run_slow_burn_cycle()
-                
+
                 # Record the finding
                 model_orchestrator.record_finding(proposer["id"], f"Iteration {self.iteration} Passed", hypothesis)
             else:
@@ -119,7 +119,7 @@ class PreflightEngine:
                 await self.mutate_prompt(category, critique)
 
             # Iteration cooldown (Slow-Burn)
-            await asyncio.sleep(60) 
+            await asyncio.sleep(60)
 
 preflight_engine = PreflightEngine()
 

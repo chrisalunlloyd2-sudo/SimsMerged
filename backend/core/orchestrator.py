@@ -48,7 +48,7 @@ class SelfHealingOrchestrator:
         else:
             # Continually optimize for speed if healthy, but maintain a floor to prevent IO saturating
             self.weights["agent_sync_speed"] = max(2.0, self.weights["agent_sync_speed"] * 0.99)
-            
+
         # Optimization: Only save learning every 300 seconds (5 mins) instead of every loop
         if time.time() - self.weights.get("last_save", 0) > 300:
             self.weights["last_save"] = time.time()
@@ -59,18 +59,18 @@ class SelfHealingOrchestrator:
             try:
                 # Core operational logic
                 start_time = time.time()
-                
+
                 update_agents()
-                
+
                 with open("../PULSE_HEARTBEAT.txt", "w") as f:
                     f.write(str(time.time()))
-                
+
                 # Infinite Learning Step
                 self.self_modify()
-                
+
                 sync_delay = self.weights.get("agent_sync_speed", 1.2)
                 await asyncio.sleep(sync_delay)
-                
+
             except Exception as e:
                 # Self-Healing Step
                 self.weights["error_count"] = self.weights.get("error_count", 0) + 1

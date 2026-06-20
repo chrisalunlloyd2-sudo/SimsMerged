@@ -74,7 +74,7 @@ llm_client = LLMClient()
 def query_rag_chunk(query_tags, language=None):
     """Dual BM25 Pedagogical Retrieval."""
     query_str = " ".join(query_tags)
-    
+
     if language:
         # Pillar I: Language-specific Ghost Code Schema retrieval
         ghost_db = bm25_scaffold.get_ghost_code(language)
@@ -82,7 +82,7 @@ def query_rag_chunk(query_tags, language=None):
     else:
         # Pillar I: Project Continuity / Overarching Logic retrieval
         results = bm25_scaffold.continuity.search(query_str, top_k=1)
-        
+
     if results:
         doc, score = results[0]
         return doc['text']
@@ -100,16 +100,16 @@ def project_danube_inference(state_vector, temp=0.7, top_p=0.9, query_tags=None)
     """
     # 1. Speculative Draft (Predictive Text)
     draft_action = kv_cache.get_draft(state_vector, query_tags or [])
-    
+
     # 2. KV Cache Hash
     state_hash = hashlib.md5(f"{sum(state_vector):.3f}_{temp}_{top_p}_{'_'.join(query_tags or [])}".encode()).hexdigest()
-    
+
     def compute_inference():
         actions = list(ACTION_PROJECTIONS.keys())
 
         # 3. BM25 Ingestion
         rag_text = query_rag_chunk(query_tags or [])
-        
+
         # 4. Neural Projection
         logits = []
         for action in actions:
@@ -119,7 +119,7 @@ def project_danube_inference(state_vector, temp=0.7, top_p=0.9, query_tags=None)
             # Speculative Boost: If draft matches, boost logit
             if action == draft_action:
                 logit += 0.3
-            
+
             # Pedagogy Boost
             if action == "teach" and ("react" in rag_text or "aider" in rag_text):
                 logit += 0.6
@@ -127,7 +127,7 @@ def project_danube_inference(state_vector, temp=0.7, top_p=0.9, query_tags=None)
             logits.append(logit)
 
         probs = softmax(logits, temp)
-        
+
         # Top-P Filtering
         sorted_indices = sorted(range(len(probs)), key=lambda k: probs[k], reverse=True)
         cumulative_prob = 0.0

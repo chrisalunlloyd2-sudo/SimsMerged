@@ -35,7 +35,7 @@ class CodeExecutionSandbox:
                 filepath = sandbox_guard(os.path.join(SSD_SANDBOX_PATH, "build_lab", filename))
             if not os.path.exists(filepath):
                 filepath = sandbox_guard(os.path.join(SSD_SANDBOX_PATH, "assembly_line", filename))
-            
+
             if not os.path.exists(filepath):
                 return f"ERR: File {filename} not found in sandbox."
 
@@ -51,13 +51,13 @@ class CodeExecutionSandbox:
                 cmd, capture_output=True, text=True, timeout=5.0,
                 cwd=self.sandbox_dir
             )
-            
+
             elapsed = time.time() - start_time
             output = result.stdout if result.stdout else result.stderr
-            
+
             with open(self.execution_log, "a") as f:
                 f.write(f"[{time.ctime()}] EXECUTED: {filename} | DURATION: {elapsed:.2f}s | STATUS: {result.returncode}\n")
-            
+
             return f"SUCCESS (Exit {result.returncode}): {output[:200]}"
         except subprocess.TimeoutExpired:
             return "ERR: Execution TIMED OUT (Fenced safety limit reached)."

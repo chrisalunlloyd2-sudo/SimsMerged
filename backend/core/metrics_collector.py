@@ -38,7 +38,7 @@ class MetricsCollector:
     def report_inference(self, model, latency, success):
         if model not in self.stats["models"]:
             self.stats["models"][model] = {"success": 0, "fail": 0, "total_latency": 0.0, "logic_pass": 0}
-        
+
         m = self.stats["models"][model]
         if success:
             m["success"] += 1
@@ -60,11 +60,11 @@ class MetricsCollector:
             if total == 0:
                 rankings[name] = {"coding": 0.5, "logic": 0.5}
                 continue
-                
+
             success_rate = m["success"] / total
             avg_latency = m["total_latency"] / total
             logic_score = m["logic_pass"] / max(1, m["success"])
-            
+
             # Weighted Ranking
             coding_rank = (success_rate * 0.7) + (1.0 / max(1, avg_latency) * 0.3)
             rankings[name] = {

@@ -21,7 +21,7 @@ class JavaFXPreflightWrapper:
             "missing_constructor": r"public \w+\(\)",
             "illegal_patterns": ["System.exit", "Thread.sleep"]
         }
-        
+
         results = []
         for name, pattern in checks.items():
             if isinstance(pattern, str):
@@ -31,7 +31,7 @@ class JavaFXPreflightWrapper:
                 for p in pattern:
                     if p in code:
                         results.append(f"FAILED: illegal pattern '{p}'")
-        
+
         if not results:
             return True, "Code structure passed structural preflight."
         return False, "; ".join(results)

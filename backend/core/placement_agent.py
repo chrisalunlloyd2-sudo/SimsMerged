@@ -26,18 +26,18 @@ class PlacementLogicGate:
         topic = task.get("task", "")
         # Query the Continuity DB
         results = bm25_scaffold.continuity.search(topic, top_k=1)
-        
+
         if not results:
             add_log(f"[LOGIC_GATE] Task '{topic}' rejected. No continuity context found.", "warning")
             return False
-            
+
         doc, score = results[0]
-        
+
         # If the BM25 score is too low, it means the task is an hallucination or out of scope
         if score < 0.8:
             add_log(f"[LOGIC_GATE] Task '{topic}' rejected. Continuity score too low ({score:.2f}).", "warning")
             return False
-            
+
         add_log(f"[LOGIC_GATE] Task '{topic}' approved. Continuity score: {score:.2f}.")
         return True
 
@@ -47,13 +47,13 @@ class PlacementLogicGate:
         """
         from backend.core.data_syphon_epmo import LeanSixSigmaEPMO
         from backend.core.model_orchestrator import model_orchestrator
-        
+
         epmo = LeanSixSigmaEPMO()
         topic = task.get("task", "")
         context = task.get("context", "")
-        
+
         add_message("Logic_Gate", f"🚦 [ROUTING] Evaluating task: {topic}")
-        
+
         if not self._evaluate_continuity(task):
             add_message("Logic_Gate", f"⛔ [REJECTED] Task '{topic}' violates project continuity.")
             return
@@ -62,21 +62,21 @@ class PlacementLogicGate:
         if any(kw in topic.lower() for kw in ["install", "package", "dependency", "download", "pkg"]):
             add_message("Dependency_Agent", f"📦 [ACQUISITION] Processing dependency task: {topic}")
             pkg_tool = os.path.join(os.path.dirname(__file__), "headless_tools", "headless_pkg_manager.py")
-            
+
             prompt = f"Extract the EXACT install or download command from this task: {topic}. Output ONLY the command (e.g., pip install requests)."
             cmd_to_run = await model_orchestrator.add_task("Dependency_Agent", prompt, task_type="pkg_extract")
-            
+
             import subprocess
             res = subprocess.run(["python", pkg_tool, cmd_to_run.strip()], capture_output=True, text=True)
             try:
                 report = json.loads(res.stdout.split('\n')[-1])
                 if report.get("verified"):
                     add_message("Dependency_Agent", f"✅ [VERIFIED] Successfully installed: {cmd_to_run}")
-                    return 
+                    return
                 else:
                     add_message("Dependency_Agent", f"❌ [FAILED] Installation failed: {cmd_to_run}")
                     return
-            except:
+            except Exception:
                 add_message("Dependency_Agent", f"⚠️ [ERROR] Malformed report from Pkg Manager.")
                 return
 
@@ -84,7 +84,7 @@ class PlacementLogicGate:
         lang = "python" # Default fallback
         if "java" in topic.lower(): lang = "java"
         elif "js" in topic.lower() or "javascript" in topic.lower(): lang = "javascript"
-        
+
         ghost_db = bm25_scaffold.get_ghost_code(lang)
         schema_results = ghost_db.search(topic, top_k=1)
         schema_context = schema_results[0][0]['text'] if schema_results else "Use standard syntax."
@@ -102,7 +102,7 @@ class PlacementLogicGate:
             "If creating a file, use: with open('path/to/file', 'w') as f: f.write(content)\n"
             "STRATEGY: Prioritize using scripts in tools/. Use [EXECUTE] python tools/script_name.py <args>."
         )
-        
+
         try:
             raw_output = await model_orchestrator.add_task("Implementer_Qwen", prompt, options=options, task_type="implementation")
             add_log(f"[LOGIC_GATE] SLM Raw Output: {raw_output[:200]}...")
@@ -127,10 +127,10 @@ class PlacementLogicGate:
             # We save the raw_code to a temp file to test it
             temp_path = os.path.join(SSD_SANDBOX_PATH, f"test_{abs(hash(raw_code))}.py")
             with open(temp_path, "w", encoding="utf-8") as f: f.write(raw_code)
-            
+
             test_res = subprocess.run(["python", test_tool, temp_path], capture_output=True, text=True)
             if os.path.exists(temp_path): os.remove(temp_path)
-            
+
             try:
                 test_data = json.loads(test_res.stdout.split('\n')[-1])
                 if not test_data.get("success"):
@@ -140,7 +140,7 @@ class PlacementLogicGate:
                 else:
                     add_message("Logic_Gate", f"✅ [TEST_PASSED] Task '{topic}' passed all sovereign tests.")
                     success = True
-            except:
+            except Exception:
                 success = epmo.verify_runtime(raw_code) # Fallback to standard sandbox
 
             # Headless Validation (Security & AST)
@@ -149,18 +149,18 @@ class PlacementLogicGate:
             temp_eval_path = os.path.join(SSD_SANDBOX_PATH, f"eval_{abs(hash(raw_code))}.py")
             with open(temp_eval_path, "w", encoding="utf-8") as f:
                 f.write(raw_code)
-                
+
             tool_dir = os.path.join(os.path.dirname(__file__), "headless_tools")
             ast_script = os.path.join(tool_dir, "headless_ast_analyzer.py")
             sec_script = os.path.join(tool_dir, "headless_security_scanner.py")
-            
+
             ast_res = subprocess.run(["python", ast_script, temp_eval_path], capture_output=True, text=True)
             sec_res = subprocess.run(["python", sec_script, temp_eval_path], capture_output=True, text=True)
             if os.path.exists(temp_eval_path): os.remove(temp_eval_path)
-            
+
             ast_data = json.loads(ast_res.stdout) if ast_res.stdout.strip() else {}
             sec_data = json.loads(sec_res.stdout) if sec_res.stdout.strip() else {}
-            
+
             if sec_data.get("pii_flags") or sec_data.get("entropy_warnings"):
                 add_message("Logic_Gate", f"❌ [REJECTED] Failed Headless Security Scan.")
                 return
@@ -184,7 +184,7 @@ class PlacementLogicGate:
                 })
             else:
                 add_message("Logic_Gate", f"💀 [FATAL] Task failed all attempts.")
-                
+
         except Exception as e:
             add_log(f"[LOGIC_GATE_ERR] {e}", "error")
 
