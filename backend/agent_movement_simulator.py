@@ -18,20 +18,20 @@ async def simulate_agent_movement(agent_id, start_pos, target_pos):
     map_path = r"C:\Users\viper\Desktop\SimsMerged\backend\world_map.json"
     with open(map_path, 'r') as f:
         world_data = json.load(f)
-    
+
     matrix = world_data['matrix']
-    
+
     # 2. Pathfinding
     pathfinder = AStarPathfinder(matrix)
     print(f"[SIM] Calculating path for {agent_id} from {start_pos} to {target_pos}...")
     path = pathfinder.find_path(start_pos, target_pos)
-    
+
     if not path:
         print("[SIM] No path found!")
         return
 
     print(f"[SIM] Path found: {len(path)} steps.")
-    
+
     # 3. Step through path and broadcast to WebSocket
     async with httpx.AsyncClient() as client:
         for step in path:
@@ -47,7 +47,7 @@ async def simulate_agent_movement(agent_id, start_pos, target_pos):
                 await client.post("http://127.0.0.1:8000/api/v1/agent/update", json=payload)
             except Exception as e:
                 print(f"[SIM] Failed to send update: {e}")
-            
+
             # Simulated move time
             await asyncio.sleep(0.1) # 100ms per tile for smooth-ish visual
 

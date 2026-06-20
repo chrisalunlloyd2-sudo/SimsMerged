@@ -32,11 +32,11 @@ class TrainingRoutine:
 
     async def run_genetic_darwin_epoch(self, epoch_num):
         self.log(f"--- Starting Genetic Darwin Epoch {epoch_num} ---")
-        
+
         # A/B Testing Mutation
         mutation_a = {"name": "Performance_Focus", "stability_drain": random.uniform(0.05, 0.1), "speed_boost": random.uniform(1.2, 1.5)}
         mutation_b = {"name": "Stability_Focus", "stability_drain": random.uniform(0.01, 0.03), "speed_boost": random.uniform(0.8, 1.0)}
-        
+
         # DePIN Agents Vote (SHA-256)
         votes_a = 0
         votes_b = 0
@@ -50,21 +50,21 @@ class TrainingRoutine:
 
         winner = mutation_b if votes_b >= votes_a else mutation_a
         self.log(f"DePIN Voting Results: A({votes_a}) vs B({votes_b}). Winner: {winner['name']} (Hash: {vote_hash[:16]}...)")
-        
+
         # Apply Mutation
         self.quantum_core.stability -= winner['stability_drain']
-        
+
         # Simulated "Loss" calculation based on Darwin winner
         loss = max(0.001, 0.5 * (0.95 ** epoch_num) * winner['speed_boost'] + random.uniform(-0.01, 0.01))
-        
+
         # Update attributes based on epoch
         new_lr = max(0.0001, 0.001 * (0.98 ** epoch_num))
         self.quantum_core.update_attributes({"lr": new_lr, "loss": loss, "darwin_winner": winner['name']})
-        
+
         # Chain of Thought Logging
         cot = f"Epoch {epoch_num} Chain of Thought: By applying {winner['name']}, the system ensures longevity over short-term bursts. The DePIN network has spoken."
         self.log(cot)
-        
+
         # Save Weights Matrix
         weights_file = os.path.join(self.workspace_dir, f"weights_matrix_epoch_{epoch_num}.json")
         weights_data = {
@@ -78,12 +78,12 @@ class TrainingRoutine:
             },
             "status": "CONVERGING"
         }
-        
+
         with open(weights_file, "w", encoding="utf-8") as f:
             json.dump(weights_data, f, indent=2)
-            
+
         self.log(f"Epoch {epoch_num} complete. Loss: {loss:.4f}. Weights saved.")
-        
+
         # Self-healing if stability is low
         if self.quantum_core.stability < 0.6:
             self.quantum_core.stability = min(1.0, self.quantum_core.stability + 0.2)

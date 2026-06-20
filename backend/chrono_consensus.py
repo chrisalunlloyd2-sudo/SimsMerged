@@ -21,12 +21,12 @@ class ChronoTimer:
     async def start_voting_epoch(self, proposal_id):
         """Step 14.1: Broadcast temporal phase gates."""
         phases = ["PROPOSAL_OPEN", "BALLOT_CASTING", "TALLIED_EXECUTION"]
-        
+
         for phase in phases:
             self.current_phase = phase
             self.start_time = time.time()
             logger.info(f">>> CHRONOS PHASE: {phase} for {proposal_id}")
-            
+
             # Broadcast to GUI
             async with httpx.AsyncClient() as client:
                 try:
@@ -36,9 +36,9 @@ class ChronoTimer:
                         "message": f"[CHRONOS] Phase Transition: {phase}. Remaining: {self.epoch_duration}s"
                     })
                 except: pass
-                
+
             await asyncio.sleep(self.epoch_duration / len(phases))
-            
+
         logger.info(f"Voting Epoch for {proposal_id} closed.")
 
 if __name__ == "__main__":

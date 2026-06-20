@@ -32,19 +32,19 @@ class ObjectPool:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    
+
     class MockDataPacket:
         def __init__(self):
             self.data = None
         def reset(self):
             self.data = None
-            
+
     pool = ObjectPool(MockDataPacket, initial_size=5)
-    
+
     # Simulate high-frequency acquisition
     p1 = pool.acquire()
     p1.data = "Payload A"
     print(f"Acquired: {p1.data}")
     pool.release(p1)
-    
+
     print(f"Pool size after release: {len(pool.pool)}")

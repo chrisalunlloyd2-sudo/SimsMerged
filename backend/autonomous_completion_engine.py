@@ -50,17 +50,17 @@ class CompletionEngine:
             logger.info(">>> STEP 1: SYSTEMIC COMBING")
             holes_report = self.reaper.generate_autonomous_report()
             holes = holes_report.get("detected_holes", [])
-            
+
             if not holes:
                 logger.info("No holes detected. Project 100% complete.")
                 # Shift to evolutionary loop
             else:
                 logger.info(f"Detected {len(holes)} holes. Initiating Surgical Patching...")
-                
+
                 # 3. Act (Resolve via Test Factory)
                 logger.info(">>> STEP 2: TEST FACTORY PASS")
                 self.factory.resolve_holes()
-                
+
                 # 4. Feedback (Darwinian Pruning)
                 logger.info(">>> STEP 3: DARWINIAN PRUNING")
                 self.darwin.run_population_pruner()

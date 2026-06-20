@@ -20,12 +20,12 @@ async def validate_ui_throughput():
         logger.info("Starting Headless UI Validation Sprite...")
         # Note: We are validating the WebSocket stream which drives the GUI.
         # Measuring 'Messages Per Second' as a proxy for visual update potential.
-        
+
         ws_url = "ws://127.0.0.1:8000/ws/chat/ValidatorSprite"
-        
+
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
-        
+
         # Simple JS to measure WS throughput
         script = """
         () => {
@@ -40,22 +40,22 @@ async def validate_ui_throughput():
             });
         }
         """
-        
+
         logger.info("Measuring WebSocket throughput for 5 seconds...")
         # Need a page to execute JS
         await page.goto("about:blank")
         msg_total = await page.evaluate(script)
-        
+
         mps = msg_total / 5.0
         logger.info(f"UI Validation Complete.")
         logger.info(f"Total Messages: {msg_total}")
         logger.info(f"Messages Per Second: {mps:.2f}")
-        
+
         if mps >= 30:
             logger.info("RESULT: PASS. UI Throughput meets 30 FPS target.")
         else:
             logger.warning(f"RESULT: MARGINAL. Throughput is {mps:.2f} MPS. Optimization may be required.")
-            
+
         await browser.close()
 
 if __name__ == "__main__":

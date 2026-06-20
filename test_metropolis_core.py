@@ -26,7 +26,7 @@ async def test_metropolis_core():
     print("📊 [TEST] Validating Pattern Engine...")
     test_data = "CPU: 45%, RAM: 30MB, Disk: OK"
     pattern_engine.store_pattern("test_telemetry_001", "telemetry", test_data, {"source": "validator"})
-    
+
     matches = pattern_engine.identify_environmental_parameters({"raw": test_data})
     if matches and matches[0]['pattern_id'] == "test_telemetry_001":
         print("✅ [TEST] Pattern Engine: Logit Storage & Matching Verified.")

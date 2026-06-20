@@ -20,9 +20,9 @@ class CitationManager:
         if not domain:
             try:
                 domain = re.search(r'https?://(.*?)/', url).group(1)
-            except:
+            except Exception:
                 domain = "AcademicSource"
-        
+
         citation = {
             "title": f"Metropolis Academic Archive: {domain.capitalize()}",
             "url": url,
@@ -61,18 +61,18 @@ class AdvancedScraper:
 
     def is_high_quality(self, text: str) -> bool:
         """Heuristically weeds out inaccurate or poor data using Shannon Logic."""
-        if len(text) < 500: return False 
-        
+        if len(text) < 500: return False
+
         entropy = self.calculate_shannon_entropy(text)
         # Higher entropy (typically 4.0 - 5.0 for English text) implies higher information density
         if entropy < 3.5: return False # Likely repetitive or low-info content
-        
+
         academic_markers = ["taxonomy", "genetics", "physiological", "evolutionary", "behavioral", "felis catus"]
         matches = sum(1 for m in academic_markers if m in text.lower())
-        
-        if matches < 2: return False 
+
+        if matches < 2: return False
         if any(word in text.lower() for word in self.blacklist): return False
-            
+
         return True
 
     def scrape_topic(self, topic: str, max_results: int = 10) -> List[Dict]:
@@ -81,14 +81,14 @@ class AdvancedScraper:
         """
         add_log(f"[SCRAPER] Initiating Advanced Scrape for: {topic}")
         search_url = f"https://www.google.com/search?q={topic.replace(' ', '+')}+university+study+feline+biology"
-        
+
         results = []
         try:
             response = requests.get(search_url, headers=self.headers, timeout=10)
             if response.status_code == 200:
                 links = re.findall(r'href="/url\?q=(https://.*?)"', response.text)
                 unique_links = list(set([l.split('&')[0] for l in links if "google" not in l]))
-                
+
                 for link in unique_links[:max_results]:
                     content = self.fetch_and_clean(link)
                     if self.is_high_quality(content):
@@ -96,7 +96,7 @@ class AdvancedScraper:
                         add_log(f"[SCRAPER] Verified High-Quality Source: {link[:40]}...")
         except Exception as e:
             add_log(f"[SCRAPER] Scrape Error: {str(e)}", level="error")
-            
+
         return results
 
     def fetch_and_clean(self, url: str) -> str:
@@ -105,14 +105,14 @@ class AdvancedScraper:
             res = requests.get(url, headers=self.headers, timeout=5)
             html = re.sub(r'<(script|style).*?>.*?</\1>', '', res.text, flags=re.DOTALL)
             paragraphs = re.findall(r'<p>(.*?)</p>', html, flags=re.DOTALL)
-            
+
             clean_text = ""
             for p in paragraphs:
                 p_clean = re.sub(r'<.*?>', '', p)
                 if len(p_clean) > 100:
                     clean_text += p_clean + "\n\n"
             return clean_text
-        except:
+        except Exception:
             return ""
 
     def get_citation(self, result: Dict) -> str:
@@ -120,7 +120,7 @@ class AdvancedScraper:
         url = result['url']
         try:
             domain = re.search(r'https?://(.*?)/', url).group(1)
-        except:
+        except Exception:
             domain = "AcademicSource"
         title = "Metropolis Academic Archive: " + domain.capitalize()
         return f"[{title}. Available at: {url} (Accessed 2026-06-11)]"

@@ -26,7 +26,7 @@ class FeatureFactory:
     def implement_scout(self):
         """Step 8.1: Implement the Scout Agent."""
         logger.info("Implementing Scout Agent (Task Decomposition)...")
-        
+
         code = """# [PERFORMATIVE: SCOUT_AGENT]
 import json
 import logging
@@ -36,7 +36,7 @@ def scout_decompose_goals(world_map_json, global_goal):
     # 1. Parse Map
     with open(world_map_json, 'r') as f:
         world = json.load(f)
-    
+
     # 2. Logic: If goal is Build Cabin, we need Wood and Stone.
     # Find coordinates of Wood (Terrain 0) and Stone (Terrain 2).
     tasks = []
@@ -47,7 +47,7 @@ def scout_decompose_goals(world_map_json, global_goal):
             if tile == 2: tasks.append({"type": "GATHER", "item": "Stone", "coord": (x,y)})
             if len(tasks) >= 5: break
         if len(tasks) >= 5: break
-            
+
     return tasks
 """
         # Verify via Axiomatic Checker
@@ -61,18 +61,18 @@ def scout_decompose_goals(world_map_json, global_goal):
     def implement_aggregator(self):
         """Step 8.2: Implement the Aggregator Agent."""
         logger.info("Implementing Aggregator Agent (Economic Synthesis)...")
-        
+
         code = """# [PERFORMATIVE: AGGREGATOR_AGENT]
 import json
 
 def aggregate_metropolis_economy(agent_inventories):
     \"\"\"Compiles 50+ agent reports into a single economic summary.\"\"\"
     summary = {"total_wood": 0, "total_stone": 0, "active_pioneers": len(agent_inventories)}
-    
+
     for agent_id, inv in agent_inventories.items():
         summary["total_wood"] += inv.get("Wood", 0)
         summary["total_stone"] += inv.get("Stone", 0)
-        
+
     return summary
 """
         if self.checker.verify(code):

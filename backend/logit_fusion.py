@@ -19,9 +19,9 @@ class LogitFusion:
         """
         w1, w2 = 0.6, 0.4 # Developer has primary weight
         z_emergent = (w1 * dev_certainty) + (w2 * critic_certainty)
-        
+
         logger.info(f"Emergent Logit Fusion: Dev({dev_certainty}) + Critic({critic_certainty}) -> {z_emergent:.4f}")
-        
+
         # SMT Threshold check
         if z_emergent > 0.85:
             return "TRUSTED", z_emergent

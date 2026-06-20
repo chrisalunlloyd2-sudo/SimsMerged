@@ -40,7 +40,7 @@ fernet = Fernet(AES_KEY)
 
 class SecurityManager:
     """Handles core security functions for the backend."""
-    
+
     @staticmethod
     def generate_jwt(subject: str) -> str:
         """Step 61: Generate JWT tokens for internal/external API routing."""
@@ -80,7 +80,7 @@ def configure_app_security(app):
         allow_methods=["GET", "POST"],
         allow_headers=["Authorization", "Content-Type"],
     )
-    
+
     # Rate Limiter
     limiter = Limiter(key_func=get_remote_address)
     app.state.limiter = limiter
@@ -91,14 +91,14 @@ def configure_app_security(app):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logger.info("Testing Security Core...")
-    
+
     # Test Encryption
     secret_code = "def backdoor(): pass"
     encrypted = SecurityManager.encrypt_payload(secret_code)
     logger.info(f"Encrypted payload length: {len(encrypted)}")
     decrypted = SecurityManager.decrypt_payload(encrypted)
     assert secret_code == decrypted
-    
+
     # Test JWT
     token = SecurityManager.generate_jwt("VIPER_ADMIN")
     logger.info(f"Generated JWT: {token[:20]}...")

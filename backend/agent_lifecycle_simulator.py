@@ -19,15 +19,15 @@ async def simulate_agent_lifecycle(agent_id, start_pos, target_pos):
     map_path = r"C:\Users\viper\Desktop\SimsMerged\backend\world_map.json"
     with open(map_path, 'r') as f:
         world_data = json.load(f)
-    
+
     matrix = world_data['matrix']
     inv_sys = InventorySystem()
-    
+
     # 2. Pathfinding
     pathfinder = AStarPathfinder(matrix)
     print(f"[SIM] Calculating path for {agent_id} from {start_pos} to {target_pos}...")
     path = pathfinder.find_path(start_pos, target_pos)
-    
+
     if not path:
         print("[SIM] No path found!")
         return
@@ -49,14 +49,14 @@ async def simulate_agent_lifecycle(agent_id, start_pos, target_pos):
         # 4. Gather Resource at target
         terrain = matrix[target_pos[0]][target_pos[1]]
         print(f"[SIM] Agent {agent_id} reached target {target_pos}. Initiating gathering...")
-        
+
         success = await inv_sys.gather_resource(agent_id, terrain)
-        
+
         if success:
             # 5. Broadcast inventory update to GUI
             inventory = inv_sys.get_inventory(agent_id)
             inv_dict = {item[0]: item[1] for item in inventory}
-            
+
             payload = {
                 "type": "AGENT_UPDATE",
                 "agent_id": agent_id,

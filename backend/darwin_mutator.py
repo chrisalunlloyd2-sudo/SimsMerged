@@ -29,9 +29,9 @@ class DarwinMutator:
         """Step 18.1: Mutate L3 prompts using structural variation."""
         with open(self.registry_path, "r") as f:
             registry = json.load(f)
-            
+
         parent = registry.get(base_prompt_key, "")
-        
+
         # 10-Iteration Genetic Loop (Simulated)
         mutations = [
             "Use snake_case for all variables.",
@@ -39,15 +39,15 @@ class DarwinMutator:
             "Minimize whitespace to reduce token load.",
             "Prepend all functions with the [AXIOM_SAFE] tag."
         ]
-        
+
         selected_mutation = random.choice(mutations)
         new_prompt = f"{parent} RULE: {selected_mutation}"
-        
+
         # Update Registry
         registry[f"{base_prompt_key}_v{random.randint(100,999)}"] = new_prompt
         with open(self.registry_path, "w") as f:
             json.dump(registry, f, indent=4)
-            
+
         logger.info(f"Darwinian Mutation successful: '{selected_mutation}' applied to {base_prompt_key}.")
         return new_prompt
 

@@ -24,14 +24,14 @@ class SkillCrystallizer:
     def crystallize_module(self, path: str, module_name: str):
         """Step 18.3: Bit-pack successful autonomous logic into the ToK Tower."""
         logger.info(f"Crystallizing skill: {module_name}...")
-        
+
         with open(path, 'r') as f:
             code = f.read()
-            
+
         # Create a persistent namespace in the Radix-Trie
         tower_path = f"skills/autonomous/{module_name}"
         offset = self.tower.insert_node(tower_path, weight=100, flags=1) # flag 1 = VERIFIED_SKILL
-        
+
         logger.info(f"Skill '{module_name}' crystallized in ToK Arena at offset {hex(offset)}")
         return offset
 

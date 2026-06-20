@@ -48,8 +48,8 @@ class InventorySystem:
             cursor.execute('''
                 INSERT INTO agent_inventory (agent_id, item_id, quantity, weight)
                 VALUES (?, ?, ?, ?)
-                ON CONFLICT(agent_id, item_id) DO UPDATE SET 
-                quantity = quantity + ?, 
+                ON CONFLICT(agent_id, item_id) DO UPDATE SET
+                quantity = quantity + ?,
                 weight = weight + ?
             ''', (agent_id, item_id, quantity, weight_per_unit * quantity, quantity, weight_per_unit * quantity))
             conn.commit()
@@ -64,14 +64,14 @@ class InventorySystem:
 
     async def gather_resource(self, agent_id, terrain_type):
         """
-        Step 3.2: Write the gather_resource logic. 
+        Step 3.2: Write the gather_resource logic.
         Agent at a specific tile spends 1 DePIN token and waits to add resource.
         """
         item_map = {
             0: ("Wood", 1.0, 1.5),  # Terrain 0 (Grass/Trees) -> Wood
             2: ("Stone", 1.0, 2.5)  # Terrain 2 (Stone) -> Stone
         }
-        
+
         if terrain_type not in item_map:
             logger.warning(f"No gatherable resources at terrain type {terrain_type}.")
             return False
@@ -84,7 +84,7 @@ class InventorySystem:
             # 2. Wait 5 system "ticks" (simulated sleep)
             logger.info(f"Gathering {item_id} in progress (5 ticks)...")
             await asyncio.sleep(1.0) # 1 second simulated gathering time
-            
+
             # 3. Add to inventory
             self.add_item(agent_id, item_id, 1, weight)
             return True
@@ -95,17 +95,17 @@ class InventorySystem:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     inv = InventorySystem()
-    
+
     # Test
     agent = "L3_PIONEER_01"
     # Ensure agent is funded for test
     inv.ledger.fund_wallet(agent, 10.0)
-    
+
     import asyncio
     async def test():
         success = await inv.gather_resource(agent, 0)
         if success:
             items = inv.get_inventory(agent)
             print(f"Inventory: {items}")
-            
+
     asyncio.run(test())

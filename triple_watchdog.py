@@ -33,11 +33,11 @@ def run_authority():
         time.sleep(10)
 
     log_event("🚀 WATCHDOG: Launching Standalone Metropolis Authority...")
-    
+
     # Set environment variables for Git and high-frequency sync
     env = os.environ.copy()
     env["GIT_PYTHON_GIT_EXECUTABLE"] = "C:\\Users\\viper\\git\\cmd\\git.exe"
-    
+
     # Launch uvicorn directly via subprocess.Popen (Detached)
     process = subprocess.Popen(
         [PYTHON_EXE, "-m", "uvicorn", "backend.main:app", "--host", "127.0.0.1", "--port", "8000"],
@@ -53,6 +53,6 @@ if __name__ == "__main__":
     while True:
         # Periodic health check
         check_system_health()
-        
+
         # Jittered sleep to reduce CPU impact
         time.sleep(15 + random.uniform(2.0, 5.0))

@@ -69,7 +69,7 @@ if __name__ == "__main__":
     gen = WorldGenerator(100)
     gen.generate()
     path = gen.save_to_json()
-    
+
     # Validation
     with open(path, 'r') as f:
         v_data = json.load(f)

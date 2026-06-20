@@ -23,7 +23,7 @@ class ThermalGrid:
         self.alpha = alpha
         # Initialize with ambient temperature (20C)
         self.temperature_matrix = np.full((size, size), 20.0, dtype=np.float32)
-        
+
         # Add some initial heat sources for testing
         self.temperature_matrix[10, 10] = 500.0 # A "Fire" entity
         self.temperature_matrix[50, 50] = -50.0 # A "Frost" entity
@@ -38,7 +38,7 @@ class ThermalGrid:
             4 * T
         )
         self.temperature_matrix += self.alpha * laplacian
-        
+
         # Maintain constant heat sources (Step 8: Thermal Convection Entities)
         self.temperature_matrix[10, 10] = 500.0
         self.temperature_matrix[50, 50] = -50.0
@@ -55,10 +55,10 @@ class ThermalGrid:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     engine = ThermalGrid(100)
-    
+
     logger.info("Simulating 50 steps of heat diffusion...")
     for _ in range(50):
         engine.step()
-        
+
     engine.save_state()
     logger.info("Thermal state saved for GUI verification.")

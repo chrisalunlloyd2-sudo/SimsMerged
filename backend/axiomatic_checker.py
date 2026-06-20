@@ -15,8 +15,8 @@ class AxiomaticChecker(ast.NodeVisitor):
         self.is_safe = True
         self.errors = []
         self.allowed_modules = {
-            'math', 'json', 'random', 'asyncio', 'time', 'httpx', 
-            'psutil', 'logging', 'os', 'sys', 'sqlite3', 'uuid', 
+            'math', 'json', 'random', 'asyncio', 'time', 'httpx',
+            'psutil', 'logging', 'os', 'sys', 'sqlite3', 'uuid',
             'pathlib', 'mmap', 'struct', 'hashlib', 'ast', 'datetime',
             'heapq', 'numpy', 'jwt', 'cryptography', 'fastapi', 'pydantic',
             'slowapi', 'playwright', 'shutil', 'threading', 'traceback', 'uvicorn',
@@ -27,8 +27,8 @@ class AxiomaticChecker(ast.NodeVisitor):
         # Allow internal backend imports and common standard libraries
         if node.module:
             is_allowed = (
-                node.module in self.allowed_modules or 
-                node.module.startswith('backend') or 
+                node.module in self.allowed_modules or
+                node.module.startswith('backend') or
                 node.module.startswith('typing') or
                 node.module.startswith('fastapi') or
                 node.module.startswith('cryptography') or
@@ -70,15 +70,15 @@ class AxiomaticChecker(ast.NodeVisitor):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     checker = AxiomaticChecker()
-    
+
     # Test 1: Safe Code
     safe_code = "import math\ndef calculate(x): return math.sqrt(x)"
     print(f"Safe Test: {checker.verify(safe_code)}")
-    
+
     # Test 2: Infinite Loop
     evil_loop = "while True: pass"
     print(f"Evil Loop Test: {checker.verify(evil_loop)}")
-    
+
     # Test 3: Forbidden Import
     evil_import = "import os; os.remove('core.py')"
     print(f"Evil Import Test: {checker.verify(evil_import)}")

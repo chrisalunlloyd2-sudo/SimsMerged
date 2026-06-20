@@ -24,9 +24,9 @@ class ATCCoordinator:
         cpu = psutil.cpu_percent(interval=None)
         ram = psutil.virtual_memory().percent
         io_wait = psutil.cpu_times().iowait if hasattr(psutil.cpu_times(), 'iowait') else 0.0
-        
+
         notams = []
-        
+
         # 1. Wind Shear (CPU)
         if cpu > 40:
             notams.append({
@@ -36,7 +36,7 @@ class ATCCoordinator:
                 "instruction": "HALVE_THROUGHPUT",
                 "msg": f"Wind Shear: CPU at {cpu}%"
             })
-            
+
         # 2. Runway Icing (SSD Latency)
         if cpu > 70 or io_wait > 0.05:
             notams.append({
@@ -46,7 +46,7 @@ class ATCCoordinator:
                 "instruction": "LOCK_FILE_WRITES",
                 "msg": "Runway Icing: SSD Bottleneck."
             })
-            
+
         # 3. Category 5 Storm (Ground Stop)
         if ram > 85 or cpu > 90:
             notams.append({
@@ -59,7 +59,7 @@ class ATCCoordinator:
             self.ground_stop_active = True
         else:
             self.ground_stop_active = False
-            
+
         return {
             "type": "WEATHER_UPDATE",
             "cpu": cpu,
@@ -73,11 +73,11 @@ class ATCCoordinator:
         async with httpx.AsyncClient() as client:
             while True:
                 report = self.get_weather_report()
-                
+
                 try:
                     # Broadcast detailed report for UI
                     await client.post("http://127.0.0.1:8000/api/v1/agent/update", json=report)
-                    
+
                     # If new NOTAMs, post to chat
                     for n in report['notams']:
                         await client.post(self.chat_url, json={
@@ -87,7 +87,7 @@ class ATCCoordinator:
                         })
                 except Exception as e:
                     logger.error(f"ATC Broadcast failed: {e}")
-                
+
                 await asyncio.sleep(2)
 
 if __name__ == "__main__":

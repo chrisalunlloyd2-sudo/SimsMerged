@@ -21,25 +21,25 @@ class MailboxRouter:
         self.root_dir = Path(root_dir)
         if not self.root_dir.exists():
             self.root_dir.mkdir(parents=True)
-            
+
         # Simulation: Generate a local master key for signatures
         self.private_key = ed25519.Ed25519PrivateKey.generate()
         self.public_key = self.private_key.public_key()
-        
+
     def initialize_agent_mailbox(self, agent_id: str):
         """Step 26.1: Allocate structured repository folders for every agent."""
         agent_path = self.root_dir / agent_id
         inbox = agent_path / "inbox"
         outbox = agent_path / "outbox"
-        
+
         inbox.mkdir(parents=True, exist_ok=True)
         outbox.mkdir(parents=True, exist_ok=True)
-        
+
         logger.info(f"Mailbox initialized for {agent_id} on SSD lane.")
 
     def send_email(self, sender: str, recipient: str, msg_type: str, payload: dict):
         """Step 26.2: MSN Mailbox JSON Envelope with Ed25519 Signatures."""
-        
+
         # Prepare the envelope
         email = {
             "message_id": f"msg-{int(time.time()*1000)}",
@@ -49,22 +49,22 @@ class MailboxRouter:
             "type": msg_type, # ASK, TELL, ASK_TELL
             "payload": payload
         }
-        
+
         # Generate Signature (Ed25519 simulation)
         raw_bytes = json.dumps(email, sort_keys=True).encode()
         signature = self.private_key.sign(raw_bytes)
         email["signature"] = signature.hex()
-        
+
         # Atomic file write to recipient's inbox
         filename = f"{email['message_id']}.json"
         target_path = self.root_dir / recipient / "inbox" / filename
-        
+
         # Using a temporary file + rename to ensure atomic write (Direct I/O simulation)
         tmp_path = target_path.with_suffix(".tmp")
         with open(tmp_path, "w") as f:
             json.dump(email, f, indent=4)
         os.replace(tmp_path, target_path)
-            
+
         logger.info(f"Email {email['message_id']} cryptographically signed and delivered to {recipient}.")
         return email['message_id']
 
@@ -76,11 +76,11 @@ class MailboxRouter:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     router = MailboxRouter()
-    
+
     agent = "L3_PIONEER_01"
     router.initialize_agent_mailbox(agent)
-    
+
     # Send test ASK mail
     router.send_email("ATC_TOWER", agent, "ASK", {"task": "verify_physics", "sector": "alpha"})
-    
+
     print(f"Agent {agent} has {router.get_unread_count(agent)} unread emails.")

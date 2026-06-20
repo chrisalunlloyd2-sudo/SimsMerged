@@ -25,7 +25,7 @@ def auto_launch_browser():
         os.system('taskkill /F /FI "WINDOWTITLE eq SimsMerged*" >nul 2>&1')
     except Exception as err:
         pass
-    
+
     frontend_path = os.path.abspath(os.path.join(project_root, "frontend", "index.html"))
     print(f"[GENESIS] Launching fresh UI at file:///{frontend_path}...")
     webbrowser.open(f"file:///{frontend_path}")
@@ -34,5 +34,5 @@ if __name__ == "__main__":
     # Start the auto-launch thread
     launcher_thread = threading.Thread(target=auto_launch_browser, daemon=True)
     launcher_thread.start()
-    
+
     uvicorn.run(app, host="127.0.0.1", port=8000)

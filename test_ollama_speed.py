@@ -8,10 +8,10 @@ async def test_ollama():
     model = "smollm:135m"
     prompt = "Hello, respond with 'OLLAMA_OK' if you can hear me."
     options = {"num_ctx": 512, "num_predict": 50, "temperature": 0.7, "num_thread": 1}
-    
+
     print(f"Testing model: {model}...")
     start_time = time.perf_counter()
-    
+
     def _call():
         req = urllib.request.Request("http://localhost:11434/api/generate", headers={"Content-Type": "application/json"})
         data = json.dumps({

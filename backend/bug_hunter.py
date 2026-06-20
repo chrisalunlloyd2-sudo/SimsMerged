@@ -26,20 +26,20 @@ class BugHunter:
         """Step 20.1: Continuous headless game loop simulation."""
         logger.info("Starting Headless Bug-Hunting Session...")
         start_time = time.time()
-        
+
         while (time.time() - start_time) < duration_s:
             # 1. Weather check
             weather = self.atc.get_weather_report()
             if weather['ground_stop']:
                 logger.warning("Weather Red: Halting Playtester.")
                 break
-                
+
             # 2. Simulate game movement and state audit
             # (In production, this hooks to the JavaFX snapshot buffer)
             logger.info("Testing Coordinate: (15, 15) -> No Collision detected. Memory stable.")
-            
+
             await asyncio.sleep(2)
-            
+
         logger.info("Bug-Hunting Session Complete. 0 Crashes found.")
 
 if __name__ == "__main__":

@@ -17,14 +17,14 @@ class KernelHardener:
         """Step 16.1: Pin process to specific core and elevate priority."""
         try:
             p = psutil.Process(pid)
-            
+
             # 1. CPU Affinity (Pin to specific core)
             # 1 << core_index creates a bitmask for the core
             p.cpu_affinity([core_index])
-            
+
             # 2. Process Priority (Windows High Priority)
             p.nice(psutil.HIGH_PRIORITY_CLASS)
-            
+
             logger.info(f"Hardened PID {pid}: Pinned to Core {core_index} | Priority: HIGH")
             return True
         except Exception as e:

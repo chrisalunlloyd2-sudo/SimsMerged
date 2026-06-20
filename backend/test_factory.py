@@ -27,12 +27,12 @@ class TestFactory:
     def generate_boilerplate_test(self, module_path: Path):
         """
         Step 1: AI-Driven TDD logic.
-        Generates a pytest file that imports the target module and runs basic 
+        Generates a pytest file that imports the target module and runs basic
         initialization and FSM checks.
         """
         module_name = module_path.stem
         test_file_path = self.test_dir / f"test_{module_name}.py"
-        
+
         # 1. Structural Operational Semantics check
         try:
             with open(module_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -40,13 +40,13 @@ class TestFactory:
         except Exception as e:
             logger.error(f"Failed to read {module_path}: {e}")
             return False
-        
+
         if not self.checker.verify(code):
             logger.error(f"Cannot generate test for {module_name}: Axiom Violation found in source.")
             return False
 
         logger.info(f"Generating deterministic test target for {module_name}...")
-        
+
         # 2. Template Generation (Simulating Chapter 19 Logic)
         template = f"""# [TIMESTAMP: 2026-06-09] [AGENT: TestFactory]
 import pytest
@@ -70,7 +70,7 @@ def test_structural_integrity():
 """
         with open(test_file_path, "w") as f:
             f.write(template)
-            
+
         logger.info(f"Test successfully generated at {test_file_path}")
         return True
 
@@ -96,7 +96,7 @@ def test_structural_integrity():
                 if py_path.exists():
                     if self.generate_boilerplate_test(py_path):
                         resolved_count += 1
-                
+
             if resolved_count >= 10: break # Rate limit per turn
 
         logger.info(f"Autonomous Factory Pass Complete. Resolved {resolved_count} holes.")

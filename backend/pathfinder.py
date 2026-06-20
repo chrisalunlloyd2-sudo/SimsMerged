@@ -40,7 +40,7 @@ class AStarPathfinder:
         """Step 2.1: Core A* Algorithm."""
         if start == goal:
             return [start]
-            
+
         frontier = []
         heapq.heappush(frontier, (0, start))
         came_from = {start: None}
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     ]
     pathfinder = AStarPathfinder(mock_matrix)
     path = pathfinder.find_path((0, 0), (2, 3))
-    
+
     logger.info(f"Test Path: {path}")
     if path:
         logger.info("CRITIC: Shortest path found successfully.")

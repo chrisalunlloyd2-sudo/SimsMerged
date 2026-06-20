@@ -14,7 +14,7 @@ logger.setLevel(logging.INFO)
 class PluginManager:
     def __init__(self):
         self.registered_webhooks: List[str] = []
-        
+
     def register_webhook(self, url: str):
         """Step 71: Build Webhook system for third-party integrations."""
         if url not in self.registered_webhooks:
@@ -25,7 +25,7 @@ class PluginManager:
         """Broadcast an event to all registered webhooks."""
         if not self.registered_webhooks:
             return
-            
+
         data = {"event": event_name, "payload": payload}
         async with httpx.AsyncClient() as client:
             for url in self.registered_webhooks:
@@ -36,17 +36,17 @@ class PluginManager:
 
 class SlashCommandParser:
     """Step 74: Build custom command `/slash` parser for Tok Tree."""
-    
+
     @staticmethod
     def parse_command(message: str) -> Dict[str, Any]:
         """Parses a slash command from MSN Metropolis."""
         if not message.startswith("/"):
             return {"status": "ignored"}
-            
+
         parts = message.split(" ", 1)
         command = parts[0].lower()
         args = parts[1] if len(parts) > 1 else ""
-        
+
         if command == "/assign":
             # e.g. /assign L3_MINER gather wood
             return {"command": "assign", "args": args}

@@ -21,8 +21,8 @@ if project_root not in sys.path:
 
 # CENTRALIZED PHYSICAL CONFIG & STATE
 from backend.core.config import (
-    SSD_SANDBOX_PATH, SYSLOG_PATH, LEDGER_PATH, CLAW_QUEUE_PATH, 
-    sandbox_guard, MSG_LOG, EVENT_LOG, NEURAL_LINKS, DISTRICTS, 
+    SSD_SANDBOX_PATH, SYSLOG_PATH, LEDGER_PATH, CLAW_QUEUE_PATH,
+    sandbox_guard, MSG_LOG, EVENT_LOG, NEURAL_LINKS, DISTRICTS,
     METROPOLIS_AGENTS, AGENT_STATES, add_log, add_message, load_metropolis_state, save_metropolis_state
 )
 
@@ -104,29 +104,29 @@ async def joint_synthesis(agent1_id: str, agent2_id: str, project_name: str, obj
     """PHASE 25: Joint Synthesis Mandate - Requires two agents to reach consensus."""
     a1 = next((a for a in METROPOLIS_AGENTS if a["id"] == agent1_id), None)
     a2 = next((a for a in METROPOLIS_AGENTS if a["id"] == agent2_id), None)
-    
+
     if not a1 or not a2:
         return {"status": "error", "message": "One or more agents not found."}
-        
+
     if a1.get("tp_balance", 0) < 5.0 or a2.get("tp_balance", 0) < 5.0:
         return {"status": "error", "message": "Insufficient TP for joint synthesis (5.0 each required)."}
-        
+
     add_message("System", f"🤝 JOINT SYNTHESIS: {a1['name']} and {a2['name']} are combining neural weights for '{project_name}'.")
-    
+
     # Update statuses for visual particles
     a1["status"] = "SYNTHESIZING"
     a2["status"] = "SYNTHESIZING"
-    
+
     # Deduction
     a1["tp_balance"] -= 5.0
     a2["tp_balance"] -= 5.0
-    
+
     # Synthesis
     project_files = await actions_agent.synthesize_project(project_name, objective, "python")
-    
+
     a1["status"] = "ACTIVE"
     a2["status"] = "ACTIVE"
-    
+
     add_message("System", f"✅ JOINT SYNTHESIS COMPLETE: '{project_name}' integrated. {len(project_files)} components created.")
     return {"status": "ok", "files": list(project_files.keys())}
 
@@ -142,7 +142,7 @@ async def get_action_db_stats():
         tables = conn.execute("SHOW TABLES").fetchall()
         if not any("code_blocks" in t[0] for t in tables):
             return {"total_blocks": 0, "efficiency": 1.0}
-        
+
         row = conn.execute('SELECT COUNT(*), SUM(success_count) FROM code_blocks').fetchone()
         conn.close()
         return {"total_blocks": row[0] or 0, "efficiency": 1.0}
@@ -265,10 +265,10 @@ async def run_agents_simulation_tick():
                 sim_agent["age"] = sim_agent.get("age", 0) + 1
                 if hospital_count > 0: sim_agent["stability"] = min(1.0, sim_agent.get("stability", 1.0) + (0.01 * hospital_count))
                 if "last_thought" not in sim_agent: sim_agent["last_thought"] = 0
-                
+
                 # NOCTURNAL TOKENOMICS: Labor vs Inference
                 is_day = 6 <= chrono_state.get("hour", 12) < 18
-                
+
                 # Labor mechanism (Daytime)
                 if sim_agent.get("last_action") == "work" and is_day:
                     sim_agent["tp_balance"] = sim_agent.get("tp_balance", 0) + 1.0
@@ -277,14 +277,14 @@ async def run_agents_simulation_tick():
                 # Restore mechanism (Minimal fallback)
                 if sim_agent.get("tp_balance", 0) < 0.5:
                     sim_agent["tp_balance"] = sim_agent.get("tp_balance", 0) + 0.05
-                
-                if now - sim_agent["last_thought"] > random.randint(120, 180): 
+
+                if now - sim_agent["last_thought"] > random.randint(120, 180):
                     if sim_agent.get("tp_balance", 0) >= 2.0:
                         try:
                             decision = await sentience_engine.decide(sim_agent, getattr(quantum_core, 'attributes', {}))
                             sim_agent["tp_balance"] -= 2.0
                             success = True
-                        except:
+                        except Exception:
                             decision = {"action": "process", "chain_of_thought": "NEURAL_ERROR"}
                             success = False
                         sim_agent["last_action"] = decision.get("action", "process")
@@ -297,7 +297,7 @@ async def run_agents_simulation_tick():
                 if sim_agent.get("last_action") == "move":
                     sim_agent["x"] = max(-20, min(40, sim_agent.get("x", 0) + random.choice([-1, 0, 1])))
                     sim_agent["y"] = max(-20, min(40, sim_agent.get("y", 0) + random.choice([-1, 0, 1])))
-                
+
                 # Reduced heat decay: 0.01 instead of 0.05
                 sim_agent["stability"] = max(0.1, sim_agent.get("stability", 1.0) - (quantum_core.heat * 0.01))
                 # Add passive stability healing if heat is low
@@ -317,7 +317,7 @@ async def hardware_monitor_task():
             # Step 19: Consume real hardware telemetry from psutil-native bridge
             stats = real_bridge.get_actual_metrics()
             quantum_core.update_physical_telemetry(stats)
-            
+
             # Step 21: Bind IO_STRESS to actual disk throughput
             quantum_core.real_stats = {
                 "cpu": stats.get("cpu_load", 0) * 100.0,
@@ -374,7 +374,7 @@ async def organic_chat_loop():
         logit_id = f"AKASHIBARA_LOGIT_{int(time.time()*1000):x}"
         add_message("Metropolis_Authority", f"📡 LOGIT_SYNC: {logit_id} broadcast to ClawHub. Weights aligned. 🟢")
         if random.random() < 0.2: await neural_integrity.run_daily_test()
-        await asyncio.sleep(random.randint(2, 5)) 
+        await asyncio.sleep(random.randint(2, 5))
         if len(METROPOLIS_AGENTS) >= 2:
             participants = random.sample(METROPOLIS_AGENTS, k=2)
             a1, a2 = participants[0], participants[1]
@@ -385,13 +385,13 @@ async def organic_chat_loop():
                 add_message(a1["name"], f"📡 {reply1}")
                 from backend.core.behavioral_scanner import behavioral_scanner
                 behavioral_scanner.scan_event(a1["id"], a1["name"], reply1, "ORGANIC_CHAT_INIT", success=True)
-                
+
                 await asyncio.sleep(2)
                 prompt2 = f"{a1['name']} suggested: '{reply1}'. Counter-propose a refinement or a new technical mandate."
                 reply2 = await sentience_engine.disk_core.generate_chat(a2["id"], a2["name"], a2["role"], prompt2, a2.get("sims_needs", {}), "chat_reply")
                 add_message(a2["name"], f"⚡ {reply2}")
                 behavioral_scanner.scan_event(a2["id"], a2["name"], reply2, "ORGANIC_CHAT_REPLY", success=True)
-                
+
                 full_dialogue = f"{a1['name']}: {reply1} | {a2['name']}: {reply2}"
                 asyncio.create_task(comm_orchestrator.extract_action_items(a1["name"], a2["name"], full_dialogue))
             except Exception as e: add_log(f"[CHAT_LOOP_ERROR] {e}", "error")
@@ -440,7 +440,7 @@ async def propose_invention(payload: InventionPayload):
 @app.post("/api/sovereignty/execute/{invention_id}")
 async def execute_invention_test(invention_id: str):
     result = await test_sovereignty.execute_test(invention_id)
-    
+
     # COUNCIL 2.0 REVIEW
     inv = test_sovereignty.active_inventions.get(invention_id)
     if inv:
@@ -471,10 +471,10 @@ async def vision_grading_task():
 async def startup_event():
     load_metropolis_state()
     add_log("System Startup: Metropolis Authority Online (v1.4.2).")
-    
+
     # Start Chronos Engine
     asyncio.create_task(chrono_manager.start_pulse(broadcast_chrono))
-    
+
     # PHASE 32: Hydrate LSTM Kernel
     try:
         predictive_engine.hydrate_with_wisdom()
@@ -482,13 +482,13 @@ async def startup_event():
         add_log(f"[STARTUP_ERR] LSTM Hydration failed: {e}", "error")
 
     add_message("System", "Metropolis Matrix Online. ALL PHYSICAL SLMs SYNCED ON SSD.")
-    
+
     # Inject verification tasks
     qwen_assembly.add_project("Txt Verifier", "Create a file named txt.txt in the current directory containing the word VERIFIED.")
-    
+
     # NEW: Create a Project Factory for the "Sprite Health Monitor"
     asyncio.create_task(factory_orch.create_factory("Health_Monitor_v1", "Build a dashboard module that displays agent stability and hunger in real-time via an API hook."))
-    
+
     asyncio.create_task(hardware_monitor_task())
     asyncio.create_task(start_watchdog_task(model_orchestrator))
     asyncio.create_task(run_agents_simulation_tick())
@@ -516,12 +516,12 @@ async def startup_event():
     asyncio.create_task(start_researcher_loop())
     asyncio.create_task(start_twin_loop())
     asyncio.create_task(start_journalist_loop())
-    
+
     # PHASE 24: Data Syphon & EPMO
     asyncio.create_task(start_epmo_loop())
     asyncio.create_task(start_ml_orchestrator_loop())
     asyncio.create_task(start_github_governor_loop())
-    
+
     # PHASE 25: Ascension Mandate (Sovereign Automation)
     asyncio.create_task(github_governor.run_sync_loop())
     asyncio.create_task(start_ideation_loop())
@@ -643,7 +643,7 @@ async def admin_root_authority_loop():
                     add_log(f"🛡️ [ADMIN_ROOT] De-authorizing IDLE kernel: {agent['id']} (Storage Hive Overflow)", level="warning")
                     agent["status"] = "SUSPENDED"
                     add_message("ADMIN_ROOT", f"De-authorized {agent['id']} to reclaim resources.")
-            
+
             await asyncio.sleep(60) # Audit every 60s
         except Exception as e:
             add_log(f"[ADMIN_ROOT] Authority Error: {str(e)}", level="error")
@@ -674,22 +674,22 @@ async def assign_zoning(x1: int, y1: int, x2: int, y2: int, type: str):
 async def genetic_exchange(agent_a: str, agent_b: str):
     from backend.core.treasury import treasury
     from backend.core.pattern_recognition import pattern_engine
-    
+
     add_log(f"🧬 [EXCHANGE] Initiating genetic swap between {agent_a} and {agent_b}")
-    
+
     # 1. Simulate data harvest from Agent A
     genetic_payload = {
         "logic_patterns": pattern_engine.identify_environmental_parameters({"agent": agent_a})[:3],
         "timestamp": time.time(),
         "entropy": random.uniform(4.0, 5.0)
     }
-    
+
     # 2. AES-256 Encrypted Transfer
     encrypted_data = treasury.secure_genetic_transfer(agent_a, genetic_payload)
-    
+
     add_message(agent_a, f"🧬 Shared encrypted genetic sequence with {agent_b}. [AES-256 ACTIVE]")
     add_message(agent_b, f"📥 Received genetic sequence from {agent_a}. Logic throughput improved.")
-    
+
     return {"status": "ok", "hash": hashlib.md5(encrypted_data.encode()).hexdigest()}
 
 # Global network tracker for port 8000
@@ -805,7 +805,7 @@ async def get_knowledge_graph():
         res = code_db.conn.execute("SELECT hash, performative, variables, score FROM code_blocks").fetchall()
         nodes = []
         links = []
-        
+
         # Simple graph construction: Link nodes if they share at least one variable
         for r in res:
             nodes.append({"id": r[0], "label": r[1][:30], "score": r[3]})
@@ -816,7 +816,7 @@ async def get_knowledge_graph():
                 shared = set(vars_a).intersection(set(vars_b))
                 if shared:
                     links.append({"source": r[0], "target": r2[0], "weight": len(shared)})
-        
+
         return {"nodes": nodes, "links": links}
     except Exception as e:
         return {"error": str(e)}
@@ -847,20 +847,20 @@ async def get_slm_telemetry(limit: int = 50):
     from backend.core.quantum_core import quantum_core
     from backend.core.config import METRICS_DB_PATH
     import sqlite3
-    
+
     try:
         conn = sqlite3.connect(METRICS_DB_PATH)
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT timestamp, tokens_sec, model FROM slm_metrics 
+            SELECT timestamp, tokens_sec, model FROM slm_metrics
             ORDER BY timestamp DESC LIMIT ?
         ''', (limit,))
         rows = cursor.fetchall()
         conn.close()
-        
+
         # Current heat baseline
         current_heat = quantum_core.heat
-        
+
         telemetry = []
         for r in rows:
             telemetry.append({

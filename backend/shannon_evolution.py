@@ -43,7 +43,7 @@ class ShannonDarwinEngine:
     def run_population_pruner(self):
         """Step 27.2: Darwin Task - Terminate bottom 10% and clone top 10%."""
         logger.info("Initiating Darwinian Population Pruning...")
-        
+
         import sqlite3
         with sqlite3.connect(self.performance_db) as conn:
             cursor = conn.cursor()
@@ -56,14 +56,14 @@ class ShannonDarwinEngine:
 
         total = len(rankings)
         prune_count = max(1, int(total * 0.10))
-        
+
         top_performers = rankings[:prune_count]
         bottom_performers = rankings[-prune_count:]
 
         for b_hash, score in bottom_performers:
             logger.warning(f"TERMINATING low-fitness asset: {b_hash[:8]} (Score: {score:.2f})")
             # In a real evolution, this would delete/archive the code
-            
+
         for t_hash, score in top_performers:
             logger.info(f"CLONING high-fitness asset: {t_hash[:8]} (Score: {score:.2f})")
             # This triggers 'Genetic Prompt Mutation' (Step 13.1 in Arc 5)
@@ -71,9 +71,9 @@ class ShannonDarwinEngine:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     engine = ShannonDarwinEngine()
-    
+
     # Simulate Entropy of a decision
     print(f"Decision Entropy: {engine.calculate_shannon_entropy([0.7, 0.2, 0.1]):.4f} bits")
-    
+
     # Run Pruner
     engine.run_population_pruner()

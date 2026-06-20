@@ -44,21 +44,21 @@ class TimeManager:
     async def start_pulse(self, broadcast_callback):
         self.is_running = True
         logger.info("Chronos Engine Primed.")
-        
+
         while self.is_running:
             self.tick_count += 1
             state = self.get_chrono_state()
-            
+
             # Broadcast state every 10 ticks (1 second real-time)
             if self.tick_count % 10 == 0:
                 await broadcast_callback(state)
-                
+
             await asyncio.sleep(0.1) # 100ms real-world tick
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     manager = TimeManager()
-    
+
     async def mock_broadcast(state):
         print(f"\r[CHRONOS] {state['timestamp']} | Epoch: {state['epoch']} | Daylight: {state['is_daylight']}", end="")
 
