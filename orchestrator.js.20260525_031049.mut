@@ -2,7 +2,7 @@
 // TIMESTAMP: 2026-05-25T04:15:00.000Z
 // PROJECT_ID: SimsMerged-v1.3
 // AGENT_ID: Gemini-CLI-Architect
-// MANDATE: Tri-Agent Non-Stop Autonomy. Local H2O Danube ONLY.
+// MANDATE: Tri-Agent Non-Stop Autonomy. Local H2O Danube ONLY..
 
 const db = require('./database/db_wrapper');
 const ai = require('./wrappers/ai_tools_wrapper');
