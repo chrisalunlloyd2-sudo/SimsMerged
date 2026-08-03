@@ -2,6 +2,9 @@
 
 All notable changes to this project.
 
+## 2026-08
+- **[Docs]** docs: auto-update [skip-docs] ($hash)
+
 ## 2026-06
 - **[Changed]** [Moe autonomous] SimsMerged 2026-06-30 07:47 ($hash)
 - **[Changed]** [Moe autonomous] SimsMerged 2026-06-29 13:54 ($hash)
@@ -54,5 +57,4 @@ All notable changes to this project.
 - **[Changed]** Repair: Removing redundant mutation file GRAND_MASTER_PLAN.md.20260525_023412.mut ($hash)
 - **[Changed]** Repair: Removing redundant mutation file GRAND_MASTER_PLAN.md.20260525_023322.mut ($hash)
 - **[Changed]** Repair: Removing redundant mutation file GRAND_MASTER_PLAN.md.20260525_023230.mut ($hash)
-- **[Changed]** Repair: Removing redundant mutation file GRAND_MASTER_PLAN.md.20260525_023128.mut ($hash)
 
