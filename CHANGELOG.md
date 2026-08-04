@@ -27,6 +27,7 @@ All notable changes to this project.
 - **[Docs]** docs: auto-update [skip-docs] ($hash)
 - **[Docs]** docs: auto-update [skip-docs] ($hash)
 - **[Docs]** docs: auto-update [skip-docs] ($hash)
+- **[Docs]** docs: auto-update [skip-docs] ($hash)
 
 ## 2026-06
 - **[Changed]** [Moe autonomous] SimsMerged 2026-06-30 07:47 ($hash)
@@ -56,5 +57,4 @@ All notable changes to this project.
 - **[Changed]** [TIMESTAMP: 2026-06-01T06:00:00.000Z] [PROJECT_ID: SimsMerged-v1.3-Metropolis] [AGENT_ID: Antigravity-CLI-Architect] - Integrated visual aesthetic deck, built-in photo capture screenshot mode, generated 900-step master evolution plan, and committed pristine city assets. ($hash)
 - **[Changed]** Aider [MaxSkills]: Integrated BM25 learning, Predictive KV Caching, and High-Fidelity README visuals. ($hash)
 - **[Changed]** System: Update BOOT_STATE and seal WebUI protection mandate. TIMESTAMP: 2026-06-01T02:50:00.000Z PROJECT_ID: SimsMerged-v1.3 AGENT_ID: Antigravity-CLI-Architect ($hash)
-- **[Changed]** System: Add GITHUB_PROTECTION_GAME_PLAN and BOOT_STATE. TIMESTAMP: 2026-06-01T02:22:00.000Z PROJECT_ID: SimsMerged-v1.3 AGENT_ID: Antigravity-CLI-Architect ($hash)
 
