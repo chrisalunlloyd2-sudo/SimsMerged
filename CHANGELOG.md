@@ -3,6 +3,7 @@
 All notable changes to this project.
 
 ## 2026-08
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 13:13 ($hash)
 - **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 11:12 ($hash)
 - **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 08:57 ($hash)
 - **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 04:10 ($hash)
@@ -52,5 +53,4 @@ All notable changes to this project.
 - **[Changed]** [Moe autonomous] SimsMerged 2026-08-12 12:50 ($hash)
 - **[Changed]** [Moe autonomous] SimsMerged 2026-08-12 11:58 ($hash)
 - **[Changed]** [Moe autonomous] SimsMerged 2026-08-12 10:03 ($hash)
-- **[Changed]** [Moe autonomous] SimsMerged 2026-08-12 08:37 ($hash)
 
