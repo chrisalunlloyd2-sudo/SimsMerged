@@ -1,0 +1,31 @@
+{
+    "layout_containers": {
+        "root": "BorderPane",
+        "center": "Pane (canvasPane) -> Canvas (canvas)",
+        "right": "VBox (rightPanel)"
+    },
+    "widget_ids": {
+        "msnHeader": "HBox",
+        "title": "Label",
+        "statusDropdown": "ComboBox<String>",
+        "chatList": "ListView<String>",
+        "chatInput": "TextField",
+        "btnSpawn": "Button",
+        "depinSlider": "Slider",
+        "btnFund": "Button",
+        "btnNudge": "Button",
+        "taskList": "ListView<String>"
+    },
+    "state_variables": {
+        "agentMap": "ConcurrentHashMap<String, Agent>",
+        "gameHour": "int",
+        "ambientColor": "Color",
+        "gridColor": "Color",
+        "worldMatrix": "int[][]",
+        "thermalMatrix": "int[][]"
+    },
+    "safe_injection_points": {
+        "ui_append": "rightPanel.getChildren().add()",
+        "event_bridge": "webSocket.Listener.onText()"
+    }
+}

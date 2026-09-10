@@ -29,13 +29,13 @@ parameter_templates = [
 ]
 
 db = {}
-# 22 phases, 100 features per phase = 2200 features. 
+# 22 phases, 100 features per phase = 2200 features.
 # We'll generate up to 2700 to match the roadmap items.
 for i in range(1, 2701):
     feature_id = f"TASK_{i}"
     # Randomly select 15 parameters from our pool of 20
     selected_params = random.sample(parameter_templates, 15)
-    
+
     # Slightly mutate values to ensure uniqueness
     feature_params = []
     for param in selected_params:
@@ -45,7 +45,7 @@ for i in range(1, 2701):
         elif p_copy["type"] == "range":
             p_copy["val"] = round(p_copy["val"] * random.uniform(0.9, 1.1), 4)
         feature_params.append(p_copy)
-        
+
     db[feature_id] = feature_params
 
 os.makedirs(os.path.join(base_path, "backend", "data"), exist_ok=True)

@@ -66,6 +66,10 @@ public class HUD extends HBox {
 
     private Label lblNodes;
     private Label lblAgents;
+    private Label lblHardware;
+    private Label lblEconomy;
+    private Label lblBuildLab;
+    private Label lblWisdomTree;
 
     private void addOmniHUD() {
         VBox gridInfo = new VBox(5);
@@ -81,9 +85,55 @@ public class HUD extends HBox {
 
         lblAgents = new Label("AGENTS: Syncing...");
         lblAgents.setTextFill(Color.WHITE);
+
+        lblHardware = new Label("HEAT: 0.0C | STB: 1.0");
+        lblHardware.setTextFill(Color.CYAN);
+
+        lblEconomy = new Label("TREASURY: 0.0 TP");
+        lblEconomy.setTextFill(Color.LIME);
+
+        lblBuildLab = new Label("BUILD LAB: IDLE");
+        lblBuildLab.setTextFill(Color.VIOLET);
+
+        lblWisdomTree = new Label("WISDOM TREE: 0 BLOCKS");
+        lblWisdomTree.setTextFill(Color.BEIGE);
         
-        gridInfo.getChildren().addAll(lblGrid, lblNodes, lblAgents);
+        gridInfo.getChildren().addAll(lblGrid, lblNodes, lblAgents, lblHardware, lblEconomy, lblBuildLab, lblWisdomTree);
         this.getChildren().add(gridInfo);
+    }
+
+    public void updateMetropolisState(SpriteBridge.MetropolisState state) {
+        if (state == null) return;
+        
+        if (state.agents != null) {
+            lblAgents.setText("AGENTS: " + state.agents.size() + " DEPLOYED");
+        }
+        
+        if (state.hardware != null) {
+            lblHardware.setText(String.format("HEAT: %.1fC | STB: %.2f | %.2fGHz", 
+                state.hardware.heat, state.hardware.stability, state.hardware.frequency));
+            if (state.hardware.heat > 80) lblHardware.setTextFill(Color.RED);
+            else if (state.hardware.stability < 0.7) lblHardware.setTextFill(Color.ORANGE);
+            else lblHardware.setTextFill(Color.CYAN);
+        }
+        
+        if (state.economy != null) {
+            lblEconomy.setText(String.format("TREASURY: %.2f TP (%.4f/s)", 
+                state.economy.treasury_balance, state.economy.mint_rate));
+        }
+
+        if (state.build_lab != null) {
+            long staged = state.build_lab.stream().filter(t -> "STAGED".equals(t.status)).count();
+            long drafting = state.build_lab.stream().filter(t -> "DRAFTING".equals(t.status) || "VERIFYING".equals(t.status)).count();
+            lblBuildLab.setText(String.format("BUILD LAB: %d STAGED | %d ACTIVE", staged, drafting));
+            if (staged > 0) lblBuildLab.setTextFill(Color.YELLOW);
+            else lblBuildLab.setTextFill(Color.VIOLET);
+        }
+
+        if (state.wisdom_tree != null) {
+            lblWisdomTree.setText(String.format("WISDOM TREE: %d BLOCKS (%.2fx SPEED)", 
+                state.wisdom_tree.total_blocks, state.wisdom_tree.efficiency));
+        }
     }
 
     private void addMotiveBar(String name) {

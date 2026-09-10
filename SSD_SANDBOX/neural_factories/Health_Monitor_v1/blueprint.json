@@ -1,0 +1,8 @@
+{
+  "project_id": "Health_Monitor_v1",
+  "global_goal": "Build a dashboard module that displays agent stability and hunger in real-time via an API hook.",
+  "status": "ASSEMBLING",
+  "performatives_completed": [],
+  "current_performative": "You can create a component called `aggregation_utils` for this task. It will manage data stored by the agent's state machine and provide an API hook that displays the safety ratings in real-time via an API hook. The function should return the safety rating as a JSON string, which can be used to display it on the dashboard of the agent.",
+  "integrated_files": []
+}

@@ -18,3 +18,23 @@ build/
 *.log
 PULSE_HEARTBEAT.txt
 agents_population.json
+triton_cache/
+SSD_SANDBOX/autonomous_tests/
+backend/syslog.log
+*.wav
+temp_speech_*.wav
+*.vram
+*.bin
+*.db
+*.sqlite3
+!database/simagentcity.db
+# --- catalogued binaries (see CATALOGUE.md) ---
+# Listed individually, not as *.so / *.jar: the rule is a
+# threshold on the FILE, so small ones of the same type ship.
+/backend/data/ai_attributes.json
+/city_workspace/continue_project/aider_prompt.txt
+
+__pycache__/
+.gradle/
+.idea/
+

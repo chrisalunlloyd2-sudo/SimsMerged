@@ -1,0 +1,1 @@
+THROTTLED: 64s remaining for sprite_socrates. SSD_I/O_COOLDOWN.

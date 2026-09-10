@@ -1,1 +1,1 @@
-# Metropolis Backend Package
+# Main backend package

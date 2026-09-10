@@ -1,0 +1,1 @@
+[sprite_newton_SSD] Platter spinning. Kernel optimized. Logic bypass active.

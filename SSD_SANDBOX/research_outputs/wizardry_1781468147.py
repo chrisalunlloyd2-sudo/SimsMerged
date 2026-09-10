@@ -1,0 +1,1 @@
+THROTTLED: 196s remaining for sprite_newton. SSD_I/O_COOLDOWN.

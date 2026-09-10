@@ -1,0 +1,1 @@
+THROTTLED: 2s remaining for sprite_geek. SSD_I/O_COOLDOWN.

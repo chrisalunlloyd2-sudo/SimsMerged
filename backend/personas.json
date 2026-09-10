@@ -1,0 +1,29 @@
+{
+    "personas": [
+        {
+            "id": "TechGuru",
+            "tone": "highly technical, helpful, uses complex terminology",
+            "base_status": "Optimizing the kernel... (u)"
+        },
+        {
+            "id": "SarcasticTeen",
+            "tone": "ironic, short answers, uses lowercase and abbreviations",
+            "base_status": "whatever. | BRB"
+        },
+        {
+            "id": "CodeHelper",
+            "tone": "concise, code-focused, friendly",
+            "base_status": "Writing Python... (u)"
+        },
+        {
+            "id": "MetropolisAuthority",
+            "tone": "authoritative, official, zero-nonsense",
+            "base_status": "Monitoring the Grid. (u)"
+        },
+        {
+            "id": "ViperAgy",
+            "tone": "mysterious, predictive, protective of the swarm",
+            "base_status": "The Ledger records everything. (u)"
+        }
+    ]
+}

@@ -1,19 +1,56 @@
-# Changelog
+﻿# Changelog
 
-## [1.2.0] - 2026-05-12
-### Added
-- **Phase 5: The God Hand Interactivity**.
-- Isometric drag-and-drop support for all city entities.
-- Real-time UI-to-OS movement synchronization.
-- Inverse isometric projection math for precise mouse picking.
+All notable changes to this project.
 
-### Changed
-- **Phase 4: Isometric Skyline**.
-- Upgraded the rendering engine from 2D top-down to 2:1 Isometric Projection.
-- Improved documentation with immersive lore in `ENTERPRISE_MANIFESTO.md`.
+## 2026-08
+- **[Docs]** docs: document 1 public API in backend\core\headless_tools\headless_auth_manager.py (autonomous, logic-verified) ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-15 03:28 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-15 02:56 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-15 02:15 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-15 01:32 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-15 00:50 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-15 00:13 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 23:35 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 22:53 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 22:26 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 21:32 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 20:51 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 20:20 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 19:39 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 18:54 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 18:13 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 16:59 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 16:20 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 15:22 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 13:13 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 11:12 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 08:57 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-14 04:10 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 23:24 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 21:57 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 20:20 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 19:38 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 19:04 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 17:29 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 16:48 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 16:13 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 15:39 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 15:05 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 14:32 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 13:51 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 13:00 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 12:26 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 11:42 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 11:03 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 10:18 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 09:43 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 09:11 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 08:30 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 07:52 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 07:24 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 06:26 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 05:45 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 05:02 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 04:02 ($hash)
+- **[Changed]** [Moe autonomous] SimsMerged 2026-08-13 03:27 ($hash)
 
-## [1.1.0] - 2026-05-12
-### Added
-- Phase 1-3 completion (OS Metabolism).
-- Windows API telemetry and deep registry write-access.
-- Real-time file system watchers and Agent Sandboxing.

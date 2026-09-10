@@ -63,30 +63,30 @@ def overhaul_logic():
     }
 
     final_table = []
-    
+
     for m in matches:
         status = "VERIFIED" if m[0].lower() == "x" else "ENACTING"
         task_id = int(m[2])
         raw_desc = m[3].strip()
-        
+
         # Determine Group
         assigned_group = "CORE_KERNEL"
         for g_name, g_data in groups.items():
             if any(k in raw_desc.lower() for k in g_data["keywords"]):
                 assigned_group = g_name
                 break
-        
+
         # Build Articulate Definition
         def_parts = []
         for word, d in definitions.items():
             if word.lower() in raw_desc.lower():
                 def_parts.append(d)
-        
+
         if not def_parts:
             def_parts = ["Procedural logic step for city evolution."]
-            
+
         long_desc = f"{raw_desc} - This protocol ensures system-wide stability by leveraging { ' and '.join(def_parts).lower() }"
-        
+
         final_table.append({
             "id": task_id,
             "group": assigned_group,
@@ -99,18 +99,18 @@ def overhaul_logic():
     with open(OUTPUT_PATH, "w", encoding="utf-8") as out:
         out.write("# ðŸ§¬ SIMSMERGED: HIERARCHICAL FEATURE LOGIC TABLE\n\n")
         out.write("This table categorizes all 2,200+ features into logical hierarchies and defines their system role.\n\n")
-        
+
         for g_name, g_data in groups.items():
             out.write(f"## {g_name.replace('_', ' ')}\n")
             out.write(f"*{g_data['desc']}*\n\n")
             out.write("| ID | Feature | Status | Logical Definition |\n")
             out.write("|----|---------|--------|--------------------|\n")
-            
+
             group_tasks = [t for t in final_table if t["group"] == g_name]
             # To avoid making a 10MB markdown, we show first 20 and summarize
             for t in group_tasks[:20]:
                 out.write(f"| {t['id']} | {t['desc']} | {t['status']} | {t['definition']} |\n")
-            
+
             if len(group_tasks) > 20:
                 out.write(f"| ... | ... | ... | *{len(group_tasks) - 20} more tasks logically mapped...* |\n")
             out.write("\n")

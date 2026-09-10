@@ -1,147 +1,156 @@
-const canvas = document.getElementById('city-canvas');
-const ctx = canvas.getContext('2d');
+/**
+ * TIMESTAMP: 2026-06-09
+ * PROJECT_ID: SimsMerged-v1.4.2
+ * DESCRIPTION: Phase 1 - 2:1 Isometric Projection Engine & Render Loop
+ */
 
-canvas.width = canvas.parentElement.clientWidth;
-canvas.height = canvas.parentElement.clientHeight;
-
-const tileW = 64; // Isometric tile width
-const tileH = 32; // Isometric tile height (2:1 ratio)
-const gridColor = 'rgba(0, 100, 0, 0.5)';
-
-class CityEngine {
-    constructor() {
-        this.entities = []; // {x, y, type, id, name, color}
-        this.zones = {}; // "x,y": zone_type
-        this.camera = { x: canvas.width / 2, y: 50 };
-        this.zoneColors = {
-            "MINING": "rgba(255, 255, 0, 0.2)",
-            "PROCESSING": "rgba(0, 255, 255, 0.2)",
-            "INDUSTRIAL": "rgba(255, 0, 255, 0.2)",
-            "RESIDENTIAL": "rgba(0, 255, 0, 0.1)"
-        };
+class IsometricEngine {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d', { alpha: false }); // Optimize for no transparency on base
+        
+        // Tile dimensions (2:1 ratio for true isometric)
+        this.tileWidth = 64;
+        this.tileHeight = 32;
+        
+        // Grid size
+        this.gridSizeX = 50;
+        this.gridSizeY = 50;
+        
+        // Interaction state
+        this.isDragging = false;
+        this.lastMouse = { x: 0, y: 0 };
+        
         this.init();
+        this.bindEvents();
     }
 
     init() {
-        window.addEventListener('resize', () => {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
-            this.camera.x = canvas.width / 2;
-            this.draw();
-        });
-        this.animate();
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        
+        // Center camera initially
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 4;
+        actions.updateCamera(cx, cy, 1.0);
+        
+        // Start Render Loop
+        requestAnimationFrame(() => this.render());
     }
 
-    // Step 301-350: Isometric Transformation Matrix
-    isoToScreen(mapX, mapY) {
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    bindEvents() {
+        this.canvas.addEventListener('mousedown', (e) => {
+            this.isDragging = true;
+            this.lastMouse = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mouseup', () => {
+            this.isDragging = false;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!this.isDragging) return;
+            
+            const state = appState.getState();
+            const dx = e.clientX - this.lastMouse.x;
+            const dy = e.clientY - this.lastMouse.y;
+            
+            actions.updateCamera(
+                state.camera.x + dx,
+                state.camera.y + dy,
+                state.camera.zoom
+            );
+            
+            this.lastMouse = { x: e.clientX, y: e.clientY };
+        });
+
+        this.canvas.addEventListener('wheel', (e) => {
+            const state = appState.getState();
+            let newZoom = state.camera.zoom - (e.deltaY * 0.001);
+            newZoom = Math.max(0.2, Math.min(newZoom, 3.0)); // Clamp zoom
+            actions.updateCamera(state.camera.x, state.camera.y, newZoom);
+        });
+    }
+
+    // Mathematical Cartesion to Isometric mapping
+    cartToIso(cartX, cartY) {
+        const state = appState.getState();
+        const isoX = (cartX - cartY) * (this.tileWidth / 2);
+        const isoY = (cartX + cartY) * (this.tileHeight / 2);
+        
+        // Apply camera transforms
         return {
-            x: this.camera.x + (mapX - mapY) * (tileW / 2),
-            y: this.camera.y + (mapX + mapY) * (tileH / 2)
+            x: (isoX * state.camera.zoom) + state.camera.x,
+            y: (isoY * state.camera.zoom) + state.camera.y
         };
     }
 
-    drawGrid() {
-        ctx.strokeStyle = gridColor;
-        ctx.lineWidth = 1;
-        const gridSize = 20;
-
-        // Step 501-550: Zone Overlay Rendering
-        for (let x = 0; x < gridSize; x++) {
-            for (let y = 0; y < gridSize; y++) {
-                const zone = this.zones[`${x},${y}`];
-                if (zone) {
-                    const pos = this.isoToScreen(x, y);
-                    ctx.fillStyle = this.zoneColors[zone] || this.zoneColors["RESIDENTIAL"];
-                    ctx.beginPath();
-                    ctx.moveTo(pos.x, pos.y - tileH/2);
-                    ctx.lineTo(pos.x + tileW/2, pos.y);
-                    ctx.lineTo(pos.x, pos.y + tileH/2);
-                    ctx.lineTo(pos.x - tileW/2, pos.y);
-                    ctx.closePath();
-                    ctx.fill();
-                }
+    render() {
+        const state = appState.getState();
+        
+        // Clear background
+        this.ctx.fillStyle = '#050505';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw Topological Grid (Phase 6 Visualization)
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = 'rgba(0, 255, 204, 0.15)'; // Cyber grid lines
+        
+        for (let x = 0; x < this.gridSizeX; x++) {
+            for (let y = 0; y < this.gridSizeY; y++) {
+                this.drawTile(x, y, state.camera.zoom);
             }
         }
+        
+        // Draw Agents
+        this.drawAgents(state.agents, state.camera.zoom);
+        
+        requestAnimationFrame(() => this.render());
+    }
 
-        for (let x = 0; x <= gridSize; x++) {
-            let start = this.isoToScreen(x, 0);
-            let end = this.isoToScreen(x, gridSize);
-            ctx.beginPath();
-            ctx.moveTo(start.x, start.y);
-            ctx.lineTo(end.x, end.y);
-            ctx.stroke();
+    drawTile(x, y, zoom) {
+        const top = this.cartToIso(x, y);
+        const right = this.cartToIso(x + 1, y);
+        const bottom = this.cartToIso(x + 1, y + 1);
+        const left = this.cartToIso(x, y + 1);
+
+        // Basic Frustum Culling: Don't draw tiles off screen
+        const maxRadius = this.tileWidth * zoom;
+        if (top.x < -maxRadius || top.x > this.canvas.width + maxRadius ||
+            top.y < -maxRadius || top.y > this.canvas.height + maxRadius) {
+            return;
         }
-        for (let y = 0; y <= gridSize; y++) {
-            let start = this.isoToScreen(0, y);
-            let end = this.isoToScreen(gridSize, y);
-            ctx.beginPath();
-            ctx.moveTo(start.x, start.y);
-            ctx.lineTo(end.x, end.y);
-            ctx.stroke();
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(top.x, top.y);
+        this.ctx.lineTo(right.x, right.y);
+        this.ctx.lineTo(bottom.x, bottom.y);
+        this.ctx.lineTo(left.x, left.y);
+        this.ctx.closePath();
+        this.ctx.stroke();
+    }
+
+    drawAgents(agents, zoom) {
+        for (const [id, agent] of Object.entries(agents)) {
+            // Draw a highly visible retro shape for the agent
+            const pos = this.cartToIso(agent.x, agent.y);
+            
+            this.ctx.fillStyle = agent.status === 'SUSPENDED' ? '#ff3366' : '#33ff66';
+            this.ctx.beginPath();
+            // A diamond shape representing the agent
+            this.ctx.arc(pos.x, pos.y - (10 * zoom), 10 * zoom, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Draw Agent ID Text
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.font = `${10 * zoom}px Courier New`;
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(id, pos.x, pos.y - (25 * zoom));
         }
-    }
-
-    drawDistricts() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-        ctx.font = 'bold 24px "MS Sans Serif"';
-        
-        const mall = this.isoToScreen(2, 2);
-        ctx.fillText("FILE MALL", mall.x, mall.y);
-        
-        const plaza = this.isoToScreen(15, 2);
-        ctx.fillText("REGISTRY PLAZA", plaza.x, plaza.y);
-        
-        const dist = this.isoToScreen(2, 15);
-        ctx.fillText("AGENT DISTRICT", dist.x, dist.y);
-    }
-
-    drawEntities() {
-        // Sort entities by depth (Y + X) for correct isometric layering
-        const sorted = [...this.entities].sort((a, b) => (a.x + a.y) - (b.x + b.y));
-
-        sorted.forEach(ent => {
-            const pos = this.isoToScreen(ent.x, ent.y);
-            
-            // Draw Isometric Diamond/Cube Placeholder
-            ctx.fillStyle = ent.color || '#fff';
-            
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y - tileH/2); // Top
-            ctx.lineTo(pos.x + tileW/2, pos.y); // Right
-            ctx.lineTo(pos.x, pos.y + tileH/2); // Bottom
-            ctx.lineTo(pos.x - tileW/2, pos.y); // Left
-            ctx.closePath();
-            ctx.fill();
-            
-            // Subtle 3D side shading
-            ctx.fillStyle = 'rgba(0,0,0,0.2)';
-            ctx.beginPath();
-            ctx.moveTo(pos.x - tileW/2, pos.y);
-            ctx.lineTo(pos.x, pos.y + tileH/2);
-            ctx.lineTo(pos.x, pos.y + tileH);
-            ctx.lineTo(pos.x - tileW/2, pos.y + tileH/2);
-            ctx.fill();
-
-            // Retro labels
-            ctx.fillStyle = '#fff';
-            ctx.font = '10px "MS Sans Serif"';
-            const displayName = ent.name.length > 12 ? ent.name.substring(0, 10) + '..' : ent.name;
-            ctx.fillText(displayName, pos.x - 20, pos.y - 20);
-        });
-    }
-
-    draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.drawGrid();
-        this.drawDistricts();
-        this.drawEntities();
-    }
-
-    animate() {
-        this.draw();
-        requestAnimationFrame(() => this.animate());
     }
 }
-
-const engine = new CityEngine();
-window.cityEngine = engine;

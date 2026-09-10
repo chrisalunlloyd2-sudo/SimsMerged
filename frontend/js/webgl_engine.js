@@ -44,7 +44,7 @@
         'NORTHBRIDGE': 0x00ffff, 'SOUTHBRIDGE': 0x0055ff, 'REGISTRY': 0xffff00,
         'LLM': 0x00ffff, 'AGENT': 0xffcc00, 'VDB': 0xff00ff, 'PLANT': 0xffaa00,
         'SCHOOL': 0x4facfe, 'HOSPITAL': 0xff4444, 'BANK': 0xffd700,
-        'HOUSE': 0x888888, 'TREE': 0x0a3d0a, 'WATER': 0x0055ff, 'ROAD': 0x222222
+        'HOUSE': 0x888888, 'TREE': 0x0a3d0a, 'WATER': 0x0055ff, 'ROAD': 0x222222, 'RESEARCH': 0x00ffcc
     };
 
     function getGridPos(x, y) {
@@ -115,17 +115,27 @@
         }
     }
 
-    function animate() {
+    let lastAnimateTime = 0;
+    const animateInterval = 1000 / 24; // 24 FPS
+
+    function animate(timestamp) {
         requestAnimationFrame(animate);
-        if (is3DMode) {
-            syncScene();
-            // Slow camera rotation for nice effect
-            const timer = Date.now() * 0.0001;
-            camera.position.x = Math.cos(timer) * 50;
-            camera.position.z = Math.sin(timer) * 50;
-            camera.lookAt(0, 0, 0);
-            renderer.render(scene, camera);
-        }
+        
+        if (!is3DMode) return;
+        
+        if (!timestamp) timestamp = performance.now();
+        const elapsed = timestamp - lastAnimateTime;
+        if (elapsed < animateInterval) return;
+        
+        lastAnimateTime = timestamp - (elapsed % animateInterval);
+
+        syncScene();
+        // Slow camera rotation for nice effect
+        const timer = Date.now() * 0.0001;
+        camera.position.x = Math.cos(timer) * 50;
+        camera.position.z = Math.sin(timer) * 50;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
     }
 
     animate();

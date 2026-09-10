@@ -3,216 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimAgentCity v1.2</title>
-    <link rel="stylesheet" href="static/css/style.css">
+    <title>SimsMerged Metropolis - God Hand Interface</title>
+    <!-- Phase 1: CSS Namespace Locking -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="desktop">
+    <!-- 
+      PHASE 1 DOM STRUCTURE
+      Separating the rendering canvas (WebGL/2D) from the DOM UI layer (Chat/Stats).
+    -->
+    <div id="sims-app-container">
+        <!-- Render Layer -->
+        <canvas id="isometric-canvas"></canvas>
         
-        <!-- Floating SimCity Toolbar -->
-        <div id="sim-toolbar" class="win95-panel">
-            <div class="win95-titlebar">TOOLS</div>
-            <div class="tool-grid">
-                <button class="tool-btn icon-btn" id="tool-bulldoze" title="Bulldozer">🚜</button>
-                <button class="tool-btn icon-btn" id="tool-zone-mine" title="Zone: Mining">🟨</button>
-                <button class="tool-btn icon-btn" id="tool-zone-proc" title="Zone: Processing">🟦</button>
-                <button class="tool-btn icon-btn" id="tool-zone-ind" title="Zone: Industrial">🟪</button>
-                <button class="tool-btn icon-btn" id="tool-query" title="Agent Inspector">🔍</button>
+        <!-- UI Layer (Phase 2 & 4 Hooks) -->
+        <div id="ui-layer">
+            <header id="top-bar">
+                <div class="sys-status">Pulse: <span id="pulse-indicator" class="active">ONLINE</span></div>
+                <div class="sys-title">METROPOLIS AUTHORITY</div>
+                <div class="sys-economy">Global DePIN Supply: <span id="global-depin">0.00</span></div>
+            </header>
+            
+            <!-- Future MSN Metropolis Chat Hook -->
+            <div id="msn-chat-container" class="panel">
+                <div class="panel-header">MSN Metropolis Comm-Link</div>
+                <div id="chat-messages" class="panel-body"></div>
+                <input type="text" id="chat-input" placeholder="Type @AgentName to interrupt..." />
             </div>
-        </div>
 
-        <!-- Taskbar / Start Menu Area -->
-        <div id="taskbar">
-            <button class="win95-btn" id="btn-start" style="font-weight: bold;">⊞ Start</button>
-            <button class="win95-btn taskbar-item" onclick="toggleWindow('win-mall')">Agent Mall</button>
-            <button class="win95-btn taskbar-item" onclick="toggleWindow('win-bank')">Bank Monitor</button>
-            <button class="win95-btn taskbar-item" onclick="toggleWindow('win-vitals')">Hardware Bus</button>
-            <button class="win95-btn taskbar-item" onclick="toggleWindow('win-tasks')">Task Manager</button>
-            <button class="win95-btn taskbar-item" onclick="toggleWindow('win-security')">Security Circle</button>
-            <div id="pulse-indicator-container" style="margin-left: auto; display: flex; align-items: center; padding-right: 10px;">
-                <span style="margin-right: 5px;">PULSE:</span>
-                <div id="pulse-indicator"></div>
-            </div>
-        </div>
-
-        <!-- Windows -->
-        
-        <!-- Agent Mall Window -->
-        <div class="win95-window" id="win-mall" style="top: 50px; left: 100px; display: none;">
-            <div class="win95-titlebar">
-                <span>Agent Mall - Recruitment Center</span>
-                <button class="win95-close" onclick="toggleWindow('win-mall')">X</button>
-            </div>
-            <div class="win95-content">
-                <div class="recruitment-form">
-                    <fieldset>
-                        <legend>OpenClaw Agent Profile Configuration</legend>
-                        <input type="text" id="reg-name" placeholder="Agent Name">
-                        <select id="reg-role">
-                            <option value="Miner">Miner (Extraction)</option>
-                            <option value="Processor">Processor (Analysis)</option>
-                            <option value="Shipper">Shipper (Logistics)</option>
-                        </select>
-                        <label>Risk Profile (Financial):</label>
-                        <select id="reg-risk">
-                            <option value="Aggressive">Aggressive (High ROI/Spend)</option>
-                            <option value="Conservative">Conservative (Treasury)</option>
-                            <option value="Balanced">Balanced</option>
-                        </select>
-                        <button class="win95-btn" onclick="recruitAgent()">RECRUIT AGENT</button>
-                    </fieldset>
-                </div>
-                <hr>
-                <p id="agent-count" style="font-weight:bold;">Active Population: 0</p>
-                <div id="agent-list-view" style="height: 150px; overflow-y: scroll; border: 2px inset #fff;">
-                    <!-- Agent list populated here -->
+            <!-- Future God Hand Tool Palette -->
+            <div id="god-hand-tools" class="panel">
+                <div class="panel-header">God Hand Controls</div>
+                <div class="panel-body">
+                    <button class="gh-btn" id="btn-pause">PAUSE MATRIX</button>
+                    <button class="gh-btn" id="btn-spawn">SPAWN AGENT</button>
+                    <button class="gh-btn" id="btn-fund">INJECT DEPIN</button>
                 </div>
             </div>
-        </div>
-
-        <!-- Chat Window -->
-        <div class="win95-window" id="win-chat" style="top: 200px; left: 600px; display: none; width: 300px;">
-            <div class="win95-titlebar">
-                <span>MSN Chat - Agent Comm</span>
-                <button class="win95-close" onclick="toggleWindow('win-chat')">X</button>
-            </div>
-            <div class="win95-content" style="height: 200px; overflow-y: scroll; background: #fff;" id="chat-view">
-                <!-- Chat populated here -->
-            </div>
-        </div>
-
-        <!-- Bank Monitor Window -->
-        <div class="win95-window" id="win-bank" style="top: 100px; left: 400px; display: none;">
-            <div class="win95-titlebar">
-                <span>Bank Monitor - Immutable Ledger</span>
-                <button class="win95-close" onclick="toggleWindow('win-bank')">X</button>
-            </div>
-            <div class="win95-content">
-                <fieldset>
-                    <legend>City Treasury</legend>
-                    <div style="font-size: 24px; font-weight: bold; text-align: center; color: green;" id="city-funds">§ 10,000</div>
-                </fieldset>
-                <fieldset>
-                    <legend>Escrow & Transactions (Zero Spoofing)</legend>
-                    <div id="bank-ledger-view" style="height: 200px; overflow-y: scroll; border: 2px inset #fff; font-family: monospace; font-size: 12px; background: #fff;">
-                        <!-- Ledger entries here -->
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-
-        <!-- Hardware Bus / Vitals Window -->
-        <div class="win95-window" id="win-vitals" style="top: 20px; left: 700px; display: none;">
-            <div class="win95-titlebar">
-                <span>Hardware Bus Telemetry</span>
-                <button class="win95-close" onclick="toggleWindow('win-vitals')">X</button>
-            </div>
-            <div class="win95-content">
-                <fieldset>
-                    <legend>Metabolism</legend>
-                    <p>Pollution (CPU): <span id="vit-cpu">0%</span></p>
-                    <p>Wind Speed (Net): <span id="vit-net">0 kbps</span></p>
-                    <p>Weather: <span id="vit-weather">CALM</span></p>
-                    <p>Stress: <span id="vit-stress">HEALTHY</span></p>
-                </fieldset>
-            </div>
-        </div>
-
-        <!-- Task Manager Window -->
-        <div class="win95-window" id="win-tasks" style="top: 150px; left: 200px; display: none; width: 350px;">
-            <div class="win95-titlebar">
-                <span>Task Manager - Windows Processes</span>
-                <button class="win95-close" onclick="toggleWindow('win-tasks')">X</button>
-            </div>
-            <div class="win95-content">
-                <fieldset>
-                    <legend>System Processes</legend>
-                    <div id="process-list-view" style="height: 200px; overflow-y: scroll; border: 2px inset #fff; font-family: monospace; font-size: 11px; background: #fff; color: #000; padding: 5px;">
-                        <!-- Processes list populated here -->
-                    </div>
-                </fieldset>
-                <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 5px;">
-                    <button class="win95-btn" onclick="demolishSelectedProcess()" style="font-weight: bold; padding: 4px 10px;">DEMOLISH PROCESS</button>
+            
+            <!-- Agent Inspector Overlay -->
+            <div id="agent-inspector" class="panel hidden">
+                <div class="panel-header">Dossier: <span id="insp-agent-name">N/A</span></div>
+                <div class="panel-body">
+                    <p>Status: <span id="insp-status">N/A</span></p>
+                    <p>Wallet: <span id="insp-wallet">0.0</span></p>
+                    <p>Zone: <span id="insp-zone">0,0,0</span></p>
                 </div>
             </div>
-        </div>
-
-        <!-- Security Circle Window -->
-        <div class="win95-window" id="win-security" style="top: 80px; left: 500px; display: none; width: 350px;">
-            <div class="win95-titlebar">
-                <span>Security Circle - DePIN Monitor</span>
-                <button class="win95-close" onclick="toggleWindow('win-security')">X</button>
-            </div>
-            <div class="win95-content">
-                <fieldset>
-                    <legend>ASIC Proof-of-Work Trust Graph</legend>
-                    <div id="trust-graph-view" style="height: 100px; overflow-y: scroll; border: 2px inset #fff; background: #fff; color: #000; padding: 5px; font-family: monospace; font-size: 11px;">
-                        <!-- Trust multipliers here -->
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>SBI Interpol (Quarantine)</legend>
-                    <p style="margin: 2px 0;">Monitored population: <span id="sec-population" style="font-weight:bold;">0</span></p>
-                    <p style="margin: 2px 0;">Status: <span id="sec-status" style="color:green; font-weight:bold;">ACTIVE</span></p>
-                    <div id="quarantine-list-view" style="height: 60px; overflow-y: scroll; border: 2px inset #fff; background: #ffe6e6; color: #cc0000; padding: 5px; font-family: monospace; font-size: 11px;">
-                        <!-- Quarantined agents list -->
-                    </div>
-                </fieldset>
-                <div style="margin-top: 10px; border-top: 1px dashed #7f7f7f; padding-top: 10px; display: flex; gap: 5px;">
-                    <input type="text" id="mint-agent-id" placeholder="Agent ID" style="width: 80px;">
-                    <input type="text" id="mint-work-proof" placeholder="ASIC Work Proof" style="flex-grow: 1;">
-                    <button class="win95-btn" onclick="mintAgentTrust()" style="font-size: 10px; font-weight: bold;">MINT TRUST</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Agent Inspector (Query Tool) -->
-        <div class="win95-window" id="win-inspector" style="top: 300px; left: 100px; display: none; width: 300px;">
-            <div class="win95-titlebar">
-                <span>Agent Inspector</span>
-                <button class="win95-close" onclick="document.getElementById('win-inspector').style.display='none'">X</button>
-            </div>
-            <div class="win95-content" id="inspector-content">
-                Select an agent using the Query Tool.
-            </div>
-        </div>
-
-        <div id="city-map">
-            <canvas id="city-canvas"></canvas>
         </div>
     </div>
-    <script src="static/js/engine.js"></script>
-    <script src="static/js/input.js"></script>
-    <script src="static/js/bridge.js"></script>
-    <script src="static/js/gui.js"></script>
-    <!-- ABSOLUTE CHAT RENDER GUARANTEE (INLINE) -->
-    <script>
-        (function() {
-            console.log("[INLINE_CORE] Absolute Chat Rendering Loop Active.");
-            setInterval(async () => {
-                try {
-                    const res = await fetch('http://127.0.0.1:8000/chat');
-                    if (!res.ok) return;
-                    const data = await res.json();
-                    const chatLog = document.getElementById('msn-log') || document.getElementById('chat-view');
-                    if (chatLog && data.logs) {
-                        chatLog.innerHTML = data.logs.map(log => `
-                            <div class="msn-entry" style="margin-bottom: 4px; border-bottom: 1px solid #dfdfdf;">
-                                <span style="color:#888; font-size:9px;">[${log.timestamp}]</span>
-                                <span class="msn-name" style="color: ${log.agent === 'SYSTEM' ? '#008000' : '#cc0000'}; font-weight:bold;">${log.agent}:</span> 
-                                <span style="color: #333;">${log.message}</span>
-                            </div>
-                        `).join('');
-                        chatLog.scrollTop = chatLog.scrollHeight;
-                        // Mark telemetry online
-                        const tel = document.getElementById('telemetry-status');
-                        if (tel) { tel.innerText = "ONLINE"; tel.style.color = "#0f0"; }
-                    }
-                } catch(e) {
-                    console.error("[INLINE_CORE] Fetch Error:", e);
-                }
-            }, 1000);
-        })();
-    </script>
+
+    <!-- Engine Scripts -->
+    <script src="js/state.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
