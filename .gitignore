@@ -31,3 +31,5 @@ temp_speech_*.wav
 
 # Mutation snapshots (additive history kept on disk, not in git)
 *.mut
+bounties/usage.json
+bounties/DIGEST.md

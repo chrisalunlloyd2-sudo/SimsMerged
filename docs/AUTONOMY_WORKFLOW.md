@@ -53,7 +53,7 @@ python $B digest                                         # You, in the morning
 5. Put real MagicDNS names in `nodes.json`; check `digest` → `online_peers`.
 
 ## 🗺️ Roadmap
-- [ ] Wire `approve()` payout to `DePINLedger.fund_wallet`
-- [ ] Enforce `daily_token_cap`
-- [ ] Morning digest delivered to a file/notification
+- [x] `approve(..., ledger=DePINLedger(db_path))` pays out via `fund_wallet`
+- [x] Daily token caps: `python $B tokens hermes 1200` (errors when over cap)
+- [x] `python $B digest-file` writes `bounties/DIGEST.md`
 - [ ] Consolidate `*orchestrator*.py` behind one task queue
