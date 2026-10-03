@@ -20,6 +20,7 @@ try:
         b.approve('S2', 'alice', True, ''); raise SystemExit('empty notes accepted')
     except (ValueError, FileNotFoundError):
         pass
+    seeded = b.seed(); assert 'T13-01' in seeded and b.seed() == [], 'seed failed/not idempotent'
     print('dispatcher OK:', b.digest()['counts'])
 finally:
     shutil.rmtree(tmp)

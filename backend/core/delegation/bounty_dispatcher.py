@@ -155,6 +155,23 @@ def digest():
     return {'counts': counts, 'total_paid': paid, 'online_peers': tailscale_peers()}
 
 
+def seed(md_path=None, reward=10):
+    """Post bounties from the table in docs/TODO_BOUNTIES.md. Skips ids that already exist anywhere."""
+    md_path = md_path or os.path.join(ROOT, 'docs', 'TODO_BOUNTIES.md')
+    posted = []
+    with open(md_path, encoding='utf-8') as f:
+        for line in f:
+            cells = [c.strip() for c in line.strip().strip('|').split('|')]
+            if len(cells) != 3 or not cells[0].startswith('T') or cells[1] not in ('architect', 'developer', 'critic'):
+                continue
+            bid, role, desc = cells
+            if any(os.path.exists(_path(st, bid)) for st in STATES):
+                continue
+            post(bid, desc, reward, role)
+            posted.append(bid)
+    return posted
+
+
 def write_digest():
     """Write the morning digest to bounties/DIGEST.md and return its path."""
     d = digest()
@@ -176,12 +193,12 @@ if __name__ == '__main__':
         claim(sys.argv[2], sys.argv[3])
     elif cmd == 'approve':
         approve(sys.argv[2], sys.argv[3], sys.argv[4] == 'yes', *(sys.argv[5:6]))
+    elif cmd == 'seed':
+        print(seed())
     elif cmd == 'tokens':
         print(record_tokens(sys.argv[2], int(sys.argv[3])))
     elif cmd == 'digest-file':
         print(write_digest())
     else:
         print(json.dumps(digest(), indent=2))
-
-# TODO(developer:T13-10): add `seed` command that posts bounties from docs/TODO_BOUNTIES.md
 # TODO(critic:T13-11): review claim() race handling on a synced (Syncthing/Tailscale share) folder

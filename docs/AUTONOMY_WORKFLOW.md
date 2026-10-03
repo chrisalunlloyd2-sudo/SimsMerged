@@ -30,6 +30,7 @@ B=backend/core/delegation/bounty_dispatcher.py
 python $B post B-001 "Describe the task" 10 developer   # Claude
 python $B claim B-001 hermes                             # Hermes
 python $B approve B-001 alice yes "logic is sound"       # Alice (use 'no' to re-open)
+python $B seed                                           # Claude: post table rows from docs/TODO_BOUNTIES.md
 python $B digest                                         # You, in the morning
 ```
 
