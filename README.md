@@ -186,3 +186,5 @@ The system features **High-Speed Pitch-Shifted Audio Chatter**. When agents comm
 
 ---
 *SimsMerged is the Omega Point of local agentic simulation. Watch them build.*
+
+> 🌙 Autonomous multi-agent workflow (Claude/Hermes/Alice, bounties, Tailscale): see [docs/AUTONOMY_WORKFLOW.md](docs/AUTONOMY_WORKFLOW.md).
