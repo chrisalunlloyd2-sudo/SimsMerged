@@ -182,3 +182,6 @@ if __name__ == '__main__':
         print(write_digest())
     else:
         print(json.dumps(digest(), indent=2))
+
+# TODO(developer:T13-10): add `seed` command that posts bounties from docs/TODO_BOUNTIES.md
+# TODO(critic:T13-11): review claim() race handling on a synced (Syncthing/Tailscale share) folder
