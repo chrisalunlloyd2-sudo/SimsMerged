@@ -1,0 +1,8 @@
+{
+  "hub": "laptop",
+  "daily_token_cap": {"claude": 50000, "hermes": 200000, "alice": 200000},
+  "nodes": {
+    "laptop": {"host": "laptop.tailnet.ts.net", "ollama_port": 11434, "agents": ["claude", "hermes", "alice"], "tags": ["tag:laptop"]}
+  },
+  "roles": {"architect": "claude", "developer": "hermes", "critic": "alice"}
+}
