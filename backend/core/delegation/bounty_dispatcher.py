@@ -96,6 +96,8 @@ def approve(bounty_id, critic, approved, notes='', ledger=None):
 
     ledger: optional object with fund_wallet(agent_id, amount) (e.g. DePINLedger).
     """
+    if not notes.strip():
+        raise ValueError('critic must give a reason (notes) for the audit trail')
     src = _path('claimed', bounty_id)
     data = _read(src)
     if data.get('agent') == critic:
@@ -108,11 +110,19 @@ def approve(bounty_id, critic, approved, notes='', ledger=None):
         os.remove(src)
         _log(critic, f"approved {bounty_id}; payout {data['reward']} to {data['agent']}")
     else:
-        data.update(status='open', notes=notes)
+        rejections = data.get('rejections', 0) + 1
+        data.update(rejections=rejections, notes=notes, status='open')
+        data.setdefault('history', []).append({'critic': critic, 'notes': notes})
         data.pop('agent', None)
-        _write(_path('open', bounty_id), data)
-        os.remove(src)
-        _log(critic, f"rejected {bounty_id}; re-opened")
+        if rejections == 2:
+            data['role'] = 'architect'  # escalate to Claude
+        elif rejections >= 3:
+            data['status'] = 'needs_human'
+        dest = 'claimed' if data['status'] == 'needs_human' else 'open'
+        _write(_path(dest, bounty_id), data)
+        if dest != 'claimed':
+            os.remove(src)
+        _log(critic, f"rejected {bounty_id} (x{rejections}); now {data['status']} role={data['role']}")
     return data
 
 
@@ -137,6 +147,9 @@ def ollama_url(node):
 def digest():
     counts = {s: len([f for f in os.listdir(os.path.join(BOUNTIES, s)) if f.endswith('.json')])
               for s in STATES}
+    counts['needs_human'] = sum(
+        1 for f in os.listdir(os.path.join(BOUNTIES, 'claimed')) if f.endswith('.json')
+        and _read(os.path.join(BOUNTIES, 'claimed', f)).get('status') == 'needs_human')
     paid = sum(_read(_path('done', f[:-5])).get('paid', 0)
                for f in os.listdir(os.path.join(BOUNTIES, 'done')) if f.endswith('.json'))
     return {'counts': counts, 'total_paid': paid, 'online_peers': tailscale_peers()}
@@ -148,7 +161,7 @@ def write_digest():
     path = os.path.join(BOUNTIES, 'DIGEST.md')
     lines = [f"# Morning Digest {datetime.now(timezone.utc).isoformat()}", '',
              f"- open: {d['counts']['open']}", f"- claimed: {d['counts']['claimed']}",
-             f"- done: {d['counts']['done']}", f"- total paid: {d['total_paid']}",
+             f"- done: {d['counts']['done']}", f"- NEEDS YOU: {d['counts']['needs_human']}", f"- total paid: {d['total_paid']}",
              f"- online peers: {', '.join(d['online_peers']) or 'none'}"]
     with open(path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')

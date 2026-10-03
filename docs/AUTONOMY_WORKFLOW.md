@@ -56,4 +56,14 @@ python $B digest                                         # You, in the morning
 - [x] `approve(..., ledger=DePINLedger(db_path))` pays out via `fund_wallet`
 - [x] Daily token caps: `python $B tokens hermes 1200` (errors when over cap)
 - [x] `python $B digest-file` writes `bounties/DIGEST.md`
-- [ ] Consolidate `*orchestrator*.py` behind one task queue
+- [ ] Consolidate orchestrators behind one task queue (map: [ORCHESTRATOR_MAP.md](ORCHESTRATOR_MAP.md))
+
+## Escalation
+Reject #1 -> back to open (developer). Reject #2 -> re-opened for **Claude** (architect). Reject #3 -> `NEEDS YOU` in the digest.
+Critics must give a reason on every verdict.
+
+## Agent runbooks
+[Claude](agents/claude.md) · [Hermes](agents/hermes.md) · [Alice](agents/alice.md)
+
+## Smoke test (run on your laptop)
+`python tools/delegation_smoke_test.py` checks the dispatcher in a temp queue and reports Tailscale peers.
